@@ -18,11 +18,14 @@
 (setq doom-line-numbers-style nil)
 (setq doom-theme nil)
 
+;  elpy is better
 ;(set! :company-backend 'python-mode '(company-anaconda))
 
 (after! color-theme-sanityinc-tomorrow
   (color-theme-sanityinc-tomorrow-night))
 
+
+; hip shit
 (setq doom-neotree-file-icons t)
 
 (after! company-quickhelp
@@ -39,3 +42,6 @@
      (python . t)
      (dot . t)
      (ditaa . t))))
+
+;; There's something that borks my theme when loading a frame, so forcibly reload the theme
+(add-hook 'doom-init-ui-hook #'(lambda () (load-theme 'sanityinc-tomorrow-night)))
