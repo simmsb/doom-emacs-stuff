@@ -8,3 +8,4 @@
 (package! company-anaconda)
 (package! elpy)
 (package! company-quickhelp)
+(package! graphviz-dot-mode)

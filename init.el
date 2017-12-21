@@ -22,3 +22,5 @@
 (def-package-hook! solaire-mode :disable)
 
 (setq frame-title-format (list (user-login-name) "@" (system-name)))
+
+(load-theme 'sanityinc-tomorrow-night)
