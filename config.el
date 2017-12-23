@@ -28,11 +28,17 @@
 ; hip shit
 (setq doom-neotree-file-icons t)
 
+(after! mode-icons
+  (mode-icons-mode))
+
 (after! company-quickhelp
   (company-quickhelp-mode 1))
 
 (after! elpy
   (elpy-enable))
+
+(after! whitespace-cleanup-mode
+  (global-whitespace-cleanup-mode))
 
 (after! org
   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")

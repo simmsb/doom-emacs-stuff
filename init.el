@@ -17,7 +17,7 @@
 
 (setq default-directory "~/dev/")
 
-(discord-ipc-run "384815451978334208")
+(run-at-time "1 min" nil discord-ipc-run "384815451978334208")
 
 (def-package-hook! solaire-mode :disable)
 
