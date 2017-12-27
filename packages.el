@@ -11,3 +11,4 @@
 (package! graphviz-dot-mode)
 (package! whitespace-cleanup-mode)
 (package! mode-icons)
+(package! discord-ipc :recipe (:fetcher github :repo "nitros12/discord-ipc.el"))

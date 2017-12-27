@@ -24,7 +24,6 @@
 (after! color-theme-sanityinc-tomorrow
   (color-theme-sanityinc-tomorrow-night))
 
-
 ; hip shit
 (setq doom-neotree-file-icons t)
 
