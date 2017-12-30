@@ -2,10 +2,6 @@
 
 (load! +bindings)
 
-(setq doom-font (font-spec :family "Fira Mono"
-                           :size (if (string= (system-name) "home") 19 12)) ; size 19 on pc, 12 on laptop
-      doom-unicode-font (font-spec :family "Fira Mono"))
-
 (after! company
   (setq company-idle-delay 0.2
         company-minimum-prefix-length 2
