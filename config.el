@@ -2,7 +2,8 @@
 
 (load! +bindings)
 
-(setq doom-font (font-spec :family "Fira Mono" :size 19)
+(setq doom-font (font-spec :family "Fira Mono"
+                           :size (if (string= (system-name) "home") 19 12)) ; size 19 on pc, 12 on laptop
       doom-unicode-font (font-spec :family "Fira Mono"))
 
 (after! company
@@ -18,8 +19,7 @@
 (setq doom-line-numbers-style nil)
 (setq doom-theme nil)
 
-;  elpy is better
-;(set! :company-backend 'python-mode '(company-anaconda))
+;;(set! :company-backend 'python-mode '(company-yasnippet))
 
 (after! color-theme-sanityinc-tomorrow
   (color-theme-sanityinc-tomorrow-night))
@@ -34,8 +34,18 @@
   (company-quickhelp-mode 1))
 
 (after! elpy
+  (setq elpy-syntax-check-command "epylint"
+        elpy-modules '(elpy-module-company
+                       elpy-module-eldoc
+                       elpy-module-pyvenv
+                       elpy-module-flymake
+                       elpy-module-yasnippet
+                       elpy-module-sane-defaults))
   (elpy-enable))
 
+(after! flycheck
+  (add-hook 'python-mode-hook #'(lambda () (setq flycheck-checker 'python-pylint
+                                            flycheck-pylintrc "~/.pylintrc"))))
 (after! whitespace-cleanup-mode
   (global-whitespace-cleanup-mode))
 
