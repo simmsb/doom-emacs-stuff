@@ -20,6 +20,11 @@
 (after! color-theme-sanityinc-tomorrow
   (color-theme-sanityinc-tomorrow-night))
 
+(after! yasnippet
+  (setq yas-snippet-dirs
+        (append (list (expand-file-name "snippets/" (file-name-directory load-file-name)))
+                (delq 'yas-installed-snippets-dir yas-snippet-dirs))))
+
 ; hip shit
 (setq doom-neotree-file-icons t)
 
