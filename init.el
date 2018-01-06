@@ -1,8 +1,9 @@
 ;;; private/ben/init.el -*- lexical-binding: t; -*-
-(setq user-mail-address "ben@bensimms.moe"
-      user-full-name "Ben Simms")
 
 (require 'discord-ipc)
+
+(setq user-mail-address "ben@bensimms.moe"
+      user-full-name "Ben Simms")
 
 (fringe-mode 8)
 (show-paren-mode 1)

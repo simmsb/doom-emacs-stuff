@@ -28,9 +28,6 @@
 ; hip shit
 (setq doom-neotree-file-icons t)
 
-(after! mode-icons
-  (mode-icons-mode))
-
 (after! company-quickhelp
   (company-quickhelp-mode 1))
 
