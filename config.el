@@ -44,8 +44,6 @@
 (after! flycheck
   (add-hook 'python-mode-hook #'(lambda () (setq flycheck-checker 'python-pylint
                                             flycheck-pylintrc "~/.pylintrc"))))
-(after! whitespace-cleanup-mode
-  (global-whitespace-cleanup-mode))
 
 (after! org
   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")

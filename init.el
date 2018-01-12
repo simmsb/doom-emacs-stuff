@@ -1,6 +1,7 @@
 ;;; private/ben/init.el -*- lexical-binding: t; -*-
 
 (require 'discord-ipc)
+(require 'whitespace-cleanup-mode)
 
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
@@ -22,6 +23,8 @@
   (map! :map anaconda-mode-map :m "gd" #'anaconda-mode-find-definitions)
   (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer)
   nil)
+
+(global-whitespace-cleanup-mode)
 
 (pcase (system-name)
   ("laptop"
