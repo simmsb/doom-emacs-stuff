@@ -2,6 +2,9 @@
 
 (require 'discord-ipc)
 (require 'whitespace-cleanup-mode)
+(require 'rainbow-identifiers)
+(require 'color-theme-sanityinc-tomorrow)
+(require 'elpy)
 
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
@@ -33,6 +36,7 @@
          doom-unicode-font (font-spec :family "Fira Mono")))
   (_
    (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
+   (add-to-list 'exec-path "/home/ben/.local/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19) ; size 19 on pc, 12 on laptop
          doom-unicode-font (font-spec :family "Fira Mono"))))
