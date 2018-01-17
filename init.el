@@ -20,6 +20,11 @@
 
 (setq frame-title-format (list (user-login-name) "@" (system-name)))
 
+(setq +rust-src-dir (concat (replace-regexp-in-string
+                             "\n\\'" ""
+                             (shell-command-to-string "rustc --print sysroot"))
+                            "/lib/rustlib/src"))
+
 (def-package-hook! anaconda-mode
   :pre-config
   (set! :popup "*anaconda-mode*" :size 10 :noselect t :autoclose t :autokill t)
@@ -37,6 +42,7 @@
   (_
    (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
    (add-to-list 'exec-path "/home/ben/.local/bin/")
+   (add-to-list 'exec-path "/home/ben/.cargo/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19) ; size 19 on pc, 12 on laptop
          doom-unicode-font (font-spec :family "Fira Mono"))))
