@@ -1,11 +1,5 @@
 ;;; private/ben/init.el -*- lexical-binding: t; -*-
 
-(require 'discord-ipc)
-(require 'whitespace-cleanup-mode)
-(require 'rainbow-identifiers)
-(require 'color-theme-sanityinc-tomorrow)
-(require 'elpy)
-
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
@@ -32,17 +26,26 @@
   (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer)
   nil)
 
-(global-whitespace-cleanup-mode)
-
 (pcase (system-name)
   ("laptop"
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 12) ; size 19 on pc, 12 on laptop
          doom-unicode-font (font-spec :family "Fira Mono")))
   (_
-   (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
    (add-to-list 'exec-path "/home/ben/.local/bin/")
    (add-to-list 'exec-path "/home/ben/.cargo/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19) ; size 19 on pc, 12 on laptop
          doom-unicode-font (font-spec :family "Fira Mono"))))
+
+(def-package-hook! magit
+  :post-config
+  (require 'pretty-magit)
+  (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.0 :family "FontAwesome"))
+  (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.0 :family "FontAwesome"))
+  (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
+  (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
+  (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
+  (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
+  (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
+  t)

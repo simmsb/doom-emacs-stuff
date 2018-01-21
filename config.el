@@ -2,12 +2,33 @@
 
 (load! +bindings)
 
+(def-package! elpy)
+(def-package! color-theme-sanityinc-tomorrow)
+(def-package! rainbow-identifiers)
+(def-package! discord-ipc)
+(def-package! whitespace-cleanup-mode)
+
+(after! whitespace-cleanup-mode
+  (global-whitespace-cleanup-mode))
+
+(if (string-equal (system-name)
+                  "home")
+    (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208"))
+
 (after! company
   (setq company-idle-delay 0.2
         company-minimum-prefix-length 2
         company-quickhelp-mode 1
-        company-quickhelp-delay 0.0)
+        company-quickhelp-delay 0.0
+        company-transformers '(company-sort-by-statistics)
+        )
   (global-company-mode))
+
+(after! company-math
+  (set! :company-backend '(org-mode) '(company-math-symbols-unicode
+                                       company-files
+                                       company-yasnippet
+                                       company-dabbrev)))
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
@@ -56,4 +77,29 @@
      (ditaa . t))))
 
 ;; There's something that borks my theme when loading a frame, so forcibly reload the theme
-(add-hook 'doom-init-ui-hook #'(lambda () (load-theme 'sanityinc-tomorrow-night)))
+(add-hook! doom-init-ui (load-theme 'sanityinc-tomorrow-night))
+
+(add-hook! prog-mode (setq-local show-trailing-whitespace t))
+
+(after! smartparens
+  ;; Auto-close more conservatively and expand braces on RET
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+  (sp-local-pair 'org-mode "\\[" "\\]")
+
+  (let ((unless-list '(sp-point-before-word-p
+                       sp-point-after-word-p
+                       sp-point-before-same-p)))
+    (sp-pair "'"  nil :unless unless-list)
+    (sp-pair "\"" nil :unless unless-list))
+  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "(" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p))
+  (sp-pair "[" nil :post-handlers '(("| " " "))
+           :unless '(sp-point-before-word-p sp-point-before-same-p)))
+
+(def-package! magithub
+  :after magit
+  :ensure t
+  :config
+  (magithub-feature-autoinject t))
