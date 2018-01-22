@@ -20,11 +20,8 @@
         company-minimum-prefix-length 2
         company-quickhelp-mode 1
         company-quickhelp-delay 0.0
-        company-transformers '(company-sort-by-statistics)
-        )
-  (global-company-mode))
-
-(after! company-math
+        company-transformers '(company-sort-by-statistics))
+  (global-company-mode)
   (set! :company-backend '(org-mode) '(company-math-symbols-unicode
                                        company-files
                                        company-yasnippet
