@@ -25,7 +25,12 @@
   (set! :company-backend '(org-mode) '(company-math-symbols-unicode
                                        company-files
                                        company-yasnippet
-                                       company-dabbrev)))
+                                       company-dabbrev))
+  (set! :company-backend '(rust-mode) '(company-racer
+                                        company-yasnippet
+                                        company-dabbrev))
+  (set! :company-backend '(python-mode) '(elpy-company-backend company-yasnippet company-dabbrev))
+  (set! :company-backend '(haskell-mode) '(company-yasnippet)))
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
