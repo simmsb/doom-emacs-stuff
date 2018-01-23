@@ -7,6 +7,7 @@
 (def-package! rainbow-identifiers)
 (def-package! discord-ipc)
 (def-package! whitespace-cleanup-mode)
+(def-package! magithub)
 
 (after! whitespace-cleanup-mode
   (global-whitespace-cleanup-mode))
@@ -99,8 +100,8 @@
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
 
-(def-package! magithub
-  :after magit
-  :ensure t
-  :config
-  (magithub-feature-autoinject t))
+;; (def-package! magithub
+;;   :after magit
+;;   :ensure t
+;;   :config
+;;   (magithub-feature-autoinject t))
