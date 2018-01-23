@@ -22,8 +22,7 @@
         company-quickhelp-delay 0.0
         company-transformers '(company-sort-by-statistics))
   (global-company-mode)
-  (set! :company-backend '(org-mode) '(company-math-symbols-unicode
-                                       company-files
+  (set! :company-backend '(org-mode) '(company-files
                                        company-yasnippet
                                        company-dabbrev)))
 
