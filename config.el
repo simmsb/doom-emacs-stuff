@@ -7,7 +7,7 @@
 (def-package! rainbow-identifiers)
 (def-package! discord-ipc)
 (def-package! whitespace-cleanup-mode)
-(def-package! magithub)
+;;(def-package! magithub)
 
 (after! whitespace-cleanup-mode
   (global-whitespace-cleanup-mode))
