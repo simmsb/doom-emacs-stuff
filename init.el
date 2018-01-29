@@ -3,8 +3,6 @@
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
-(setq auth-source-debug t)
-
 (fringe-mode 8)
 (show-paren-mode 1)
 (setq show-paren-style 'expression

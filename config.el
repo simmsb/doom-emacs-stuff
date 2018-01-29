@@ -7,7 +7,7 @@
 (def-package! rainbow-identifiers)
 (def-package! discord-ipc)
 (def-package! whitespace-cleanup-mode)
-;;(def-package! magithub)
+(def-package! wakatime-mode)
 
 (after! whitespace-cleanup-mode
   (global-whitespace-cleanup-mode))
@@ -99,6 +99,9 @@
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
+
+(after! wakatime-mode
+  (global-wakatime-mode))
 
 ;; (def-package! magithub
 ;;   :after magit
