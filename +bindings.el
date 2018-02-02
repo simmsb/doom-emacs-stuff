@@ -5,7 +5,7 @@
  (:after neotree
    :map neotree-mode-map
    :n "|" #'neotree-enter-vertical-split
-   :n "_" #'neotree-enter-horizont-split)
+   :n "_" #'neotree-enter-horizontal-split)
 
  (:leader
    (:desc "file" :prefix "f"
