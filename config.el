@@ -71,6 +71,7 @@
 
 (after! org
   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
+  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
