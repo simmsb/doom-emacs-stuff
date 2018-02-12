@@ -112,5 +112,9 @@
 ;;   (magithub-feature-autoinject t)
 ;;   (setq magithub-clone-default-directory "~/dev"))
 
-(after! neotree ;; what it works?
+(after! neotree ;; when we first load, set the cwd properly
   (cd "~/dev/"))
+
+(setq +doom-dashboard-pwd-policy 'last)
+(setq +doom-dashboard--last-cwd "~/dev/") ;; start off cwd'd to /dev
+(+doom-dashboard-reload) ;; reload to apply

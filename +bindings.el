@@ -9,7 +9,7 @@
 
  (:leader
    (:desc "file" :prefix "f"
-     :desc "Neotree" :n "t" #'neotree-toggle))
+     :desc "Neotree" :n "t" #'+neotree/open))
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
