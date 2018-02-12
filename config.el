@@ -16,9 +16,6 @@
                   "home")
     (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208"))
 
-(after! neotree
-  (cd "~/dev/"))
-
 (after! company
   (setq company-idle-delay 0.2
         company-minimum-prefix-length 2
@@ -114,3 +111,6 @@
 ;;   :config
 ;;   (magithub-feature-autoinject t)
 ;;   (setq magithub-clone-default-directory "~/dev"))
+
+(after! neotree ;; It works okay?
+  (cd "~/dev/"))

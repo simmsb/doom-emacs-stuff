@@ -11,6 +11,8 @@
 
 (def-package-hook! solaire-mode :disable)
 
+(setq default-directory "~/dev/")
+
 (setq +rust-src-dir (concat (replace-regexp-in-string
                              "\n\\'" ""
                              (shell-command-to-string "rustc --print sysroot"))
