@@ -112,5 +112,5 @@
 ;;   (magithub-feature-autoinject t)
 ;;   (setq magithub-clone-default-directory "~/dev"))
 
-(after! neotree ;; It works okay?
+(after! neotree ;; what it works?
   (cd "~/dev/"))
