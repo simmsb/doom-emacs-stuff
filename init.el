@@ -4,15 +4,12 @@
       user-full-name "Ben Simms")
 
 (fringe-mode 8)
+(setq doom-fringe-size 8)
 (show-paren-mode 1)
 (setq show-paren-style 'expression
       show-paren-delay 0)
 
-(setq default-directory "~/dev/")
-
 (def-package-hook! solaire-mode :disable)
-
-(setq frame-title-format (list (user-login-name) "@" (system-name)))
 
 (setq +rust-src-dir (concat (replace-regexp-in-string
                              "\n\\'" ""
