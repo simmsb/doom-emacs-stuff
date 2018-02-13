@@ -27,9 +27,8 @@
                                        company-yasnippet
                                        company-dabbrev))
   (set! :company-backend '(rust-mode) '(company-racer
-                                        company-yasnippet
-                                        company-dabbrev))
-  (set! :company-backend '(python-mode) '(elpy-company-backend company-yasnippet company-dabbrev))
+                                        company-yasnippet))
+  (set! :company-backend '(python-mode) '(elpy-company-backend company-yasnippet))
   (set! :company-backend '(haskell-mode) '(company-yasnippet)))
 
 (after! rainbow-identifiers
