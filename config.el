@@ -80,8 +80,9 @@
 
 ;; There's something that borks my theme when loading a frame, so forcibly reload the theme
 (add-hook! doom-init-ui
-  (load-theme 'sanityinc-tomorrow-night)
-  (setq frame-title-format (list (user-login-name) "@" (system-name))))
+  (load-theme 'sanityinc-tomorrow-night))
+
+(setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
 (add-hook! prog-mode (setq-local show-trailing-whitespace t))
 
