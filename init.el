@@ -35,7 +35,9 @@
    (add-to-list 'exec-path "/home/ben/.cargo/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19) ; size 19 on pc, 12 on laptop
-         doom-unicode-font (font-spec :family "Fira Mono"))))
+         doom-unicode-font (font-spec :family "Fira Mono")
+         doom-big-font (font-spec :family "Fira Mono"
+                                  :size 25))))
 
 (def-package-hook! magit
   :post-config

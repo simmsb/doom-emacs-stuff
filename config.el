@@ -107,9 +107,17 @@
 
 ;; (def-package! magithub
 ;;   :after magit
+;;   :commands
+;;   (magithub-clone
+;;    magithub-completion-enable
+;;    magithub-feature-autoinject)
 ;;   :config
+;;   (setq magithub-clone-default-directory "~/dev"
+;;         magithub-dir (concat doom-etc-dir "magithub/")))
+
+;; (after! magit
 ;;   (magithub-feature-autoinject t)
-;;   (setq magithub-clone-default-directory "~/dev"))
+;;   (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
 
 (after! neotree ;; when we first load, set the cwd properly
   (cd "~/dev/"))
@@ -117,3 +125,11 @@
 (setq +doom-dashboard-pwd-policy 'last)
 (setq +doom-dashboard--last-cwd "~/dev/") ;; start off cwd'd to /dev
 (+doom-dashboard-reload) ;; reload to apply
+
+(def-package! py-isort
+  :after python
+  :config
+  (map! :map python-mode-map
+        :localleader
+        :n "s" #'py-isort-buffer
+        :v "s" #'py-isort-region))
