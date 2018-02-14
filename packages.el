@@ -8,7 +8,6 @@
 ;;(package! company-anaconda)
 (package! company-quickhelp)
 (package! graphviz-dot-mode)
-(package! whitespace-cleanup-mode)
 (package! wakatime-mode)
 
 ;;(package! magithub)

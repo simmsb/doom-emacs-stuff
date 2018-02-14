@@ -6,11 +6,7 @@
 (def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
 (def-package! discord-ipc)
-(def-package! whitespace-cleanup-mode)
 (def-package! wakatime-mode)
-
-(after! whitespace-cleanup-mode
-  (global-whitespace-cleanup-mode))
 
 (if (string-equal (system-name)
                   "home")
@@ -84,7 +80,8 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-(add-hook! prog-mode (setq-local show-trailing-whitespace t))
+(add-hook! prog-mode
+  (doom|enable-delete-trailing-whitespace))
 
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
