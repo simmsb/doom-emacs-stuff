@@ -19,4 +19,5 @@
 (package! elpy)
 ;;(package! lsp-python)
 (package! py-isort)
+(package! evil-multiedit)
 ;;(package! pipenv)

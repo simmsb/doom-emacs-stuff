@@ -54,7 +54,6 @@
         elpy-modules '(elpy-module-company
                        elpy-module-eldoc
                        elpy-module-pyvenv
-                       elpy-module-flymake
                        elpy-module-yasnippet
                        elpy-module-sane-defaults))
   (elpy-enable))
@@ -127,3 +126,6 @@
         :localleader
         :n "s" #'py-isort-buffer
         :v "s" #'py-isort-region))
+
+(after! evil-multiedit
+  (evil-multiedit-default-keybinds))
