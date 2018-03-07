@@ -8,7 +8,9 @@
 ;;(package! company-anaconda)
 (package! company-quickhelp)
 (package! graphviz-dot-mode)
-(package! wakatime-mode)
+
+(unless (string= (system-name) "laptop")
+  (package! wakatime-mode))
 
 ;;(package! magithub)
 (package! pretty-magit :recipe (pretty-magit :url "https://gist.githubusercontent.com/nitros12/ed3a2265e9fabf39c46767ba0c65a85a/raw/58d5e2e858149548fa72e6060a5f00a7a46b10fa/pretty-magit.el"

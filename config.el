@@ -6,11 +6,12 @@
 (def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
 (def-package! discord-ipc)
-(def-package! wakatime-mode)
 
-(if (string-equal (system-name)
-                  "home")
-    (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208"))
+(unless (string= (system-name) "laptop")
+  (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
+  (def-package! wakatime-mode)
+  (after! wakatime-mode
+    (global-wakatime-mode)))
 
 (after! company
   (setq company-idle-delay 0.2
@@ -98,9 +99,6 @@
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
-
-(after! wakatime-mode
-  (global-wakatime-mode))
 
 ;; (def-package! magithub
 ;;   :after magit
