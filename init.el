@@ -28,13 +28,14 @@
 (pcase (system-name)
   ("laptop"
    (setq doom-font (font-spec :family "Fira Mono"
-                              :size 12) ; size 19 on pc, 12 on laptop
-         doom-unicode-font (font-spec :family "Fira Mono")))
+                              :size 14) ; size 14 on pc, 12 on laptop
+         doom-unicode-font (font-spec :family "Fira Mono")
+         font-backend 'ns))
   (_
    (add-to-list 'exec-path "/home/ben/.local/bin/")
    (add-to-list 'exec-path "/home/ben/.cargo/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
-                              :size 19) ; size 19 on pc, 12 on laptop
+                              :size 19)
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono"
                                   :size 25))))

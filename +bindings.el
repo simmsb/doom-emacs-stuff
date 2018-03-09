@@ -18,4 +18,5 @@
    "<down>"     #'evil-window-down)
 
  "<home>" #'back-to-indentation-or-beginning
+ "<end>" #'end-of-line
  "<backspace>" #'doom/backward-delete-whitespace-to-column)
