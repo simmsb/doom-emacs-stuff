@@ -4,7 +4,7 @@
       user-full-name "Ben Simms")
 
 (add-hook! text-mode
-  (auto-save-mode))
+  #'auto-save-mode)
 
 (fringe-mode 8)
 (setq doom-fringe-size 8)
