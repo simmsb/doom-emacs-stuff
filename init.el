@@ -3,13 +3,16 @@
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
+(add-hook! text-mode
+  (auto-save-mode))
+
 (fringe-mode 8)
 (setq doom-fringe-size 8)
 (show-paren-mode 1)
 (setq show-paren-style 'expression
       show-paren-delay 0)
 
-(def-package-hook! solaire-mode :disable)
+(def-package-hook! solaire-mode :disable)  ;; this breaks our stuff
 
 (setq default-directory "~/dev/")
 
@@ -27,9 +30,10 @@
 
 (pcase (system-name)
   ("laptop"
-   (setq doom-font (font-spec :family "Fira Mono"
-                              :size 14) ; size 14 on pc, 12 on laptop
+   (toggle-frame-maximized)
+   (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-unicode-font (font-spec :family "Fira Mono")
+         doom-big-font (font-spec :family "Fira Mono" :size 18)
          font-backend 'ns))
   (_
    (add-to-list 'exec-path "/home/ben/.local/bin/")
@@ -37,8 +41,7 @@
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19)
          doom-unicode-font (font-spec :family "Fira Mono")
-         doom-big-font (font-spec :family "Fira Mono"
-                                  :size 25))))
+         doom-big-font (font-spec :family "Fira Mono" :size 25))))
 
 (def-package-hook! magit
   :post-config

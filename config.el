@@ -7,17 +7,23 @@
 (def-package! rainbow-identifiers)
 (def-package! discord-ipc)
 
-(unless (string= (system-name) "laptop")
-  (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
-  (def-package! wakatime-mode)
-  (after! wakatime-mode
-    (global-wakatime-mode)))
+(setq ON-LAPTOP (string= (system-name) "laptop"))
+
+(if ON-LAPTOP
+    (progn)
+    (progn
+      (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
+      (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+      (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
+      (def-package! wakatime-mode)
+      (after! wakatime-mode
+        (global-wakatime-mode))))
 
 (after! company
   (setq company-idle-delay 0.2
         company-minimum-prefix-length 2
         company-quickhelp-mode 1
-        company-quickhelp-delay 0.0
+        company-quickhelp-delay 0.2
         company-transformers '(company-sort-by-statistics))
   (global-company-mode)
   (set! :company-backend '(org-mode) '(company-files
@@ -36,8 +42,11 @@
 
 ;;(set! :company-backend 'python-mode '(company-yasnippet))
 
-(after! color-theme-sanityinc-tomorrow
-  (color-theme-sanityinc-tomorrow-night))
+(if ON-LAPTOP
+    (after! color-theme-sanityinc-tomorrow
+      (color-theme-sanityinc-tomorrow-eighties))
+  (after! color-theme-sanityinc-tomorrow
+      (color-theme-sanityinc-tomorrow-night)))
 
 (after! yasnippet
   (setq yas-snippet-dirs
@@ -65,8 +74,6 @@
   (global-flycheck-mode))
 
 (after! org
-  (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
-  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
@@ -76,7 +83,9 @@
 
 ;; There's something that borks my theme when loading a frame, so forcibly reload the theme
 (add-hook! doom-init-ui
-  (load-theme 'sanityinc-tomorrow-night))
+  (if ON-LAPTOP
+      (load-theme 'sanityinc-tomorrow-eighties)
+      (load-theme 'sanityinc-tomorrow-night)))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
