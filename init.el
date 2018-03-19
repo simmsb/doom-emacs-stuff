@@ -33,24 +33,23 @@
    (toggle-frame-maximized)
    (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-unicode-font (font-spec :family "Fira Mono")
-         doom-big-font (font-spec :family "Fira Mono" :size 18)
-         font-backend 'ns))
+         doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
    (add-to-list 'exec-path "/home/ben/.local/bin/")
    (add-to-list 'exec-path "/home/ben/.cargo/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19)
          doom-unicode-font (font-spec :family "Fira Mono")
-         doom-big-font (font-spec :family "Fira Mono" :size 25))))
+         doom-big-font (font-spec :family "Fira Mono" :size 25))
 
-(def-package-hook! magit
-  :post-config
-  (require 'pretty-magit)
-  (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.0 :family "FontAwesome"))
-  (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.0 :family "FontAwesome"))
-  (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
-  (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
-  (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
-  (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
-  (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
-  t)
+    (def-package-hook! magit
+    :post-config
+    (require 'pretty-magit)
+    (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
+    (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
+    (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
+    t)))
