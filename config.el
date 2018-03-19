@@ -32,7 +32,8 @@
   (set! :company-backend '(rust-mode) '(company-racer
                                         company-yasnippet))
   (set! :company-backend '(python-mode) '(elpy-company-backend company-yasnippet))
-  (set! :company-backend '(haskell-mode) '(company-yasnippet)))
+  (set! :company-backend '(haskell-mode) '(company-intero company-yasnippet))
+  )
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
