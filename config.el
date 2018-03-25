@@ -5,13 +5,13 @@
 (def-package! elpy)
 (def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
-(def-package! discord-ipc)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (if ON-LAPTOP
     (progn)
     (progn
+      (def-package! discord-ipc)
       (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
       (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
       (run-at-time "1 min" nil #'discord-ipc-run "384815451978334208")
@@ -104,20 +104,6 @@
            :unless '(sp-point-before-word-p sp-point-before-same-p))
   (sp-pair "[" nil :post-handlers '(("| " " "))
            :unless '(sp-point-before-word-p sp-point-before-same-p)))
-
-;; (def-package! magithub
-;;   :after magit
-;;   :commands
-;;   (magithub-clone
-;;    magithub-completion-enable
-;;    magithub-feature-autoinject)
-;;   :config
-;;   (setq magithub-clone-default-directory "~/dev"
-;;         magithub-dir (concat doom-etc-dir "magithub/")))
-
-;; (after! magit
-;;   (magithub-feature-autoinject t)
-;;   (add-hook! 'magit-popup-mode-hook #'doom-hide-modeline-mode))
 
 
 (setq +doom-dashboard-pwd-policy 'last)
