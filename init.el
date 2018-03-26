@@ -57,6 +57,8 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
+       ebnf
+       racket
        assembly          ; assembly for fun or debugging
        cc                ; C/C++/Obj-C madness
        crystal           ; ruby at the speed of c
