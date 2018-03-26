@@ -130,8 +130,6 @@
 (setq show-paren-style 'expression
       show-paren-delay 0)
 
-(def-package-hook! solaire-mode :disable)  ;; this breaks our stuff
-
 (setq default-directory "~/dev/")
 
 (setq +rust-src-dir (concat (replace-regexp-in-string
