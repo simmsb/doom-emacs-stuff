@@ -34,7 +34,7 @@
        evil-goggles      ; display visual hints when editing in evil
        unicode           ; extended unicode support for various languages
       ;tabbar            ; FIXME an (incomplete) tab bar for Emacs
-       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+      ;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
       ;posframe          ; use child frames where possible (Emacs 26+ only)
 
@@ -159,13 +159,19 @@
          doom-big-font (font-spec :family "Fira Mono" :size 25))
 
     (def-package-hook! magit
-    :post-config
-    (require 'pretty-magit)
-    (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
-    (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
-    (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
-    t)))
+     :post-config
+     (require 'pretty-magit)
+     (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.0 :family "FontAwesome"))
+     (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.0 :family "FontAwesome"))
+     (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.0 :family "FontAwesome"))
+     (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.0 :family "FontAwesome"))
+     (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.0 :family "FontAwesome"))
+     (pretty-magit "master"  ? (:box nil :height 1.0 :family "github-octicons") t)
+     (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
+     t)))
+
+(def-package-hook! evil
+ :post-init
+ (setq evil-normal-state-cursor '(box "light blue")
+       evil-insert-state-cursor '(bar "medium sea green")
+       evil-visual-state-cursor '(hollow "orange")))
