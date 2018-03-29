@@ -147,6 +147,9 @@
   (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer)
   nil)
 
+(add-to-list 'exec-path "/home/ben/.local/bin/")
+(add-to-list 'exec-path "/home/ben/.cargo/bin/")
+
 (pcase (system-name)
   ("laptop"
    (toggle-frame-maximized)
@@ -154,8 +157,6 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
-   (add-to-list 'exec-path "/home/ben/.local/bin/")
-   (add-to-list 'exec-path "/home/ben/.cargo/bin/")
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19)
          doom-unicode-font (font-spec :family "Fira Mono")
