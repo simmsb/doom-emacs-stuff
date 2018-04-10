@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: uml-class
+# key: uml-class
+# --
+class ${1:name} {
+$0
+}

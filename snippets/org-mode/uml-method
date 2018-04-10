@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: uml-method
+# key: uml-method
+# --
+{method} $0
