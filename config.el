@@ -5,6 +5,7 @@
 (def-package! elpy)
 (def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
+(def-package! disable-mouse)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
@@ -118,5 +119,9 @@
 
 (after! evil-multiedit
   (evil-multiedit-default-keybinds))
+
+(if ON-LAPTOP
+  (after! disable-mouse
+    (global-disable-mouse-mode)))
 
 (add-hook! after-init #'clipmon-mode-start)
