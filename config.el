@@ -118,3 +118,5 @@
 
 (after! evil-multiedit
   (evil-multiedit-default-keybinds))
+
+(add-hook! after-init #'clipmon-mode-start)
