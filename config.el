@@ -26,15 +26,7 @@
         company-quickhelp-mode 1
         company-quickhelp-delay 0.2
         company-transformers '(company-sort-by-statistics))
-  (global-company-mode)
-  (set! :company-backend '(org-mode) '(company-files
-                                       company-yasnippet
-                                       company-dabbrev))
-  (set! :company-backend '(rust-mode) '(company-racer
-                                        company-yasnippet))
-  (set! :company-backend '(python-mode) '(elpy-company-backend company-yasnippet))
-  (set! :company-backend '(haskell-mode) '(company-intero company-yasnippet))
-  )
+  (global-company-mode))
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))

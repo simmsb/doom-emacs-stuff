@@ -4,6 +4,7 @@
 (package! color-theme-sanityinc-tomorrow)
 (package! rainbow-identifiers)
 (package! solaire-mode :disable t)
+;(package! ivy-posframe :disable t)
 (package! company)
 (package! company-quickhelp)
 (package! graphviz-dot-mode)
