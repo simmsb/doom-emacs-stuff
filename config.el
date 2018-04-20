@@ -26,15 +26,14 @@
         company-quickhelp-mode 1
         company-quickhelp-delay 0.2
         company-transformers '(company-sort-by-statistics))
-  (global-company-mode))
+  (global-company-mode)
+  (set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev)))
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
 
 (setq doom-line-numbers-style nil)
 (setq doom-theme nil)
-
-;;(set! :company-backend 'python-mode '(company-yasnippet))
 
 (if ON-LAPTOP
     (after! color-theme-sanityinc-tomorrow
