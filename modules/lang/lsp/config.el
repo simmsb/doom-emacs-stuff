@@ -34,8 +34,9 @@
                   (no-special-glyphs . t)))
   :config
   (setq lsp-ui-sideline-enable nil
+        lsp-ui-flycheck-enable t
         lsp-enable-completion-at-point t
-        lsp-ui-doc-position 'at-point
+        lsp-ui-doc-position 'top
         lsp-ui-doc-header t
         lsp-ui-doc-enable t
         lsp-ui-doc-include-signature t
@@ -44,8 +45,6 @@
         lsp-ui-doc-border (doom-color 'fg))
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-  (with-eval-after-load "lsp-mode"
-    (setq lsp-ui-flycheck-enable t))
   ;; (map! :map lsp-ui-mode-map
   ;;      [remap xref-find-definitions] . lsp-ui-peek-find-definitions
   ;;      [remap xref-find-references] . lsp-ui-peek-find-references)
@@ -56,7 +55,7 @@
 (def-package! company-lsp
   :after lsp-mode
   :config
-  (set! :company-backend lsp-mode 'company-lsp)
+  ;(set! :company-backend lsp-mode '(company-lsp company-capf))
   (setq company-lsp-async t)
   (setq company-lsp-enable-snippet t))
 
@@ -65,18 +64,20 @@
   :commands (lsp-python-enable)
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
-  (set! :company-backend '(python-mode) '(company-lsp company-yasnippet))
+  (set! :company-backend python-mode '(company-lsp company-yasnippet))
   (set! :lookup 'python-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
   :hook
   (python-mode . lsp-python-enable))
 
+(def-package! hindent
+  :hook (haskell-mode . hindent-mode))
 
 (def-package! lsp-haskell
   :commands (lsp-haskell-enable)
   :config
-  (set! :company-backend '(haskell-mode) '(company-lsp company-yasnippet))
+  (set! :company-backend haskell-mode '(company-lsp company-yasnippet))
   (set! :lookup 'haskell-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
@@ -88,7 +89,7 @@
   :commands (lsp-rust-enable)
   :config
   (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-  (set! :company-backend '(rust-mode) '(company-lsp company-yasnippet))
+  (set! :company-backend rust-mode '(company-lsp company-yasnippet))
   (set! :lookup 'rust-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)

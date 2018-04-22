@@ -5,3 +5,5 @@
 (package! lsp-rust)
 (package! lsp-python)
 (package! lsp-haskell)
+
+(package! hindent)
