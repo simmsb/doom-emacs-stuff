@@ -1,4 +1,4 @@
-;;; private/racket/config.el -*- lexical-binding: t; -*-
+;;; lang/racket/config.el -*- lexical-binding: t; -*-
 
-(def-package! hy-mode
+(def-package! racket-mode
    :mode "\\.rkt$")

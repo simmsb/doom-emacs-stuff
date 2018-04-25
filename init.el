@@ -58,6 +58,7 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
+       guile
        lsp
        ebnf
        racket
