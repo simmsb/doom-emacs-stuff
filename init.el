@@ -58,10 +58,9 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
-       guile
        lsp
        ebnf
-       racket
+       geiser
        assembly          ; assembly for fun or debugging
        cc                ; C/C++/Obj-C madness
        ;crystal           ; ruby at the speed of c
