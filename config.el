@@ -116,3 +116,9 @@
     (global-disable-mouse-mode)))
 
 (add-hook! after-init #'clipmon-mode-start)
+
+
+(setq
+ geiser-mode-eval-last-sexp-to-buffer t
+ geiser-mode-eval-to-buffer-prefix " ;=> "
+ geiser-mode-start-repl-p t)
