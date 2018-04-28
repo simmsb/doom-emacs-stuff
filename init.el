@@ -176,12 +176,9 @@
    ;  t)
     ))
 
-(def-package-hook! evil-mode
- :post-init
- (setq evil-normal-state-cursor '(box "light blue")
-       evil-insert-state-cursor '(bar "medium sea green")
-       evil-visual-state-cursor '(hollow "orange"))
- t)
+(setq evil-normal-state-cursor '(box "light blue")
+      evil-insert-state-cursor '(bar "medium sea green")
+      evil-visual-state-cursor '(hollow "orange"))
 
 (setq projectile-require-project-root t)
 (fset 'evil-visual-update-x-selection 'ignore)
