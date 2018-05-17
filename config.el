@@ -35,11 +35,11 @@
 (setq doom-line-numbers-style nil)
 (setq doom-theme nil)
 
-(if ON-LAPTOP
-    (after! color-theme-sanityinc-tomorrow
-      (color-theme-sanityinc-tomorrow-eighties))
-  (after! color-theme-sanityinc-tomorrow
-      (color-theme-sanityinc-tomorrow-night)))
+;; (if ON-LAPTOP
+;;     (after! color-theme-sanityinc-tomorrow
+;;       (color-theme-sanityinc-tomorrow-eighties))
+;;   (after! color-theme-sanityinc-tomorrow
+;;       (color-theme-sanityinc-tomorrow-night)))
 
 ; hip shit
 (setq doom-neotree-file-icons t)
@@ -69,11 +69,11 @@
      (dot . t)
      (ditaa . t))))
 
-;; There's something that borks my theme when loading a frame, so forcibly reload the theme
+; There's something that borks my theme when loading a frame, so forcibly reload the theme
 (add-hook! doom-init-ui
   (if ON-LAPTOP
-      (load-theme 'sanityinc-tomorrow-eighties)
-      (load-theme 'sanityinc-tomorrow-night)))
+      (load-theme 'sanityinc-tomorrow-eighties t)
+      (load-theme 'sanityinc-tomorrow-night t)))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 

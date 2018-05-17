@@ -128,6 +128,8 @@
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
+(setq custom-safe-themes t)
+
 (add-hook! text-mode
   #'auto-save-mode)
 
