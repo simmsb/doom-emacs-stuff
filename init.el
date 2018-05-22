@@ -187,3 +187,6 @@
 
 (setq projectile-require-project-root t)
 (fset 'evil-visual-update-x-selection 'ignore)
+
+;; our custom file isn't being loaded for whatever reason?
+(load custom-file)

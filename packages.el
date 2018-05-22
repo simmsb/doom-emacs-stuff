@@ -28,3 +28,4 @@
 	   :files ("*")))
 (package! disable-mouse)
 (package! clipmon)
+(package! clang-format)

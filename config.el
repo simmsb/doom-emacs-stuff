@@ -6,6 +6,7 @@
 (def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
 (def-package! disable-mouse)
+(def-package! clang-format)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
