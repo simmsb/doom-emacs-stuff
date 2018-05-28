@@ -146,12 +146,12 @@
                              (shell-command-to-string "rustc --print sysroot"))
                             "/lib/rustlib/src"))
 
-(def-package-hook! anaconda-mode
-  :pre-config
-  (set! :popup "*anaconda-mode*" :size 10 :noselect t :autoclose t :autokill t)
-  (map! :map anaconda-mode-map :m "gd" #'anaconda-mode-find-definitions)
-  (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer)
-  nil)
+;; (def-package-hook! anaconda-mode
+;;   :pre-config
+;;   (set! :popup "*anaconda-mode*" :size 10 :noselect t :autoclose t :autokill t)
+;;   (map! :map anaconda-mode-map :m "gd" #'anaconda-mode-find-definitions)
+;;   (advice-add #'anaconda-mode-doc-buffer :after #'doom*anaconda-mode-doc-buffer)
+;;   nil)
 
 (add-to-list 'exec-path "/home/ben/.local/bin/")
 (add-to-list 'exec-path "/home/ben/.cargo/bin/")
