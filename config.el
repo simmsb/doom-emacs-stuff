@@ -24,7 +24,8 @@
 
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line
- "<backspace>" #'doom/backward-delete-whitespace-to-column)
+ ;"<backspace>" #'doom/backward-delete-whitespace-to-column
+ )
 
 (def-package! elpy)
 (def-package! color-theme-sanityinc-tomorrow)
