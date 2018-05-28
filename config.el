@@ -1,6 +1,27 @@
 ;;; private/ben/config.el -*- lexical-binding: t; -*-
 
-(load! +bindings)
+
+;; bindings
+
+(map!
+ (:after neotree
+   :map neotree-mode-map
+   :n "|" #'neotree-enter-vertical-split
+   :n "_" #'neotree-enter-horizontal-split)
+
+ (:leader
+   (:desc "file" :prefix "f"
+     :desc "Neotree" :n "t" #'+neotree/open))
+
+ (:map evil-window-map
+   "<left>"     #'evil-window-left
+   "<right>"    #'evil-window-right
+   "<up>"       #'evil-window-up
+   "<down>"     #'evil-window-down)
+
+ "<home>" #'back-to-indentation-or-beginning
+ "<end>" #'end-of-line
+ "<backspace>" #'doom/backward-delete-whitespace-to-column)
 
 (def-package! elpy)
 (def-package! color-theme-sanityinc-tomorrow)
@@ -43,7 +64,9 @@
 ;;       (color-theme-sanityinc-tomorrow-night)))
 
 ; hip shit
-(setq doom-neotree-file-icons t)
+(after! neotree
+  (setq doom-neotree-file-icons t
+        neo-theme 'icons))
 
 (after! company-quickhelp
   (company-quickhelp-mode 1))
@@ -81,6 +104,8 @@
 (add-hook! prog-mode
   (doom|enable-delete-trailing-whitespace))
 
+(add-hook! after-init #'clipmon-mode-start)
+
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
@@ -116,8 +141,13 @@
   (after! disable-mouse
     (global-disable-mouse-mode)))
 
-(add-hook! after-init #'clipmon-mode-start)
 
+(setq evil-normal-state-cursor '(box "light blue")
+      evil-insert-state-cursor '(bar "medium sea green")
+      evil-visual-state-cursor '(hollow "orange"))
+
+(setq projectile-require-project-root t)
+(fset 'evil-visual-update-x-selection 'ignore)
 
 (setq
  geiser-mode-eval-last-sexp-to-buffer t
