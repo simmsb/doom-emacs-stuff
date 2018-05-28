@@ -19,6 +19,9 @@
    "<up>"       #'evil-window-up
    "<down>"     #'evil-window-down)
 
+ (:map evil-motion-state-map
+   "/" #'counsel-grep-or-swiper)
+
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line
  "<backspace>" #'doom/backward-delete-whitespace-to-column)
@@ -28,6 +31,7 @@
 (def-package! rainbow-identifiers)
 (def-package! disable-mouse)
 (def-package! clang-format)
+(def-package! popup-kill-ring)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 

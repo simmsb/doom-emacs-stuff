@@ -156,6 +156,9 @@
 (add-to-list 'exec-path "/home/ben/.local/bin/")
 (add-to-list 'exec-path "/home/ben/.cargo/bin/")
 
+(setq explicit-shell-file-name "/bin/bash"
+      shell-file-name "/bin/bash")
+
 (pcase (system-name)
   ("laptop"
    (toggle-frame-maximized)

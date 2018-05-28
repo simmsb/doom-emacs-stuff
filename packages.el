@@ -29,3 +29,4 @@
 (package! disable-mouse)
 (package! clipmon)
 (package! clang-format)
+(package! popup-kill-ring)
