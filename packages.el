@@ -22,10 +22,6 @@
 (package! py-isort)
 (package! evil-multiedit)
 ;;(package! pipenv)
-(package! emacs-snippets
-  :recipe (:fetcher github
-	   :repo "hlissner/emacs-snippets"
-	   :files ("*")))
 (package! disable-mouse)
 (package! clipmon)
 (package! clang-format)
