@@ -1,0 +1,3 @@
+[submodule "emacs-doom-themes"]
+	path = emacs-doom-themes
+	url = https://github.com/nitros12/emacs-doom-themes.git

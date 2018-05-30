@@ -20,7 +20,7 @@
    "<down>"     #'evil-window-down)
 
  (:map evil-motion-state-map
-   "/" #'counsel-grep-or-swiper)
+   "?" #'counsel-grep-or-swiper)
 
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line
@@ -28,7 +28,7 @@
  )
 
 (def-package! elpy)
-(def-package! color-theme-sanityinc-tomorrow)
+;(def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
 (def-package! disable-mouse)
 (def-package! clang-format)
@@ -60,13 +60,10 @@
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
 
 (setq doom-line-numbers-style nil)
-(setq doom-theme nil)
 
-;; (if ON-LAPTOP
-;;     (after! color-theme-sanityinc-tomorrow
-;;       (color-theme-sanityinc-tomorrow-eighties))
-;;   (after! color-theme-sanityinc-tomorrow
-;;       (color-theme-sanityinc-tomorrow-night)))
+(if ON-LAPTOP
+    (setq doom-theme 'doom-tomorrow-night-eighties)
+    (setq doom-theme 'doom-tomorrow-night))
 
 ; hip shit
 (after! neotree
@@ -97,12 +94,6 @@
      (python . t)
      (dot . t)
      (ditaa . t))))
-
-; There's something that borks my theme when loading a frame, so forcibly reload the theme
-(add-hook! doom-init-ui
-  (if ON-LAPTOP
-      (load-theme 'sanityinc-tomorrow-eighties t)
-      (load-theme 'sanityinc-tomorrow-night t)))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 

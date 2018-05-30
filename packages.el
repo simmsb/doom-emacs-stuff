@@ -1,9 +1,9 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(package! color-theme-sanityinc-tomorrow)
+;(package! color-theme-sanityinc-tomorrow)
 (package! rainbow-identifiers)
-(package! solaire-mode :disable t)
+;(package! solaire-mode :disable t)
 ;(package! ivy-posframe :disable t)
 (package! company)
 (package! company-quickhelp)

@@ -8,7 +8,6 @@
        (lookup           ; helps you navigate your code and documentation
         +devdocs         ; ...on devdocs.io online
         +docsets)        ; ...or in Dash docsets locally
-       services          ; TODO managing external services & code builders
        snippets          ; my elves. They type so I don't have to
        spellcheck        ; tasing you for misspelling mispelling
        (syntax-checker
@@ -20,7 +19,7 @@
        (company
          +auto
          +childframe)    ; the ultimate code completion backend
-       ivy               ; a search engine for love and life
+       (ivy +fuzzy)      ; a search engine for love and life
       ;helm              ; the *other* search engine for love and life
       ;ido               ; the other *other* search engine...
 
@@ -40,22 +39,24 @@
       ;tabbar            ; FIXME an (incomplete) tab bar for Emacs
       ;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
-       posframe          ; use child frames where possible (Emacs 26+ only)
 
-       :tools
+       :emacs
        dired             ; making dired pretty [functional]
        electric-indent   ; smarter, keyword-based electric-indent
+       ediff
        eshell            ; a consistent, cross-platform shell (WIP)
-       gist              ; interacting with github gists
        imenu             ; an imenu sidebar and searchable code index
+       term              ; terminals in Emacs
+
+       :tools
       ;macos             ; MacOS-specific commands
        make              ; run make tasks from Emacs
        magit
+       gist              ; interacting with github gists
        password-store    ; password manager for nerds
        pdf               ; pdf enhancements
        rgb
        rotate-text       ; cycle region at point between text candidates
-       term              ; terminals in Emacs
        ;tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
 
@@ -183,6 +184,3 @@
    ;  (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
    ;  t)
     ))
-
-;; our custom file isn't being loaded for whatever reason?
-(load custom-file)
