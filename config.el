@@ -54,7 +54,12 @@
         company-quickhelp-delay 0.2
         company-transformers '(company-sort-by-statistics))
   (global-company-mode)
-  (set! :company-backend '(org-mode) '(company-files company-yasnippet company-dabbrev)))
+  (set! :company-backend
+    '(org-mode markdown-mode)
+    '(company-files
+      company-yasnippet
+      company-dabbrev
+      company-math-symbols-unicode)))
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
