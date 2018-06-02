@@ -154,3 +154,7 @@
  geiser-mode-eval-last-sexp-to-buffer t
  geiser-mode-eval-to-buffer-prefix " ;=> "
  geiser-mode-start-repl-p t)
+
+(after! flx
+  (push '(swiper . ivy--regex-plus)
+        ivy-re-builders-alist))

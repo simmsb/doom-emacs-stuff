@@ -1,3 +1,4 @@
+;; -*- no-byte-compile: t; -*-
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :feature
