@@ -105,8 +105,6 @@
 (add-hook! prog-mode
   (doom|enable-delete-trailing-whitespace))
 
-(add-hook! after-init #'clipmon-mode-start)
-
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)

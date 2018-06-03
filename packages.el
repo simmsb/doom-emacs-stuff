@@ -23,7 +23,6 @@
 (package! evil-multiedit)
 ;;(package! pipenv)
 (package! disable-mouse)
-(package! clipmon)
 (package! clang-format)
 (package! popup-kill-ring)
 (package! company-math)
