@@ -62,6 +62,7 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
+       sourcepawn
        lsp
        ebnf
        geiser
@@ -74,7 +75,7 @@
        elixir            ; erlang done right
        ;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
-       ess               ; emacs speaks statistics
+       ;ess               ; emacs speaks statistics
        ;go                ; the hipster dialect
        haskell ; a language that's lazier than I am
        hy                ; readability of scheme w/ speed of python

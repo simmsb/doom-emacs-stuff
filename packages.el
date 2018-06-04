@@ -26,3 +26,4 @@
 (package! clang-format)
 (package! popup-kill-ring)
 (package! company-math)
+(package! company-statistics)
