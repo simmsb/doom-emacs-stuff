@@ -142,7 +142,8 @@
 (setq show-paren-style 'mixed
       show-paren-delay 0)
 
-(setq default-directory "~/dev/")
+(setq default-directory "~/dev/"
+      default-tab-width 4)
 
 (setq +rust-src-dir (concat (replace-regexp-in-string
                              "\n\\'" ""

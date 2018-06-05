@@ -51,8 +51,7 @@
   (setq company-idle-delay 0.2
         company-minimum-prefix-length 2
         company-quickhelp-mode 1
-        company-quickhelp-delay 0.2
-        company-transformers '(company-sort-by-statistics))
+        company-quickhelp-delay 0.2)
   (global-company-mode)
   (set! :company-backend
     '(org-mode markdown-mode)
