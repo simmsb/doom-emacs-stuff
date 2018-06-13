@@ -50,6 +50,7 @@
        term              ; terminals in Emacs
 
        :tools
+       wakatime
       ;macos             ; MacOS-specific commands
        make              ; run make tasks from Emacs
        magit
@@ -67,7 +68,7 @@
        ebnf
        geiser
        assembly          ; assembly for fun or debugging
-       cc                ; C/C++/Obj-C madness
+       (cc +irony)                ; C/C++/Obj-C madness
        ;crystal           ; ruby at the speed of c
        ;clojure           ; java with a lisp
        ;csharp            ; unity, .NET, and mono shenanigans
@@ -131,6 +132,7 @@
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
+(setq company-box-enable-icon nil)
 (setq custom-safe-themes t)
 
 (add-hook! text-mode
@@ -187,3 +189,6 @@
    ;  (pretty-magit "origin"  ? (:box nil :height 1.0 :family "github-octicons") t)
    ;  t)
     ))
+
+;; we still need this apparently
+(load custom-file)

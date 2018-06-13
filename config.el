@@ -23,12 +23,9 @@
    "?" #'counsel-grep-or-swiper)
 
  "<home>" #'back-to-indentation-or-beginning
- "<end>" #'end-of-line
- ;"<backspace>" #'doom/backward-delete-whitespace-to-column
- )
+ "<end>" #'end-of-line)
 
 (def-package! elpy)
-;(def-package! color-theme-sanityinc-tomorrow)
 (def-package! rainbow-identifiers)
 (def-package! disable-mouse)
 (def-package! clang-format)
@@ -42,10 +39,7 @@
       (def-package! discord-emacs)
       (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
       (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
-      (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")
-      (def-package! wakatime-mode)
-      (after! wakatime-mode
-        (global-wakatime-mode))))
+      (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
 (after! company
   (setq company-idle-delay 0.2

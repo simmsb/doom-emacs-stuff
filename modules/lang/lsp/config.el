@@ -1,6 +1,8 @@
 (def-package! lsp-mode
   :commands (lsp-mode)
   :config
+  (require 'lsp-imenu)
+  (add-hook! lsp-after-open 'lsp-enable-imenu)
   (setq lsp-enable-xref t
         lsp-enable-indentation t
         lsp-enable-eldoc t
@@ -42,6 +44,7 @@
         lsp-ui-doc-include-signature t
         lsp-ui-sideline-show-flycheck t
         lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-ignore-duplicate t
         lsp-ui-doc-border (doom-color 'fg))
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
