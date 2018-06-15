@@ -50,7 +50,6 @@
        term              ; terminals in Emacs
 
        :tools
-       wakatime
       ;macos             ; MacOS-specific commands
        make              ; run make tasks from Emacs
        magit
@@ -172,6 +171,8 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
+   (doom! :tools
+          wakatime)
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19)
          doom-unicode-font (font-spec :family "Fira Mono")
