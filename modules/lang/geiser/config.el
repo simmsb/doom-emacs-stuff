@@ -4,7 +4,7 @@
   :commands geiser-mode geiser-company-backend
   :config
   (setq geiser-active-implementations '(racket chez))
-  (set! :company-backend 'geiser-mode '(geiser-company-backend))
+  (set-company-backend! 'geiser-mode '(geiser-company-backend))
   :hook
   ((scheme-mode racket-mode) . geiser-mode))
 
