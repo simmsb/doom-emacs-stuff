@@ -67,8 +67,8 @@
   :commands (lsp-python-enable)
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
-  (set! :company-backend 'python-mode '(company-lsp company-yasnippet))
-  (set! :lookup 'python-mode
+  (set-company-backend! 'python-mode '(company-lsp company-yasnippet))
+  (set-lookup-handlers! 'python-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
   :hook
@@ -80,8 +80,8 @@
 (def-package! lsp-haskell
   :commands (lsp-haskell-enable)
   :config
-  (set! :company-backend 'haskell-mode '(company-lsp company-yasnippet))
-  (set! :lookup 'haskell-mode
+  (set-company-backend! 'haskell-mode '(company-lsp company-yasnippet))
+  (set-lookup-handlers! 'haskell-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
   :hook
@@ -92,8 +92,8 @@
   :commands (lsp-rust-enable)
   :config
   (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-  (set! :company-backend 'rust-mode '(company-lsp company-yasnippet))
-  (set! :lookup 'rust-mode
+  (set-company-backend! 'rust-mode '(company-lsp company-yasnippet))
+  (set-lookup-handlers! 'rust-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
   :hook
@@ -106,7 +106,7 @@
 ;;              lsp-clangd-objc-enable)
 ;;   :config
 ;;   (set! :company-backend '(c-mode c++-mode objc-mode) '(company-lsp company-yasnippet))
-;;   (set! :lookup '(c-mode c++-mode objc-mode)
+;;   (set-lookup-handlers! '(c-mode c++-mode objc-mode)
 ;;     :definition #'lsp-ui-peek-find-definitions
 ;;     :references #'lsp-ui-peek-find-references)
 ;;   :hook

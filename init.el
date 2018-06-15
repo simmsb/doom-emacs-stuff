@@ -43,7 +43,7 @@
 
        :emacs
        dired             ; making dired pretty [functional]
-       electric-indent   ; smarter, keyword-based electric-indent
+       electric          ; smarter, keyword-based electric-indent
        ediff
        eshell            ; a consistent, cross-platform shell (WIP)
        imenu             ; an imenu sidebar and searchable code index
