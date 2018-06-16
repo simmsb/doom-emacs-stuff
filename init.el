@@ -171,8 +171,6 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
-   (doom! :tools
-          wakatime)
    (setq doom-font (font-spec :family "Fira Mono"
                               :size 19)
          doom-unicode-font (font-spec :family "Fira Mono")
@@ -193,4 +191,4 @@
 
 ;; we still need this apparently
 (setq custom-file (concat doom-etc-dir "custom.el"))
-(load custom-file)
+;; (load custom-file)
