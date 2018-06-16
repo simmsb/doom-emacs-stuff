@@ -191,4 +191,5 @@
     ))
 
 ;; we still need this apparently
+(setq custom-file (concat doom-etc-dir "custom.el"))
 (load custom-file)
