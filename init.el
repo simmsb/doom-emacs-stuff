@@ -13,8 +13,10 @@
        spellcheck        ; tasing you for misspelling mispelling
        (syntax-checker
          +childframe); tasing you for every semicolon you forget
-       version-control   ; remember, remember that commit in November
        workspaces        ; tab emulation, persistence & separate workspaces
+
+       :editor
+       rotate-text       ; cycle region at point between text candidates
 
        :completion
        (company
@@ -25,6 +27,7 @@
       ;ido               ; the other *other* search engine...
 
        :ui
+       vc-gutter
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
@@ -43,6 +46,7 @@
        window-select     ; visually switch windows
 
        :emacs
+       vc                ; remember, remember that commit in November
        dired             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        ediff
@@ -58,7 +62,6 @@
        password-store    ; password manager for nerds
        pdf               ; pdf enhancements
        rgb
-       rotate-text       ; cycle region at point between text candidates
        ;tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
 
