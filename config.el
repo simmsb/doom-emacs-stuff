@@ -95,8 +95,7 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-(add-hook! prog-mode
-  (doom|enable-delete-trailing-whitespace))
+(add-hook! before-save #'delete-trailing-whitespace)
 
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
