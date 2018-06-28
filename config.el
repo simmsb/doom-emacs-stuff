@@ -145,6 +145,7 @@
  geiser-mode-eval-to-buffer-prefix " ;=> "
  geiser-mode-start-repl-p t)
 
-(after! flx
-  (push '(swiper . ivy--regex-plus)
-        ivy-re-builders-alist))
+
+;; persisit history
+(setq undo-tree-auto-save-history t
+      undo-tree-history-directory-alist `(("." . ,(concat doom-emacs-dir "undo"))))

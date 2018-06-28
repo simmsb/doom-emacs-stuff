@@ -100,16 +100,17 @@
   (rust-mode . lsp-rust-enable))
 
 
-;; (def-package! lsp-clangd
-;;   :commands (lsp-clangd-c-enable
-;;              lsp-clangd-c++-enable
-;;              lsp-clangd-objc-enable)
-;;   :config
-;;   (set! :company-backend '(c-mode c++-mode objc-mode) '(company-lsp company-yasnippet))
-;;   (set-lookup-handlers! '(c-mode c++-mode objc-mode)
-;;     :definition #'lsp-ui-peek-find-definitions
-;;     :references #'lsp-ui-peek-find-references)
-;;   :hook
-;;   ((c-mode . lsp-clangd-c-enable)
-;;    (c++-mode . lsp-clangd-c++-enable)
-;;    (objc-mode . lsp-clangd-objc-enable)))
+;; (def-package! cquery
+;;   :commands (lsp-cquery-enable)
+;;   :init
+;;   (setq cquery-extra-init-params '(:index (:comments 2)
+;;                                           :cacheFormat "msgpack"
+;;                                           :completion (:detailedLabel t))
+;;         cquery-sem-highlight-method 'overlay) ;; set to 'font-lock if highlighting slowly
+;;   (defun +setup-cquery ()
+;;     (setq-local company-transformers nil)
+;;     (setq-local company-lsp-cache-candidates nil)
+;;     (condition-case nil
+;;         (lsp-cquery-enable)
+;;       (user-error nil)))
+;;   :hook ((c-mode c++-mode objc-mode) . +setup-cquery))
