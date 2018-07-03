@@ -81,8 +81,8 @@
   (elpy-enable))
 
 (after! flycheck
-  (add-hook 'python-mode-hook #'(lambda () (setq flycheck-checker 'python-pylint
-                                            flycheck-pylintrc "~/.pylintrc")))
+;  (add-hook 'python-mode-hook #'(lambda () (setq flycheck-checker 'python-pylint
+;                                            flycheck-pylintrc "~/.pylintrc")))
   (global-flycheck-mode))
 
 (after! org
