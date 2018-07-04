@@ -30,6 +30,12 @@
 (def-package! disable-mouse)
 (def-package! clang-format)
 (def-package! popup-kill-ring)
+(def-package! elixir-yasnippets)
+(def-package! transpose-frame)
+
+(def-package! flycheck-credo
+  :commands flycheck-credo-setup
+  :hook (elixir-mode . flycheck-credo-setup))
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 

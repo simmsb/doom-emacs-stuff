@@ -26,3 +26,6 @@
 (package! popup-kill-ring)
 (package! company-math)
 (package! anaconda-mode :disable t)
+(package! flycheck-credo)
+(package! elixir-yasnippets)
+(package! transpose-frame)
