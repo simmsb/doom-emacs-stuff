@@ -146,12 +146,20 @@
 (setq projectile-require-project-root t)
 (fset 'evil-visual-update-x-selection 'ignore)
 
-(setq
- geiser-mode-eval-last-sexp-to-buffer t
- geiser-mode-eval-to-buffer-prefix " ;=> "
- geiser-mode-start-repl-p t)
+(setq geiser-mode-eval-last-sexp-to-buffer t
+      geiser-mode-eval-to-buffer-prefix " ;=> "
+      geiser-mode-start-repl-p t)
 
 
 ;; persisit history
 (setq undo-tree-auto-save-history t
       undo-tree-history-directory-alist `(("." . ,(concat doom-emacs-dir "undo"))))
+
+(setq posframe-mouse-banish nil)
+
+(set-pretty-symbols! 'python-mode
+  :lambda "lambda")
+
+(set-pretty-symbols! '(c-mode c++-mode))
+
+(setq +pretty-code-enabled-modes '(not +doom-dashboard-mode))

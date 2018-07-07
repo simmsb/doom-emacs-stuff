@@ -31,7 +31,8 @@
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
-      ;pretty-code       ; replace bits of code with pretty symbols
+       (pretty-code      ; replace bits of code with pretty symbols
+         +fira)
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-modeline     ; a snazzy Atom-inspired mode-line
@@ -174,4 +175,3 @@
 
 ;; we still need this apparently
 (setq custom-file (concat doom-etc-dir "custom.el"))
-;; (load custom-file)
