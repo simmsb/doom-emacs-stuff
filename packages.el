@@ -1,6 +1,10 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
+;; disabled
+(package! anaconda-mode :disable t)
+
+
 ;(package! color-theme-sanityinc-tomorrow)
 (package! rainbow-identifiers)
 ;(package! solaire-mode :disable t)
@@ -25,7 +29,7 @@
 (package! clang-format)
 (package! popup-kill-ring)
 (package! company-math)
-(package! anaconda-mode :disable t)
 (package! flycheck-credo)
 (package! elixir-yasnippets)
 (package! transpose-frame)
+(package! pipenv)

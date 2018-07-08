@@ -33,6 +33,13 @@
 (def-package! elixir-yasnippets)
 (def-package! transpose-frame)
 
+(use-package pipenv
+  :init
+  (setq
+   pipenv-projectile-after-switch-function
+   #'pipenv-projectile-after-switch-extended)
+  :hook (python-mode . pipenv-mode))
+
 (def-package! flycheck-credo
   :commands flycheck-credo-setup
   :hook (elixir-mode . flycheck-credo-setup))
@@ -53,7 +60,7 @@
         company-quickhelp-mode 1
         company-quickhelp-delay 0.2)
   (global-company-mode)
-  (set! :company-backend
+  (set-company-backend!
     '(org-mode markdown-mode)
     '(company-files
       company-yasnippet
@@ -157,10 +164,18 @@
 
 (setq posframe-mouse-banish nil)
 
-(set-pretty-symbols! 'python-mode
-  :lambda "lambda")
+(defun nuke-pretty-symbols (mode)
+  (setq +pretty-code-symbols-alist
+   (delq (assq mode +pretty-code-symbols-alist)
+              +pretty-code-symbols-alist)))
 
-(set-pretty-symbols! '(c-mode c++-mode))
+(add-hook! python-mode
+  (nuke-pretty-symbols 'python-mode)
+  (set-pretty-symbols! 'python-mode
+    :lambda "lambda"))
+
+(add-hook! c-mode
+  (nuke-pretty-symbols 'c-mode))
 
 (setq +pretty-code-enabled-modes '(python-mode
                                    rust-mode
