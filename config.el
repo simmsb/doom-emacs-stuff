@@ -176,15 +176,3 @@
 
 (add-hook! c-mode
   (nuke-pretty-symbols 'c-mode))
-
-(setq +pretty-code-enabled-modes '(python-mode
-                                   rust-mode
-                                   org-mode
-                                   hy-mode
-                                   emacs-lisp-mode
-                                   racket-mode
-                                   scheme-mode
-                                   c-mode
-                                   c++-mode
-                                   haskell-mode
-                                   elixir-mode))
