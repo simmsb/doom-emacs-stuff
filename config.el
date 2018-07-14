@@ -106,6 +106,8 @@
      (dot . t)
      (ditaa . t))))
 
+(setq org-log-done 'time)
+
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
 (add-hook! before-save #'delete-trailing-whitespace)

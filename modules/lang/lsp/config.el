@@ -100,6 +100,19 @@
   (rust-mode . lsp-rust-enable))
 
 
+;; (def-package! ccls
+;;   :commands (lsp-ccls-enable)
+;;   :init
+;;   (setq ccls-executable "/home/ben/dev/ccls/release/ccls"
+;;         ccls-extra-init-params '(:cacheFormat "msgpack"))
+;;   :config
+;;   (set-company-backend! '(c-mode c++-mode) '(company-lsp company-yasnippet))
+;;   (set-lookup-handlers! '(c-mode c++-mode)
+;;     :definition #'lsp-ui-peek-find-definitions
+;;     :references #'lsp-ui-peek-find-references)
+;;   :hook
+;;   ((c-mode c++-mode) . lsp-ccls-enable))
+
 ;; (def-package! cquery
 ;;   :commands (lsp-cquery-enable)
 ;;   :init

@@ -5,6 +5,7 @@
 (package! lsp-rust)
 (package! lsp-python)
 (package! lsp-haskell)
+(package! ccls)
 ;(package! cquery)
 
 (package! hindent)
