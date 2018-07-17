@@ -33,6 +33,15 @@
 (def-package! elixir-yasnippets)
 (def-package! transpose-frame)
 
+(def-package! org-gcal
+  :config
+  (setq org-gcal-client-id (password-store-get "google-api/calendar/oauth-client/client-id")
+        org-gcal-client-secret (password-store-get "google-api/calendar/oauth-client/client-secret")
+        org-gcal-file-alist '(("bsimms.simms@gmail.com" . "~/org/calendar.org"))))
+
+(add-hook! org-agenda-mode (org-gcal-sync))
+(add-hook! org-capture-after-finalize (org-gcal-sync))
+
 (use-package pipenv
   :init
   (setq
@@ -94,8 +103,6 @@
   (elpy-enable))
 
 (after! flycheck
-;  (add-hook 'python-mode-hook #'(lambda () (setq flycheck-checker 'python-pylint
-;                                            flycheck-pylintrc "~/.pylintrc")))
   (global-flycheck-mode))
 
 (after! org
@@ -106,7 +113,20 @@
      (dot . t)
      (ditaa . t))))
 
-(setq org-log-done 'time)
+(setq org-log-done 'time
+      +org-default-notes-file (concat org-directory "notes.org")
+      +org-default-todo-file (concat org-directory "todo.org")
+      +org-default-calendar-file (concat org-directory "calendar.org"))
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline +org-default-todo-file "Inbox")
+             "* [ ] %?\n%i" :prepend t :kill-buffer t)
+        ("n" "Notes" entry (file+headline +org-default-notes-file "Inbox")
+             "* %u %?\n%i" :prepend t :kill-buffer t)
+        ("c" "Calendar" entry (file +org-default-calendar-file)
+             "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")))
+
+(setq org-agenda-files (list +org-default-todo-file +org-default-calendar-file))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 

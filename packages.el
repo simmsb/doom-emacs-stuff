@@ -33,3 +33,4 @@
 (package! elixir-yasnippets)
 (package! transpose-frame)
 (package! pipenv)
+(package! org-gcal :recipe (:fetcher github :repo "kidd/org-gcal.el"))
