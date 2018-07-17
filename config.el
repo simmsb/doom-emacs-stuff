@@ -40,7 +40,6 @@
         org-gcal-file-alist '(("bsimms.simms@gmail.com" . "~/org/calendar.org"))))
 
 (add-hook! org-agenda-mode (org-gcal-sync))
-(add-hook! org-capture-after-finalize (org-gcal-sync))
 
 (use-package pipenv
   :init
@@ -124,7 +123,7 @@
         ("n" "Notes" entry (file+headline +org-default-notes-file "Inbox")
              "* %u %?\n%i" :prepend t :kill-buffer t)
         ("c" "Calendar" entry (file +org-default-calendar-file)
-             "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")))
+             "* %?\n%^T")))
 
 (setq org-agenda-files (list +org-default-todo-file +org-default-calendar-file))
 
