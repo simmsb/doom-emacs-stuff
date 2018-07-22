@@ -25,7 +25,7 @@
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
 
-(def-package! elpy)
+;; (def-package! elpy)
 (def-package! rainbow-identifiers)
 (def-package! disable-mouse)
 (def-package! clang-format)
@@ -63,17 +63,20 @@
       (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
 (after! company
-  (setq company-idle-delay 0.2
-        company-minimum-prefix-length 2
-        company-quickhelp-mode 1
-        company-quickhelp-delay 0.2)
-  (global-company-mode)
-  (set-company-backend!
-    '(org-mode markdown-mode)
-    '(company-files
-      company-yasnippet
-      company-dabbrev
-      company-math-symbols-unicode)))
+  (setq company-idle-delay 0.1
+        company-minimum-prefix-length 3
+        company-quickhelp-mode t
+        company-quickhelp-delay 0.4
+        company-backends '((company-files
+                            company-yasnippet
+                            company-keywords
+                            company-capf)
+                           (company-abbrev
+                            company-dabbrev)
+                           +company/whole-lines
+                           company-math-symbols-unicode))
+
+  (global-company-mode))
 
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
@@ -92,14 +95,14 @@
 (after! company-quickhelp
   (company-quickhelp-mode 1))
 
-(after! elpy
-  (setq elpy-syntax-check-command "epylint"
-        elpy-modules '(elpy-module-company
-                       elpy-module-eldoc
-                       elpy-module-pyvenv
-                       elpy-module-yasnippet
-                       elpy-module-sane-defaults))
-  (elpy-enable))
+;; (after! elpy
+;;   (setq elpy-syntax-check-command "epylint"
+;;         elpy-modules '(elpy-module-company
+;;                        elpy-module-eldoc
+;;                        elpy-module-pyvenv
+;;                        elpy-module-yasnippet
+;;                        elpy-module-sane-defaults))
+;;   (elpy-enable))
 
 (after! flycheck
   (global-flycheck-mode))
@@ -131,14 +134,44 @@
 
 (add-hook! before-save #'delete-trailing-whitespace)
 
+;; (defun sp-point-after-word-excepted (&rest words)
+;;   "Return t if point is after a word, nil if otherwise or previous word is in the excepted list
+;; This predicate is only tested on \"insert\" action."
+;;   (let ((match-exp (format "(%s)\\Sw" (string-join words "|"))))
+;;     (lambda (id action context)
+;;       (when (eq action 'insert)
+;;         (and (not (save-excursion
+;;                     (backward-word)
+;;                     (let ((r (looking-at match-exp)))
+;;                       (message (format-message "matched? %s" r))
+;;                       r)))
+;;             (save-excursion
+;;               (backward-char 1)
+;;               (looking-back "\\sw\\|\\s_")))))))
+
+(defun sp-point-after-quote-p (id action context)
+  "Pls."
+  (when (eq action 'insert)
+    (save-excursion
+      (backward-char 1)
+      (looking-back "\"|'"))))
+
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
   (sp-local-pair 'org-mode "\\[" "\\]")
 
+  ;; ;; This lets us have f"" and b"" etc in python
+  ;; (let ((unless-list `(sp-point-before-word-p
+  ;;                      ,(sp-point-after-word-excepted "f" "r" "b")
+  ;;                      sp-point-before-same-p)))
+  ;;   (sp-local-pair 'python-mode "'" nil :unless unless-list)
+  ;;   (sp-local-pair 'python-mode "\"" nil :unless unless-list))
+
   (let ((unless-list '(sp-point-before-word-p
                        sp-point-after-word-p
-                       sp-point-before-same-p)))
+                       sp-point-before-same-p
+                       sp-point-after-quote-p)))
     (sp-pair "'"  nil :unless unless-list)
     (sp-pair "\"" nil :unless unless-list))
   (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))

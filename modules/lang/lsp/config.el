@@ -67,7 +67,7 @@
   :commands (lsp-python-enable)
   :config
   (setq python-indent-guess-indent-offset-verbose nil)
-  (set-company-backend! 'python-mode '(company-lsp company-yasnippet))
+  (set-company-backend! 'python-mode 'company-lsp)
   (set-lookup-handlers! 'python-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
@@ -80,7 +80,7 @@
 (def-package! lsp-haskell
   :commands (lsp-haskell-enable)
   :config
-  (set-company-backend! 'haskell-mode '(company-lsp company-yasnippet))
+  (set-company-backend! 'haskell-mode 'company-lsp)
   (set-lookup-handlers! 'haskell-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
@@ -92,7 +92,7 @@
   :commands (lsp-rust-enable)
   :config
   (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-  (set-company-backend! 'rust-mode '(company-lsp company-yasnippet))
+  (set-company-backend! 'rust-mode 'company-lsp)
   (set-lookup-handlers! 'rust-mode
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
@@ -106,7 +106,7 @@
 ;;   (setq ccls-executable "/home/ben/dev/ccls/release/ccls"
 ;;         ccls-extra-init-params '(:cacheFormat "msgpack"))
 ;;   :config
-;;   (set-company-backend! '(c-mode c++-mode) '(company-lsp company-yasnippet))
+;;   (set-company-backend! '(c-mode c++-mode) 'company-lsp)
 ;;   (set-lookup-handlers! '(c-mode c++-mode)
 ;;     :definition #'lsp-ui-peek-find-definitions
 ;;     :references #'lsp-ui-peek-find-references)

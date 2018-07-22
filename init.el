@@ -146,7 +146,8 @@
 
 (fringe-mode 8)
 (setq doom-fringe-size 8)
-(show-paren-mode 1)
+(show-paren-mode t)
+(show-smartparens-global-mode)
 (setq show-paren-style 'mixed
       show-paren-delay 0)
 

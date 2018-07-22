@@ -20,11 +20,9 @@
   (package! discord-emacs :recipe (:fetcher github :repo "nitros12/discord-emacs.el")))
 
 
-(package! elpy)
-;;(package! lsp-python)
+;;(package! elpy)
 (package! py-isort)
 (package! evil-multiedit)
-;;(package! pipenv)
 (package! disable-mouse)
 (package! clang-format)
 (package! popup-kill-ring)
