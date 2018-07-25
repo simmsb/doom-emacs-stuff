@@ -159,8 +159,8 @@
                              (shell-command-to-string "rustc --print sysroot"))
                             "/lib/rustlib/src"))
 
-(add-to-list 'exec-path "/home/ben/.local/bin/")
-(add-to-list 'exec-path "/home/ben/.cargo/bin/")
+(add-to-list 'exec-path "~/.local/bin/")
+(add-to-list 'exec-path "~/.cargo/bin/")
 
 (setq explicit-shell-file-name "/bin/bash"
       shell-file-name "/bin/bash")

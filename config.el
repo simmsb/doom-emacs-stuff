@@ -1,6 +1,5 @@
 ;;; private/ben/config.el -*- lexical-binding: t; -*-
 
-
 ;; bindings
 
 (map!
@@ -67,14 +66,18 @@
         company-minimum-prefix-length 3
         company-quickhelp-mode t
         company-quickhelp-delay 0.4
-        company-backends '((company-files
-                            company-yasnippet
+        company-backends '((company-yasnippet
                             company-keywords
-                            company-capf)
-                           (company-abbrev
-                            company-dabbrev)
-                           +company/whole-lines
-                           company-math-symbols-unicode))
+                            company-capf)))
+
+  (set-company-backend! 'org-mode
+    '(company-files
+      company-yasnippet
+      company-keywords
+      company-capf)
+    '(company-abbrev
+      company-dabbrev)
+    'company-math-symbols-unicode)
 
   (global-company-mode))
 
