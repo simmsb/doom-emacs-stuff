@@ -63,41 +63,43 @@
   (setq company-lsp-enable-snippet t))
 
 
-(def-package! lsp-python
-  :commands (lsp-python-enable)
-  :config
-  (setq python-indent-guess-indent-offset-verbose nil)
-  (set-company-backend! 'python-mode 'company-lsp)
-  (set-lookup-handlers! 'python-mode
-    :definition #'lsp-ui-peek-find-definitions
-    :references #'lsp-ui-peek-find-references)
-  :hook
-  (python-mode . lsp-python-enable))
+(when (featurep! +python)
+  (def-package! lsp-python
+    :commands (lsp-python-enable)
+    :config
+    (setq python-indent-guess-indent-offset-verbose nil)
+    (set-company-backend! 'python-mode 'company-lsp)
+    (set-lookup-handlers! 'python-mode
+      :definition #'lsp-ui-peek-find-definitions
+      :references #'lsp-ui-peek-find-references)
+    :hook
+    (python-mode . lsp-python-enable)))
 
-(def-package! hindent
-  :hook (haskell-mode . hindent-mode))
+(when (featurep! +haskell)
+  (def-package! hindent
+    :hook (haskell-mode . hindent-mode))
 
-(def-package! lsp-haskell
-  :commands (lsp-haskell-enable)
-  :config
-  (set-company-backend! 'haskell-mode 'company-lsp)
-  (set-lookup-handlers! 'haskell-mode
-    :definition #'lsp-ui-peek-find-definitions
-    :references #'lsp-ui-peek-find-references)
-  :hook
-  (haskell-mode . lsp-haskell-enable))
+  (def-package! lsp-haskell
+    :commands (lsp-haskell-enable)
+    :config
+    (set-company-backend! 'haskell-mode 'company-lsp)
+    (set-lookup-handlers! 'haskell-mode
+      :definition #'lsp-ui-peek-find-definitions
+      :references #'lsp-ui-peek-find-references)
+    :hook
+    (haskell-mode . lsp-haskell-enable)))
 
-
-(def-package! lsp-rust
-  :commands (lsp-rust-enable)
-  :config
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-  (set-company-backend! 'rust-mode 'company-lsp)
-  (set-lookup-handlers! 'rust-mode
-    :definition #'lsp-ui-peek-find-definitions
-    :references #'lsp-ui-peek-find-references)
-  :hook
-  (rust-mode . lsp-rust-enable))
+(when (featurep! +rust)
+  (def-package! lsp-rust
+    :commands (lsp-rust-enable)
+    :config
+    (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+    (set-company-backend! 'rust-mode 'company-lsp)
+    (set-lookup-handlers! 'rust-mode
+      :definition #'lsp-ui-peek-find-definitions
+      :references #'lsp-ui-peek-find-references)
+    :hook
+    (rust-mode . lsp-rust-enable)))
 
 
 ;; (def-package! ccls

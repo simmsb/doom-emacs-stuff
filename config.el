@@ -31,6 +31,10 @@
 (def-package! popup-kill-ring)
 (def-package! elixir-yasnippets)
 (def-package! transpose-frame)
+(def-package! drag-stuff
+  :init
+  (drag-stuff-global-mode 1)
+  (drag-stuff-define-keys))
 
 (def-package! org-gcal
   :config
@@ -63,7 +67,7 @@
 
 (after! company
   (setq company-idle-delay 0.1
-        company-minimum-prefix-length 3
+        company-minimum-prefix-length 2
         company-quickhelp-mode t
         company-quickhelp-delay 0.4
         company-backends '((company-yasnippet
@@ -223,8 +227,8 @@
 
 (defun nuke-pretty-symbols (mode)
   (setq +pretty-code-symbols-alist
-   (delq (assq mode +pretty-code-symbols-alist)
-              +pretty-code-symbols-alist)))
+   (delq (assq mode +pretty-code-symbols-alist
+              +pretty-code-symbols-alist))))
 
 (add-hook! python-mode
   (nuke-pretty-symbols 'python-mode)
@@ -233,3 +237,5 @@
 
 (add-hook! c-mode
   (nuke-pretty-symbols 'c-mode))
+
+(setq alchemist-server-extension "sh")

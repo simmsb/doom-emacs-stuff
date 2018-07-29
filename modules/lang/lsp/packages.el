@@ -2,11 +2,16 @@
 (package! company-lsp)
 (package! lsp-ui)
 
-(package! lsp-rust)
-(package! lsp-python)
-;(package! lsp-python :recipe (:fetcher github :repo "nitros12/lsp-python"))
-(package! lsp-haskell)
-(package! ccls)
-;(package! cquery)
+(when (featurep! +rust)
+  (package! lsp-rust))
 
-(package! hindent)
+(when (featurep! +python)
+  (package! lsp-python))
+
+(when (featurep! +haskell)
+  (package! lsp-haskell)
+  (package! hindent))
+
+(when (featurep! +cc)
+  (package! ccls))
+

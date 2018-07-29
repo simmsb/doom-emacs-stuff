@@ -5,9 +5,9 @@
 (package! anaconda-mode :disable t)
 
 ;; overidden
-(package! alchemist :recipe (:fetcher github
-                             :repo "trevoke/alchemist.el"
-                             :branch "use-elixir-ls"))
+;; (package! alchemist :recipe (:fetcher github
+;;                              :repo "trevoke/alchemist.el"
+;;                              :branch "use-elixir-ls"))
 
 ;(package! color-theme-sanityinc-tomorrow)
 (package! rainbow-identifiers)
@@ -36,5 +36,6 @@
 (package! transpose-frame)
 (package! pipenv)
 (package! org-gcal :recipe (:fetcher github :repo "kidd/org-gcal.el"))
+(package! drag-stuff)
 
 (package! f)
