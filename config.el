@@ -227,8 +227,8 @@
 
 (defun nuke-pretty-symbols (mode)
   (setq +pretty-code-symbols-alist
-   (delq (assq mode +pretty-code-symbols-alist
-              +pretty-code-symbols-alist))))
+   (delq (assq mode +pretty-code-symbols-alist)
+         +pretty-code-symbols-alist)))
 
 (add-hook! python-mode
   (nuke-pretty-symbols 'python-mode)

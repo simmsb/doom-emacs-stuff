@@ -127,7 +127,7 @@
       ;twitter           ; twitter client https://twitter.com/vnought
       (write            ; emacs as a word processor (latex + org + markdown)
        +wordnut         ; wordnet (wn) search
-       +langtool       ; a proofreader (grammar/style check) for Emacs
+       +langtool)       ; a proofreader (grammar/style check) for Emacs
        :collab
        impatient-mode
        :config
@@ -135,7 +135,7 @@
        ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,
        ;; and additional ex commands for evil-mode. Use it as a reference for
        ;; your own modules.
-       (default +bindings +snippets +evil-commands)))
+       (default +bindings +snippets +evil-commands))
 
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
