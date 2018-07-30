@@ -8,6 +8,10 @@
    :n "|" #'neotree-enter-vertical-split
    :n "_" #'neotree-enter-horizontal-split)
 
+ (:after alchemist
+   :map alchemist-mode-map
+   :n "g/" #'alchemist-help-search-at-point)
+
  (:leader
    (:desc "file" :prefix "f"
      :desc "Neotree" :n "t" #'+neotree/open))
@@ -202,7 +206,7 @@
 (after! evil-multiedit
   (evil-multiedit-default-keybinds))
 
-(if ON-LAPTOP
+(when ON-LAPTOP
   (after! disable-mouse
     (global-disable-mouse-mode)))
 
@@ -227,8 +231,8 @@
 
 (defun nuke-pretty-symbols (mode)
   (setq +pretty-code-symbols-alist
-   (delq (assq mode +pretty-code-symbols-alist)
-         +pretty-code-symbols-alist)))
+        (delq (assq mode +pretty-code-symbols-alist)
+              +pretty-code-symbols-alist)))
 
 (add-hook! python-mode
   (nuke-pretty-symbols 'python-mode)
@@ -239,3 +243,16 @@
   (nuke-pretty-symbols 'c-mode))
 
 (setq alchemist-server-extension "sh")
+
+;; dunno if there's a better way to starting in paren mode
+(add-hook! parinfer-mode
+  (parinfer--switch-to-paren-mode))
+
+
+(set-popup-rule! "^\\*alchemist help"
+  :side 'right
+  :size 0.35)
+
+(set-popup-rule! "^\\*Alchemist-IEx"
+  :side 'right
+  :size 0.35)
