@@ -32,7 +32,6 @@
 (package! popup-kill-ring)
 (package! company-math)
 (package! flycheck-credo)
-(package! elixir-yasnippets)
 (package! transpose-frame)
 (package! pipenv)
 (package! org-gcal :recipe (:fetcher github :repo "kidd/org-gcal.el"))

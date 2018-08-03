@@ -33,7 +33,6 @@
 (def-package! disable-mouse)
 (def-package! clang-format)
 (def-package! popup-kill-ring)
-(def-package! elixir-yasnippets)
 (def-package! transpose-frame)
 (def-package! drag-stuff
   :init
@@ -169,9 +168,15 @@
 
 (after! smartparens
   ;; Auto-close more conservatively and expand braces on RET
+  (show-smartparens-global-mode)
   (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
   (sp-local-pair 'org-mode "\\[" "\\]")
 
+  ;; Elixir stuff should work like python
+  (sp-with-modes 'elixir-mode
+    (sp-local-pair "\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
+    (sp-local-pair "\\'" "\\'")
+    (sp-local-pair "\"\"\"" "\"\"\""))
   ;; ;; This lets us have f"" and b"" etc in python
   ;; (let ((unless-list `(sp-point-before-word-p
   ;;                      ,(sp-point-after-word-excepted "f" "r" "b")

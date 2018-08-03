@@ -2,6 +2,7 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :feature
+       org-brain
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        eval              ; run code, run (also, repls)
        (evil +everywhere); come to the dark side, we have cookies
@@ -22,7 +23,7 @@
        :completion
        (company
         +auto)
-        ;; +childframe)    ; the ultimate code completion backend
+       ;; +childframe)    ; the ultimate code completion backend
        (ivy +fuzzy)      ; a search engine for love and life
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
@@ -74,7 +75,7 @@
        (lsp +haskell +rust +python)
        ;;lsp-eglot
        ebnf
-       ;racket
+                                        ;racket
        geiser
        assembly          ; assembly for fun or debugging
        (cc +irony)       ; C/C++/Obj-C madness
@@ -150,7 +151,6 @@
 (fringe-mode 8)
 (setq doom-fringe-size 8)
 (show-paren-mode t)
-(show-smartparens-global-mode)
 (setq show-paren-style 'mixed
       show-paren-delay 0)
 
