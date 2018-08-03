@@ -7,10 +7,11 @@ defmodule ${1:Module} do
 
   # Client API
   def start_link(default) do
-    GenServer.start_link(__MODULE__, default)
+    GenServer.start_link(__MODULE__, default, name: __MODULE__)
   end
 
   # Server callbacks
+  @impl true
   def init(state) do
     {:ok, state}
   end
