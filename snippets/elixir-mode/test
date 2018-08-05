@@ -2,6 +2,6 @@
 # name: test
 # key: test
 # --
-test "$1" do
+test "$1"${2:, ${3:params}} do
   $0
 end
