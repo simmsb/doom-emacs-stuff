@@ -101,6 +101,26 @@
     :hook
     (rust-mode . lsp-rust-enable)))
 
+(when (featurep! +js)
+  (def-package! lsp-javascript-typescript
+    :commands (lsp-javascript-typescript-enable)
+    :config
+    (set-company-backend! '(js-mode js3-mode rjsx-mode) 'company-lsp)
+    (set-lookup-handlers! '(js-mode js3-mode rjsx-mode)
+      :definition #'lsp-ui-peek-find-definitions
+      :references #'lsp-ui-peek-find-references)
+    :hook
+    ((js-mode js3-mode rjsx-mode) . lsp-javascript-typescript-enable))
+
+  (defun lsp-javascript-typescript-company-transformer (candidates)
+    (let ((completion-ignore-case t))
+      (all-completions (company-grab-symbol) candidates)))
+
+  (defun lsp-javascript-typescript-js-hook ()
+    (make-local-variable 'company-transformers)
+    (push 'lsp-javascript-typescript-company-transformer company-transformers))
+
+  (add-hook! js-mode 'lsp-javascript-typescript-js-hook))
 
 ;; (def-package! ccls
 ;;   :commands (lsp-ccls-enable)

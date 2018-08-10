@@ -46,7 +46,7 @@
        neotree           ; a project drawer, like NERDTree for vim
        ;;treemacs
        ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
-       ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
 
        :emacs
@@ -72,8 +72,8 @@
        :lang
        jade
        sourcepawn
-       (lsp +haskell +rust +python)
-       ;;lsp-eglot
+       (lsp +haskell +python +js +rust)
+       ;;(lsp-eglot +rust)
        ebnf
                                         ;racket
        geiser
@@ -84,7 +84,7 @@
        ;;csharp          ; unity, .NET, and mono shenanigans
        data              ; config/data formats
        elixir            ; erlang done right
-       ;;elm             ; care for a cup of TEA?
+       elm             ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;;ess             ; emacs speaks statistics
        ;;go              ; the hipster dialect

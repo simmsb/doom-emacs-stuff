@@ -5,7 +5,7 @@
 (package! anaconda-mode :disable t)
 
 ;; overidden
-(package! alchemist :recipe (:fetcher github :repo "dsdshcym/alchemist.el"))
+;; (package! alchemist :recipe (:fetcher github :repo "dsdshcym/alchemist.el"))
 ;; (package! alchemist :recipe (:fetcher github
 ;;                              :repo "trevoke/alchemist.el"
 ;;                              :branch "use-elixir-ls"))

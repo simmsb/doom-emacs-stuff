@@ -247,6 +247,9 @@
 (add-hook! c-mode
   (nuke-pretty-symbols 'c-mode))
 
+(add-hook! js-mode
+  (nuke-pretty-symbols 'js-mode))
+
 (setq alchemist-server-extension "sh")
 
 ;; dunno if there's a better way to starting in paren mode
@@ -261,3 +264,6 @@
 (set-popup-rule! "^\\*Alchemist-IEx"
   :side 'right
   :size 0.35)
+
+;; mhtml mode pls
+(add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))

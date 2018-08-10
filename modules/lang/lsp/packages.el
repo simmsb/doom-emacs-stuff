@@ -15,3 +15,5 @@
 (when (featurep! +cc)
   (package! ccls))
 
+(when (featurep! +js)
+  (package! lsp-javascript-typescript))
