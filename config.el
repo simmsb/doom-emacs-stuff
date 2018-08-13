@@ -3,10 +3,10 @@
 ;; bindings
 
 (map!
- (:after neotree
-   :map neotree-mode-map
-   :n "|" #'neotree-enter-vertical-split
-   :n "_" #'neotree-enter-horizontal-split)
+ ;; (:after treemacs
+ ;;   :map treemacs-mode-map
+ ;;   :n "|" #'treemacs-visit-node-vertical-split
+ ;;   :n "_" #'treemacs-visit-node-horizontal-split)
 
  (:after alchemist
    :map alchemist-mode-map
@@ -14,7 +14,7 @@
 
  (:leader
    (:desc "file" :prefix "f"
-     :desc "Neotree" :n "t" #'+neotree/open))
+     :desc "Treemacs" :n "t" #'+treemacs/toggle))
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
@@ -34,6 +34,9 @@
 (def-package! clang-format)
 (def-package! popup-kill-ring)
 (def-package! transpose-frame)
+(def-package! evil-lion
+  :config
+  (evil-lion-mode))
 (def-package! drag-stuff
   :init
   (drag-stuff-global-mode 1)
@@ -47,12 +50,12 @@
 
 (add-hook! org-agenda-mode (org-gcal-sync))
 
-(use-package pipenv
-  :init
-  (setq
-   pipenv-projectile-after-switch-function
-   #'pipenv-projectile-after-switch-extended)
-  :hook (python-mode . pipenv-mode))
+;; (use-package pipenv
+;;   :init
+;;   (setq
+;;    pipenv-projectile-after-switch-function
+;;    #'pipenv-projectile-after-switch-extended)
+;;   :hook (python-mode . pipenv-mode))
 
 (def-package! flycheck-credo
   :commands flycheck-credo-setup
@@ -98,9 +101,9 @@
     (setq doom-theme 'doom-tomorrow-night))
 
 ; hip shit
-(after! neotree
-  (setq doom-neotree-file-icons t
-        neo-theme 'icons))
+; (after! neotree
+;   (setq doom-neotree-file-icons t
+;         neo-theme 'icons))
 
 (after! company-quickhelp
   (company-quickhelp-mode 1))
@@ -267,3 +270,7 @@
 
 ;; mhtml mode pls
 (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
+
+(after! treemacs
+  (setq treemacs-silent-refresh t
+        treemacs-follow-mode t))

@@ -18,7 +18,7 @@
                   (width . 0)
                   (min-height . 0)
                   (height . 0)
-                  (internal-border-width . 5)
+                  (internal-border-width . 0)
                   (vertical-scroll-bars)
                   (horizontal-scroll-bars)
                   (left-fringe . 0)
@@ -42,9 +42,12 @@
         lsp-ui-doc-header t
         lsp-ui-doc-enable t
         lsp-ui-doc-include-signature t
+        lsp-ui-doc-use-childframe t
         lsp-ui-sideline-show-flycheck t
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-ignore-duplicate t
+        lsp-ui-sideline-show-symbol t
+        lsp-ui-sideline-show-code-actions t
         lsp-ui-doc-border (doom-color 'fg))
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)

@@ -2,7 +2,6 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :feature
-       org-brain
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        eval              ; run code, run (also, repls)
        (evil +everywhere); come to the dark side, we have cookies
@@ -24,8 +23,8 @@
        (company
         +auto)
        ;; +childframe)    ; the ultimate code completion backend
-       (ivy +fuzzy)      ; a search engine for love and life
-       ;;helm              ; the *other* search engine for love and life
+       ;;(ivy +fuzzy)      ; a search engine for love and life
+       (helm +fuzzy)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
 
        :ui
@@ -43,8 +42,8 @@
        nav-flash         ; blink the current line after jumping
        evil-goggles      ; display visual hints when editing in evil
        unicode           ; extended unicode support for various languages
-       neotree           ; a project drawer, like NERDTree for vim
-       ;;treemacs
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       treemacs
        ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
@@ -73,9 +72,9 @@
        jade
        sourcepawn
        (lsp +haskell +python +js +rust)
-       ;;(lsp-eglot +rust)
+       ;; (lsp-eglot +rust)
        ebnf
-                                        ;racket
+       ;; racket
        geiser
        assembly          ; assembly for fun or debugging
        (cc +irony)       ; C/C++/Obj-C madness
@@ -175,9 +174,11 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
-   (setq doom-font (font-spec :family "Fira Mono" :size 19)
+   (setq doom-font (font-spec :family "Fira Mono" :size 18)
          doom-unicode-font (font-spec :family "Fira Mono")
-         doom-big-font (font-spec :family "Fira Mono" :size 25))))
+         doom-big-font (font-spec :family "Fira Mono" :size 23))))
 
 ;; we still need this apparently
 (setq custom-file (concat doom-etc-dir "custom.el"))
+
+(setq lsp-print-io t)
