@@ -23,8 +23,8 @@
        (company
         +auto)
        ;; +childframe)    ; the ultimate code completion backend
-       ;;(ivy +fuzzy)      ; a search engine for love and life
-       (helm +fuzzy)              ; the *other* search engine for love and life
+       (ivy +fuzzy)      ; a search engine for love and life
+       ;;(helm +fuzzy)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
 
        :ui
@@ -71,8 +71,8 @@
        :lang
        jade
        sourcepawn
-       (lsp +haskell +python +js +rust)
-       ;; (lsp-eglot +rust)
+       (lsp +python +js +rust)
+       ;;(lsp-eglot +haskell)
        ebnf
        ;; racket
        geiser
@@ -87,7 +87,7 @@
        emacs-lisp        ; drown in parentheses
        ;;ess             ; emacs speaks statistics
        ;;go              ; the hipster dialect
-       haskell ; a language that's lazier than I am
+       (haskell +intero) ; a language that's lazier than I am
        hy                ; readability of scheme w/ speed of python
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))

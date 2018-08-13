@@ -23,7 +23,8 @@
 ;;
 
 ;; <https://github.com/hlissner/emacs-doom-theme>
-(def-package! doom-themes :load-path "~/.doom.d/emacs-doom-themes"
+(def-package! doom-themes
+  :load-path "~/.doom.d/emacs-doom-themes"
   :config
   (message "Loading themes lol")
   (unless doom-theme

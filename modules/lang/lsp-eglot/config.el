@@ -1,11 +1,16 @@
 ;;; lang/lsp-eglot/config.el -*- lexical-binding: t; -*-
 
 (def-package! eglot
-  :ensure t
   :commands (eglot eglot-ensure)
   :config
   (when (featurep! +rust)
     (set-company-backend! 'rust-mode 'eglot-completion-at-point))
+  (when (featurep! +python)
+    (set-company-backend! 'python-mode 'eglot-completion-at-point)
+    (add-hook! python-mode #'eglot-ensure))
+  (when (featurep! +haskell)
+    (set-company-backend! 'haskell-mode 'eglot-completion-at-point)
+    (add-hook! haskell-mode #'eglot-ensure))
   ;; use nightly rls
   (add-to-list 'eglot-server-programs '(rust-mode . (eglot-rls "rustup" "run" "nightly" "rls"))))
 
@@ -21,6 +26,3 @@
   (after! flycheck
     (add-to-list-or-set 'flycheck-global-modes '(not rust-mode)))
   (add-hook! rust-mode #'eglot-ensure))
-
-(when (featurep! +python)
-  (add-hook! python-mode #'eglot-ensure))
