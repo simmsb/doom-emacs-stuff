@@ -71,7 +71,7 @@
        :lang
        jade
        sourcepawn
-       (lsp +python +js +rust)
+       (lsp +haskell +python +js +rust)
        ;;(lsp-eglot +haskell)
        ebnf
        ;; racket
@@ -87,7 +87,8 @@
        emacs-lisp        ; drown in parentheses
        ;;ess             ; emacs speaks statistics
        ;;go              ; the hipster dialect
-       (haskell +intero) ; a language that's lazier than I am
+       ;;(haskell +intero) ; a language that's lazier than I am
+       haskell
        hy                ; readability of scheme w/ speed of python
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
