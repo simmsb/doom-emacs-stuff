@@ -1,8 +1,6 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-;; disabled
-(package! anaconda-mode :disable t)
 
 ;; overidden
 ;; (package! alchemist :recipe (:fetcher github :repo "dsdshcym/alchemist.el"))

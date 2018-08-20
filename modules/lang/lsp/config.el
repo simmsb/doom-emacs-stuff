@@ -6,7 +6,7 @@
   (setq lsp-enable-xref t
         lsp-enable-indentation t
         lsp-enable-eldoc t
-        lsp-enable-completion-at-point t))
+        lsp-enable-completion-at-point nil))
 
 (def-package! lsp-ui
   :init
@@ -37,7 +37,6 @@
   :config
   (setq lsp-ui-sideline-enable nil
         lsp-ui-flycheck-enable t
-        lsp-enable-completion-at-point t
         lsp-ui-doc-position 'top
         lsp-ui-doc-header t
         lsp-ui-doc-enable t
@@ -71,7 +70,7 @@
     :commands (lsp-python-enable)
     :config
     (setq python-indent-guess-indent-offset-verbose nil)
-    (set-company-backend! 'python-mode 'company-lsp)
+    (set-company-backend! 'python-mode '(company-lsp company-yasnippet))
     (set-lookup-handlers! 'python-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -85,7 +84,7 @@
   (def-package! lsp-haskell
     :commands (lsp-haskell-enable)
     :config
-    (set-company-backend! 'haskell-mode 'company-lsp)
+    (set-company-backend! 'haskell-mode '(company-lsp company-yasnippet))
     (set-lookup-handlers! 'haskell-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -97,7 +96,7 @@
     :commands (lsp-rust-enable)
     :config
     (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-    (set-company-backend! 'rust-mode 'company-lsp)
+    (set-company-backend! 'rust-mode '(company-lsp company-yasnippet))
     (set-lookup-handlers! 'rust-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -108,7 +107,7 @@
   (def-package! lsp-javascript-typescript
     :commands (lsp-javascript-typescript-enable)
     :config
-    (set-company-backend! '(js-mode js3-mode rjsx-mode) 'company-lsp)
+    (set-company-backend! '(js-mode js3-mode rjsx-mode) '(company-lsp company-yasnippet))
     (set-lookup-handlers! '(js-mode js3-mode rjsx-mode)
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -131,7 +130,7 @@
 ;;   (setq ccls-executable "/home/ben/dev/ccls/release/ccls"
 ;;         ccls-extra-init-params '(:cacheFormat "msgpack"))
 ;;   :config
-;;   (set-company-backend! '(c-mode c++-mode) 'company-lsp)
+;;   (set-company-backend! '(c-mode c++-mode) '(company-lsp company-yasnippet))
 ;;   (set-lookup-handlers! '(c-mode c++-mode)
 ;;     :definition #'lsp-ui-peek-find-definitions
 ;;     :references #'lsp-ui-peek-find-references)
