@@ -20,7 +20,7 @@
     :when (featurep! :completion company)
     :commands alchemist-company
     :init
-    (set-company-backend! 'elixir-mode '(company-yasnippet company-lsp))
+    (set-company-backend! 'elixir-mode 'company-lsp)
     :config
     ;; Alchemist doesn't use hook symbols to add these backends, so we have to use
     ;; the entire closure to get rid of it.
