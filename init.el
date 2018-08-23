@@ -16,6 +16,7 @@
        workspaces        ; tab emulation, persistence & separate workspaces
 
        :editor
+       format
        parinfer
        rotate-text       ; cycle region at point between text candidates
 
@@ -42,8 +43,8 @@
        nav-flash         ; blink the current line after jumping
        evil-goggles      ; display visual hints when editing in evil
        unicode           ; extended unicode support for various languages
-       ;;neotree           ; a project drawer, like NERDTree for vim
-       treemacs
+       neotree           ; a project drawer, like NERDTree for vim
+       ;;treemacs
        ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
@@ -77,7 +78,7 @@
        ;; racket
        geiser
        assembly          ; assembly for fun or debugging
-       (cc +irony)       ; C/C++/Obj-C madness
+       (cc +irony +rtags)       ; C/C++/Obj-C madness
        ;;crystal         ; ruby at the speed of c
        ;;clojure         ; java with a lisp
        ;;csharp          ; unity, .NET, and mono shenanigans

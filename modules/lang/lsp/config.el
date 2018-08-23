@@ -70,6 +70,7 @@
     :commands (lsp-python-enable)
     :config
     (setq python-indent-guess-indent-offset-verbose nil)
+    (set-formatter! 'python-mode #'lsp-format-buffer)
     (set-company-backend! 'python-mode '(company-lsp company-yasnippet))
     (set-lookup-handlers! 'python-mode
       :definition #'lsp-ui-peek-find-definitions
@@ -78,12 +79,10 @@
     (python-mode . lsp-python-enable)))
 
 (when (featurep! +haskell)
-  (def-package! hindent
-    :hook (haskell-mode . hindent-mode))
-
   (def-package! lsp-haskell
     :commands (lsp-haskell-enable)
     :config
+    (set-formatter! 'haskell-mode #'lsp-format-buffer)
     (set-company-backend! 'haskell-mode '(company-lsp company-yasnippet))
     (set-lookup-handlers! 'haskell-mode
       :definition #'lsp-ui-peek-find-definitions
@@ -96,6 +95,7 @@
     :commands (lsp-rust-enable)
     :config
     (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+    (set-formatter! 'rust-mode #'lsp-format-buffer)
     (set-company-backend! 'rust-mode '(company-lsp company-yasnippet))
     (set-lookup-handlers! 'rust-mode
       :definition #'lsp-ui-peek-find-definitions
@@ -107,6 +107,7 @@
   (def-package! lsp-javascript-typescript
     :commands (lsp-javascript-typescript-enable)
     :config
+    (set-formatter! 'js-mode #'lsp-format-buffer)
     (set-company-backend! '(js-mode js3-mode rjsx-mode) '(company-lsp company-yasnippet))
     (set-lookup-handlers! '(js-mode js3-mode rjsx-mode)
       :definition #'lsp-ui-peek-find-definitions

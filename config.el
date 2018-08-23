@@ -12,9 +12,13 @@
    :map alchemist-mode-map
    :n "g/" #'alchemist-help-search-at-point)
 
+ ; (:leader
+ ;   (:desc "file" :prefix "f"
+ ;     :desc "Treemacs" :n "t" #'+treemacs/toggle))
+
  (:leader
    (:desc "file" :prefix "f"
-     :desc "Treemacs" :n "t" #'+treemacs/toggle))
+     :desc "Neotree" :n "t" #'+neotree/open))
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
@@ -94,16 +98,20 @@
 (after! rainbow-identifiers
   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
 
+(setq display-line-numbers nil)
 (setq doom-line-numbers-style nil)
+(global-display-line-numbers-mode -1)
+
+(add-hook! display-line-numbers-mode (global-display-line-numbers-mode -1))
 
 (if ON-LAPTOP
     (setq doom-theme 'doom-tomorrow-night-eighties)
     (setq doom-theme 'doom-tomorrow-night))
 
 ; hip shit
-; (after! neotree
-;   (setq doom-neotree-file-icons t
-;         neo-theme 'icons))
+(after! neotree
+  (setq doom-neotree-file-icons t
+        neo-theme 'icons))
 
 (after! company-quickhelp
   (company-quickhelp-mode 1))
@@ -274,3 +282,5 @@
 (after! treemacs
   (setq treemacs-silent-refresh t
         treemacs-follow-mode t))
+
+(setq +doom-modeline-buffer-file-name #'+modeline-file-path-with-project)
