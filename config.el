@@ -12,13 +12,13 @@
    :map alchemist-mode-map
    :n "g/" #'alchemist-help-search-at-point)
 
- ; (:leader
- ;   (:desc "file" :prefix "f"
- ;     :desc "Treemacs" :n "t" #'+treemacs/toggle))
-
  (:leader
    (:desc "file" :prefix "f"
-     :desc "Neotree" :n "t" #'+neotree/open))
+     :desc "Treemacs" :n "t" #'+treemacs/toggle))
+
+ ; (:leader
+ ;   (:desc "file" :prefix "f"
+ ;     :desc "Neotree" :n "t" #'+neotree/open))
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
