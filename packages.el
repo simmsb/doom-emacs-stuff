@@ -10,7 +10,7 @@
 
 
 ;;(package! color-theme-sanityinc-tomorrow)
-(package! rainbow-identifiers)
+;;(package! rainbow-identifiers)
 ;;(package! solaire-mode :disable t)
 ;;(package! ivy-posframe :disable t)
 (package! company)

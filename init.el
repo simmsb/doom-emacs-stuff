@@ -29,6 +29,7 @@
        ;;ido               ; the other *other* search engine...
 
        :ui
+       deft
        vc-gutter
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix

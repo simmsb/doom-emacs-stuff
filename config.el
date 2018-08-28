@@ -33,7 +33,7 @@
  "<end>" #'end-of-line)
 
 ;; (def-package! elpy)
-(def-package! rainbow-identifiers)
+;; (def-package! rainbow-identifiers)
 (def-package! disable-mouse)
 (def-package! clang-format)
 (def-package! popup-kill-ring)
@@ -95,8 +95,8 @@
 
   (global-company-mode))
 
-(after! rainbow-identifiers
-  (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
+;; (after! rainbow-identifiers
+;;   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
 
 (setq display-line-numbers nil)
 (setq doom-line-numbers-style nil)
