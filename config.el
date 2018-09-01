@@ -284,3 +284,7 @@
         treemacs-follow-mode t))
 
 (setq +doom-modeline-buffer-file-name #'+modeline-file-path-with-project)
+
+
+;; TODO: remove once treemacs is unborked
+(require 'treemacs)

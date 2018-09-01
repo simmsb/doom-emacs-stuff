@@ -73,8 +73,8 @@
        :lang
        jade
        sourcepawn
-       (lsp +haskell +python +js +rust)
-       ;;(lsp-eglot +haskell)
+       (lsp +haskell +python +rust)
+       (lsp-eglot +js)
        ebnf
        ;; racket
        geiser

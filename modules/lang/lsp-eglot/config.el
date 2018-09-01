@@ -1,16 +1,19 @@
 ;;; lang/lsp-eglot/config.el -*- lexical-binding: t; -*-
 
 (def-package! eglot
-  :commands (eglot eglot-ensure)
+  :commands (eglot eglot-ensure eglot-completion-at-point)
   :config
   (when (featurep! +rust)
-    (set-company-backend! 'rust-mode 'eglot-completion-at-point))
+    (set-company-backend! 'rust-mode '(eglot-completion-at-point)))
   (when (featurep! +python)
-    (set-company-backend! 'python-mode 'eglot-completion-at-point)
+    (set-company-backend! 'python-mode '(eglot-completion-at-point))
     (add-hook! python-mode #'eglot-ensure))
   (when (featurep! +haskell)
-    (set-company-backend! 'haskell-mode 'eglot-completion-at-point)
+    (set-company-backend! 'haskell-mode '(eglot-completion-at-point))
     (add-hook! haskell-mode #'eglot-ensure))
+  (when (featurep! +js)
+    (set-company-backend! 'js-mode '(eglot-completion-at-point))
+    (add-hook! js-mode #'eglot-ensure))
   ;; use nightly rls
   (add-to-list 'eglot-server-programs '(rust-mode . (eglot-rls "rustup" "run" "nightly" "rls"))))
 
