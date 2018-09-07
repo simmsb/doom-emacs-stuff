@@ -164,11 +164,18 @@
                              (shell-command-to-string "rustc --print sysroot"))
                             "/lib/rustlib/src"))
 
+(setq explicit-shell-file-name "/bin/bash"
+      shell-file-name "/bin/bash")
+
 (add-to-list 'exec-path "~/.local/bin/")
 (add-to-list 'exec-path "~/.cargo/bin/")
 
-(setq explicit-shell-file-name "/bin/bash"
-      shell-file-name "/bin/bash")
+;; Does this work? idk
+(setenv "PATH"
+        (concat
+         (expand-file-name "~/.local/bin/") path-separator
+         (expand-file-name "~/.cargo/bin/") path-separator
+         (getenv "PATH")))
 
 (pcase (system-name)
   ("laptop"

@@ -71,7 +71,7 @@
     :config
     (setq python-indent-guess-indent-offset-verbose nil)
     (set-formatter! 'python-mode #'lsp-format-buffer)
-    (set-company-backend! 'python-mode '(company-lsp company-yasnippet))
+    (set-company-backend! 'python-mode 'company-lsp)
     (set-lookup-handlers! 'python-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -83,7 +83,7 @@
     :commands (lsp-haskell-enable)
     :config
     (set-formatter! 'haskell-mode #'lsp-format-buffer)
-    (set-company-backend! 'haskell-mode '(company-lsp company-yasnippet))
+    (set-company-backend! 'haskell-mode 'company-lsp)
     (set-lookup-handlers! 'haskell-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -96,7 +96,7 @@
     :config
     (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
     (set-formatter! 'rust-mode #'lsp-format-buffer)
-    (set-company-backend! 'rust-mode '(company-lsp company-yasnippet))
+    (set-company-backend! 'rust-mode 'company-lsp)
     (set-lookup-handlers! 'rust-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -108,7 +108,7 @@
     :commands (lsp-javascript-typescript-enable)
     :config
     (set-formatter! 'js-mode #'lsp-format-buffer)
-    (set-company-backend! '(js-mode js3-mode rjsx-mode) '(company-lsp company-yasnippet))
+    (set-company-backend! '(js-mode js3-mode rjsx-mode) 'company-lsp)
     (set-lookup-handlers! '(js-mode js3-mode rjsx-mode)
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
@@ -131,7 +131,7 @@
 ;;   (setq ccls-executable "/home/ben/dev/ccls/release/ccls"
 ;;         ccls-extra-init-params '(:cacheFormat "msgpack"))
 ;;   :config
-;;   (set-company-backend! '(c-mode c++-mode) '(company-lsp company-yasnippet))
+;;   (set-company-backend! '(c-mode c++-mode) 'company-lsp)
 ;;   (set-lookup-handlers! '(c-mode c++-mode)
 ;;     :definition #'lsp-ui-peek-find-definitions
 ;;     :references #'lsp-ui-peek-find-references)
