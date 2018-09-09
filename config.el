@@ -16,9 +16,9 @@
    (:desc "file" :prefix "f"
      :desc "Treemacs" :n "t" #'+treemacs/toggle))
 
- ; (:leader
- ;   (:desc "file" :prefix "f"
- ;     :desc "Neotree" :n "t" #'+neotree/open))
+ ;; (:leader
+ ;;   (:desc "file" :prefix "f"
+ ;;     :desc "Neotree" :n "t" #'+neotree/open))
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
@@ -53,6 +53,11 @@
         org-gcal-file-alist '(("bsimms.simms@gmail.com" . "~/org/calendar.org"))))
 
 (add-hook! org-agenda-mode (org-gcal-sync))
+
+(def-package! doom-modeline
+  ; :ensure t
+  :defer t
+  :hook (after-init . doom-modeline-init))
 
 ;; (use-package pipenv
 ;;   :init
@@ -283,8 +288,15 @@
   (setq treemacs-silent-refresh t
         treemacs-follow-mode t))
 
-(setq +doom-modeline-buffer-file-name #'+modeline-file-path-with-project)
+;; (setq +modeline-buffer-path-function #'+modeline-file-path-truncated-with-project)
 
 
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)
+
+(after! evil-easymotion
+  (map!
+    (:map evilem-map
+      "<down>" #'evilem-motion-next-line
+      "<up>" #'evilem-motion-previous-line)))
+

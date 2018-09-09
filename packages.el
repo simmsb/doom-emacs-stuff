@@ -38,4 +38,6 @@
 (package! discover-my-major)
 (package! evil-lion)
 
+(package! doom-modeline)
+
 (package! f)

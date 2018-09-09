@@ -2,6 +2,7 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :feature
+       org-ref
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        eval              ; run code, run (also, repls)
        (evil +everywhere); come to the dark side, we have cookies
@@ -38,7 +39,8 @@
         +fira)
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
-       doom-modeline     ; a snazzy Atom-inspired mode-line
+       ;doom-modeline     ; a snazzy Atom-inspired mode-line
+       ;modeline
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        hl-todo           ; highlight TODO/FIXME/NOTE tags
        nav-flash         ; blink the current line after jumping
