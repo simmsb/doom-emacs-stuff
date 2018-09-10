@@ -39,8 +39,8 @@
         +fira)
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
-       ;doom-modeline     ; a snazzy Atom-inspired mode-line
-       ;modeline
+                                        ;doom-modeline     ; a snazzy Atom-inspired mode-line
+                                        ;modeline
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        hl-todo           ; highlight TODO/FIXME/NOTE tags
        nav-flash         ; blink the current line after jumping
@@ -76,7 +76,7 @@
        jade
        sourcepawn
        (lsp +haskell +python +rust)
-       (lsp-eglot +js)
+       (lsp-eglot +js +cc)
        ebnf
        ;; racket
        geiser
@@ -186,7 +186,7 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
-   (setq doom-font (font-spec :family "Fira Mono" :size 18)
+   (setq doom-font (font-spec :family "Fira Mono" :size 17)
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 23))))
 
