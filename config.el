@@ -3,11 +3,6 @@
 ;; bindings
 
 (map!
- ;; (:after treemacs
- ;;   :map treemacs-mode-map
- ;;   :n "|" #'treemacs-visit-node-vertical-split
- ;;   :n "_" #'treemacs-visit-node-horizontal-split)
-
  (:after alchemist
    :map alchemist-mode-map
    :n "g/" #'alchemist-help-search-at-point)
@@ -16,9 +11,10 @@
    (:desc "file" :prefix "f"
      :desc "Treemacs" :n "t" #'+treemacs/toggle))
 
- ;; (:leader
- ;;   (:desc "file" :prefix "f"
- ;;     :desc "Neotree" :n "t" #'+neotree/open))
+ (:after evil-easymotion
+   (:map evilem-map
+     "<down>" #'evilem-motion-next-line
+     "<up>" #'evilem-motion-previous-line))
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
@@ -293,10 +289,3 @@
 
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)
-
-(after! evil-easymotion
-  (map!
-    (:map evilem-map
-      "<down>" #'evilem-motion-next-line
-      "<up>" #'evilem-motion-previous-line)))
-
