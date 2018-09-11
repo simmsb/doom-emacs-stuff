@@ -50,11 +50,6 @@
 
 (add-hook! org-agenda-mode (org-gcal-sync))
 
-(def-package! doom-modeline
-  ; :ensure t
-  :defer t
-  :hook (after-init . doom-modeline-init))
-
 ;; (use-package pipenv
 ;;   :init
 ;;   (setq
