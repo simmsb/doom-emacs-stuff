@@ -41,7 +41,7 @@
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-modeline     ; a snazzy Atom-inspired mode-line
        ;;modeline
-       ;doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        hl-todo           ; highlight TODO/FIXME/NOTE tags
        nav-flash         ; blink the current line after jumping
        evil-goggles      ; display visual hints when editing in evil
@@ -73,12 +73,13 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
+       common-lisp
        jade
        sourcepawn
        (lsp +haskell +python +rust)
        (lsp-eglot +js +cc)
        ebnf
-       ;; racket
+       ;;racket
        geiser
        assembly          ; assembly for fun or debugging
        (cc +irony +rtags)       ; C/C++/Obj-C madness
