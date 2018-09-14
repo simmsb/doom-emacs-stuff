@@ -33,7 +33,6 @@
 (package! company-math)
 (package! flycheck-credo)
 (package! transpose-frame)
-(package! org-gcal :recipe (:fetcher github :repo "kidd/org-gcal.el"))
 (package! drag-stuff)
 (package! discover-my-major)
 (package! evil-lion)

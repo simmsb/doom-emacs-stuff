@@ -42,14 +42,6 @@
   (drag-stuff-global-mode 1)
   (drag-stuff-define-keys))
 
-(def-package! org-gcal
-  :config
-  (setq org-gcal-client-id (password-store-get "google-api/calendar/oauth-client/client-id")
-        org-gcal-client-secret (password-store-get "google-api/calendar/oauth-client/client-secret")
-        org-gcal-file-alist '(("bsimms.simms@gmail.com" . "~/org/calendar.org"))))
-
-(add-hook! org-agenda-mode (org-gcal-sync))
-
 ;; (use-package pipenv
 ;;   :init
 ;;   (setq
@@ -133,9 +125,9 @@
      (ditaa . t))))
 
 (setq org-log-done 'time
-      +org-default-notes-file (concat org-directory "notes.org")
-      +org-default-todo-file (concat org-directory "todo.org")
-      +org-default-calendar-file (concat org-directory "calendar.org"))
+      +org-default-notes-file (f-join org-directory "notes.org")
+      +org-default-todo-file (f-join org-directory "todo.org")
+      +org-default-calendar-file (f-join org-directory "calendar.org"))
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline +org-default-todo-file "Inbox")
@@ -145,7 +137,9 @@
         ("c" "Calendar" entry (file +org-default-calendar-file)
              "* %?\n%^T")))
 
-(setq org-agenda-files (list +org-default-todo-file +org-default-calendar-file))
+(setq org-agenda-files (list +org-default-todo-file
+                             +org-default-calendar-file
+                             (f-join org-directory "lectures.org")))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
