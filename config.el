@@ -122,7 +122,8 @@
    '((emacs-lisp . t)
      (python . t)
      (dot . t)
-     (ditaa . t))))
+     (ditaa . t)))
+  (setq org-tags-column 100))
 
 (setq org-log-done 'time
       +org-default-notes-file (f-join org-directory "notes.org")
