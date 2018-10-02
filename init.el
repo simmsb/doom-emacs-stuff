@@ -172,10 +172,12 @@
 
 (add-to-list 'exec-path "~/.local/bin/")
 (add-to-list 'exec-path "~/.cargo/bin/")
+(add-to-list 'exec-path "~/.npm-packages/bin/")
 
 ;; Does this work? idk
 (setenv "PATH"
         (concat
+         (expand-file-name "~/.npm-packages/bin/") path-separator
          (expand-file-name "~/.local/bin/") path-separator
          (expand-file-name "~/.cargo/bin/") path-separator
          (getenv "PATH")))
