@@ -36,5 +36,7 @@
 (package! drag-stuff)
 (package! discover-my-major)
 (package! evil-lion)
+(package! slack)
+(package! emojify)
 
 (package! f)
