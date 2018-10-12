@@ -73,13 +73,13 @@
                             company-capf)))
 
   (set-company-backend! 'org-mode
+    'company-math-symbols-unicode
     '(company-files
       company-yasnippet
       company-keywords
       company-capf)
     '(company-abbrev
-      company-dabbrev)
-    'company-math-symbols-unicode)
+      company-dabbrev))
 
   (global-company-mode))
 
