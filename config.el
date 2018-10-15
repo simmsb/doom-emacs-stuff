@@ -128,7 +128,9 @@
      (python . t)
      (dot . t)
      (ditaa . t)))
-  (setq org-tags-column 100))
+  (setq org-tags-column 100)
+  (setq org-latex-packages-alist
+        '(("" "physics" t))))
 
 (setq org-log-done 'time
       +org-default-notes-file (f-join org-directory "notes.org")
