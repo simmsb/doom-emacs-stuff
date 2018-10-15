@@ -278,6 +278,10 @@
   :quit nil
   :size 0.35)
 
+(set-popup-rule! "^\\*Man"
+  :side 'right
+  :size 0.35)
+
 ;; mhtml mode pls
 (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 
@@ -286,7 +290,6 @@
         treemacs-follow-mode t))
 
 ;; (setq +modeline-buffer-path-function #'+modeline-file-path-truncated-with-project)
-
 
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)
