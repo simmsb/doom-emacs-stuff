@@ -5,26 +5,41 @@
   :init
   (when (featurep! +rust)
     (set-company-backend! 'rust-mode 'company-capf)
+    (set-lookup-handlers! 'rust-mode
+      :definition #'xref-find-definitions-other-window
+      :references #'xref-find-references)
     (add-hook! rust-mode #'eglot-ensure)
     (after! flycheck
       (add-to-flycheck-list-or-set '(not rust-mode))))
   (when (featurep! +python)
     (set-company-backend! 'python-mode 'company-capf)
+    (set-lookup-handlers! 'python-mode
+      :definition #'xref-find-definitions-other-window
+      :references #'xref-find-references)
     (add-hook! python-mode #'eglot-ensure)
     (after! flycheck
       (add-to-flycheck-list-or-set '(not python-mode))))
   (when (featurep! +haskell)
     (set-company-backend! 'haskell-mode 'company-capf)
+    (set-lookup-handlers! 'haskell-mode
+      :definition #'xref-find-definitions-other-window
+      :references #'xref-find-references)
     (add-hook! haskell-mode #'eglot-ensure)
     (after! flycheck
       (add-to-flycheck-list-or-set '(not haskell-mode))))
   (when (featurep! +js)
     (set-company-backend! 'js-mode 'company-capf)
+    (set-lookup-handlers! 'js-mode
+      :definition #'xref-find-definitions-other-window
+      :references #'xref-find-references)
     (add-hook! js-mode #'eglot-ensure)
     (after! flycheck
       (add-to-flycheck-list-or-set '(not js-mode))))
   (when (featurep! +cc)
     (set-company-backend! '(c-mode c++-mode) 'company-capf)
+    (set-lookup-handlers! '(c-mode c++-mode)
+      :definition #'xref-find-definitions-other-window
+      :references #'xref-find-references)
     (add-hook! (c-mode c++-mode) #'eglot-ensure)
     (after! flycheck
       (add-to-flycheck-list-or-set '(not c-mode c++mode))))

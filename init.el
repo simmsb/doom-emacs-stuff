@@ -82,7 +82,7 @@
        ;;racket
        geiser
        assembly          ; assembly for fun or debugging
-       (cc +irony +rtags)       ; C/C++/Obj-C madness
+       cc                ; C/C++/Obj-C madness
        ;;crystal         ; ruby at the speed of c
        ;;clojure         ; java with a lisp
        ;;csharp          ; unity, .NET, and mono shenanigans
