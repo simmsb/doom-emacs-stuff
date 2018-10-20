@@ -99,9 +99,9 @@
 
 (if ON-LAPTOP
     (setq doom-theme 'doom-tomorrow-night-eighties)
-    (setq doom-theme 'doom-tomorrow-night))
+  (setq doom-theme 'doom-sourcerer))
 
-; hip shit
+;; hip shit
 (after! neotree
   (setq doom-neotree-file-icons t
         neo-theme 'icons))
@@ -139,11 +139,11 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline +org-default-todo-file "Inbox")
-             "* [ ] %?\n%i" :prepend t :kill-buffer t)
+         "* [ ] %?\n%i" :prepend t :kill-buffer t)
         ("n" "Notes" entry (file+headline +org-default-notes-file "Inbox")
-             "* %u %?\n%i" :prepend t :kill-buffer t)
+         "* %u %?\n%i" :prepend t :kill-buffer t)
         ("c" "Calendar" entry (file +org-default-calendar-file)
-             "* %?\n%^T")))
+         "* %?\n%^T")))
 
 (setq org-agenda-files (list +org-default-todo-file
                              +org-default-calendar-file
