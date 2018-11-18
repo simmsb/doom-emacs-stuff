@@ -14,6 +14,7 @@
        (syntax-checker
         +childframe)     ; tasing you for every semicolon you forget
        workspaces        ; tab emulation, persistence & separate workspaces
+       proselint
 
        :editor
        format

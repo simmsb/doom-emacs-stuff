@@ -339,3 +339,6 @@
   :commands (alert)
   :init
   (setq alert-default-style 'notifier))
+
+;; (setq
+;;  lsp-haskell-process-args-hie '("-d" "-l" "/tmp/hie.log" "+RTS" "-xc"))
