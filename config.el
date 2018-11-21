@@ -34,6 +34,7 @@
 (def-package! clang-format)
 (def-package! popup-kill-ring)
 (def-package! transpose-frame)
+(def-package! evil-anzu)
 
 (def-package! emojify
   :init
@@ -42,6 +43,7 @@
 (def-package! evil-lion
   :config
   (evil-lion-mode))
+
 (def-package! drag-stuff
   :init
   (drag-stuff-global-mode 1)
@@ -57,6 +59,15 @@
 (def-package! flycheck-credo
   :commands flycheck-credo-setup
   :hook (elixir-mode . flycheck-credo-setup))
+
+(def-package! doom-modeline
+  ;; :ensure t
+  :defer t
+  :hook (after-init . doom-modeline-init))
+
+(def-package! anzu
+  :config
+  (global-anzu-mode +1))
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 

@@ -38,5 +38,8 @@
 (package! evil-lion)
 (package! slack)
 (package! emojify)
+(package! doom-modeline)
+(package! anzu)
+(package! evil-anzu)
 
 (package! f)
