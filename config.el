@@ -61,8 +61,9 @@
   :hook (elixir-mode . flycheck-credo-setup))
 
 (def-package! doom-modeline
-  ;; :ensure t
   :defer t
+  :config
+  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
   :hook (after-init . doom-modeline-init))
 
 (def-package! anzu
@@ -89,7 +90,8 @@
                             company-capf)))
 
   (set-company-backend! 'org-mode
-    'company-math-symbols-unicode
+    '(company-math-symbols-latex
+      company-latex-commands)
     '(company-files
       company-yasnippet
       company-keywords
@@ -138,7 +140,8 @@
    '((emacs-lisp . t)
      (python . t)
      (dot . t)
-     (ditaa . t)))
+     (ditaa . t)
+     (sql . t)))
   (setq org-tags-column 100)
   (setq org-latex-packages-alist
         '(("" "physics" t))))
@@ -301,8 +304,6 @@
 (after! treemacs
   (setq treemacs-silent-refresh t
         treemacs-follow-mode t))
-
-;; (setq +modeline-buffer-path-function #'+modeline-file-path-truncated-with-project)
 
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)

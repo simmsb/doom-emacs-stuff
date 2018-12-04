@@ -65,6 +65,8 @@
        :tools
        ;;macos           ; MacOS-specific commands
        make              ; run make tasks from Emacs
+       editorconfig
+       ein
        magit
        gist              ; interacting with github gists
        password-store    ; password manager for nerds

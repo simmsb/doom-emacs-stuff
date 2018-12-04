@@ -41,5 +41,6 @@
 (package! doom-modeline)
 (package! anzu)
 (package! evil-anzu)
+(package! org-download)
 
 (package! f)
