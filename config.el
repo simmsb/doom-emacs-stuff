@@ -49,6 +49,11 @@
   (drag-stuff-global-mode 1)
   (drag-stuff-define-keys))
 
+(def-package! sqlup-mode
+  :commands (sqlup-mode)
+  :hook ((sql-mode . sqlup-mode)
+         (sql-interactive-mode . sqlup-mode)))
+
 ;; (use-package pipenv
 ;;   :init
 ;;   (setq

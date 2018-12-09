@@ -42,5 +42,6 @@
 (package! anzu)
 (package! evil-anzu)
 (package! org-download)
+(package! sqlup-mode)
 
 (package! f)

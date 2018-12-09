@@ -1,5 +1,5 @@
 (def-package! lsp-mode
-  :commands (lsp-mode)
+  :commands (lsp)
   :config
   (require 'lsp-imenu)
   (add-hook! lsp-after-open 'lsp-enable-imenu)
@@ -48,39 +48,33 @@
         lsp-ui-sideline-show-symbol t
         lsp-ui-sideline-show-code-actions t
         lsp-ui-doc-border (doom-color 'fg))
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   ;; (map! :map lsp-ui-mode-map
   ;;      [remap xref-find-definitions] . lsp-ui-peek-find-definitions
   ;;      [remap xref-find-references] . lsp-ui-peek-find-references)
-  :hook
-  (lsp-mode . lsp-ui-mode))
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+
 
 
 (def-package! company-lsp
   :after lsp-mode
   :config
-  ;(set! :company-backend lsp-mode '(company-lsp company-capf))
+  ;;(set! :company-backend lsp-mode '(company-lsp company-capf))
   (setq company-lsp-async t)
   (setq company-lsp-enable-snippet t))
 
 
-(when (featurep! +python)
-  (def-package! lsp-python
-    :commands (lsp-python-enable)
-    :config
-    (setq python-indent-guess-indent-offset-verbose nil)
-    (set-formatter! 'python-mode #'lsp-format-buffer)
-    (set-company-backend! 'python-mode 'company-lsp)
-    (set-lookup-handlers! 'python-mode
-      :definition #'lsp-ui-peek-find-definitions
-      :references #'lsp-ui-peek-find-references)
-    :hook
-    (python-mode . lsp-python-enable)))
+(when (featurep! +python) ; builtin
+  (add-hook! python-mode #'lsp)
+  (set-formatter! 'python-mode #'lsp-format-buffer)
+  (set-company-backend! 'python-mode 'company-lsp)
+  (set-lookup-handlers! 'python-mode
+    :definition #'lsp-ui-peek-find-definitions
+    :references #'lsp-ui-peek-find-references))
 
 (when (featurep! +haskell)
+  (require 'lsp-haskell)
   (def-package! lsp-haskell
-    :commands (lsp-haskell-enable)
     :config
     (set-formatter! 'haskell-mode #'lsp-format-buffer)
     (set-company-backend! 'haskell-mode 'company-lsp)
@@ -88,67 +82,43 @@
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
     :hook
-    (haskell-mode . lsp-haskell-enable)))
+    (haskell-mode . lsp)))
 
 (when (featurep! +rust)
+  (require 'lsp-rust)
   (def-package! lsp-rust
-    :commands (lsp-rust-enable)
     :config
-    (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+    (add-hook! rust-mode #'lsp)
     (set-formatter! 'rust-mode #'lsp-format-buffer)
     (set-company-backend! 'rust-mode 'company-lsp)
     (set-lookup-handlers! 'rust-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
+    (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
     :hook
-    (rust-mode . lsp-rust-enable)))
+    (rust-mode . lsp))
+  )
 
 (when (featurep! +js)
-  (def-package! lsp-javascript-typescript
-    :commands (lsp-javascript-typescript-enable)
-    :config
-    (set-formatter! 'js-mode #'lsp-format-buffer)
-    (set-company-backend! '(js-mode js3-mode rjsx-mode) 'company-lsp)
-    (set-lookup-handlers! '(js-mode js3-mode rjsx-mode)
-      :definition #'lsp-ui-peek-find-definitions
-      :references #'lsp-ui-peek-find-references)
-    :hook
-    ((js-mode js3-mode rjsx-mode) . lsp-javascript-typescript-enable))
+  (add-hook! '(js-mode js3-mode rjsx-mode) #'lsp)
+  (set-formatter! 'js-mode #'lsp-format-buffer)
+  (set-company-backend! '(js-mode js3-mode rjsx-mode) 'company-lsp)
+  (set-lookup-handlers! '(js-mode js3-mode rjsx-mode)
+    :definition #'lsp-ui-peek-find-definitions
+    :references #'lsp-ui-peek-find-references)
 
-  (defun lsp-javascript-typescript-company-transformer (candidates)
-    (let ((completion-ignore-case t))
-      (all-completions (company-grab-symbol) candidates)))
+  ;; (def-package! lsp-javascript-typescript
+  ;;   :config
+  ;;   :hook
+  ;;   ((js-mode js3-mode rjsx-mode) . lsp))
 
-  (defun lsp-javascript-typescript-js-hook ()
-    (make-local-variable 'company-transformers)
-    (push 'lsp-javascript-typescript-company-transformer company-transformers))
+  ;; (defun lsp-javascript-typescript-company-transformer (candidates)
+  ;;   (let ((completion-ignore-case t))
+  ;;     (all-completions (company-grab-symbol) candidates)))
 
-  (add-hook! js-mode 'lsp-javascript-typescript-js-hook))
+  ;; (defun lsp-javascript-typescript-js-hook ()
+  ;;   (make-local-variable 'company-transformers)
+  ;;   (push 'lsp-javascript-typescript-company-transformer company-transformers))
 
-;; (def-package! ccls
-;;   :commands (lsp-ccls-enable)
-;;   :init
-;;   (setq ccls-executable "/home/ben/dev/ccls/release/ccls"
-;;         ccls-extra-init-params '(:cacheFormat "msgpack"))
-;;   :config
-;;   (set-company-backend! '(c-mode c++-mode) 'company-lsp)
-;;   (set-lookup-handlers! '(c-mode c++-mode)
-;;     :definition #'lsp-ui-peek-find-definitions
-;;     :references #'lsp-ui-peek-find-references)
-;;   :hook
-;;   ((c-mode c++-mode) . lsp-ccls-enable))
-
-;; (def-package! cquery
-;;   :commands (lsp-cquery-enable)
-;;   :init
-;;   (setq cquery-extra-init-params '(:index (:comments 2)
-;;                                           :cacheFormat "msgpack"
-;;                                           :completion (:detailedLabel t))
-;;         cquery-sem-highlight-method 'overlay) ;; set to 'font-lock if highlighting slowly
-;;   (defun +setup-cquery ()
-;;     (setq-local company-transformers nil)
-;;     (setq-local company-lsp-cache-candidates nil)
-;;     (condition-case nil
-;;         (lsp-cquery-enable)
-;;       (user-error nil)))
-;;   :hook ((c-mode c++-mode objc-mode) . +setup-cquery))
+  ;; (add-hook! js-mode #'lsp-javascript-typescript-js-hook)
+  )
