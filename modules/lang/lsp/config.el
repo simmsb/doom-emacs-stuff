@@ -1,7 +1,6 @@
 (def-package! lsp-mode
   :commands (lsp)
   :config
-  (require 'lsp-imenu)
   (add-hook! lsp-after-open 'lsp-enable-imenu)
   (setq lsp-enable-xref t
         lsp-enable-indentation t
@@ -96,8 +95,7 @@
       :references #'lsp-ui-peek-find-references)
     (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
     :hook
-    (rust-mode . lsp))
-  )
+    (rust-mode . lsp)))
 
 (when (featurep! +js)
   (add-hook! '(js-mode js3-mode rjsx-mode) #'lsp)
