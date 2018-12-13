@@ -68,7 +68,8 @@
 (def-package! doom-modeline
   :defer t
   :config
-  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (setq doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-github nil)
   :hook (after-init . doom-modeline-init))
 
 (def-package! anzu
