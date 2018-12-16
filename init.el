@@ -55,7 +55,7 @@
 
        :emacs
        vc                ; remember, remember that commit in November
-       dired             ; making dired pretty [functional]
+       (dired +ranger +icons) ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        ediff
        eshell            ; a consistent, cross-platform shell (WIP)
@@ -192,7 +192,7 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
-   (setq doom-font (font-spec :family "Fira Mono" :size 17)
+   (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 23))))
 
