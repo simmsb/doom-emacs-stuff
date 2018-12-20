@@ -3,8 +3,8 @@
   :config
   (add-hook! lsp-after-open 'lsp-enable-imenu)
   (setq lsp-enable-xref t
+        lsp-prefer-flymake nil
         lsp-enable-indentation t
-        lsp-enable-eldoc t
         lsp-enable-completion-at-point nil))
 
 (def-package! lsp-ui
@@ -35,13 +35,11 @@
                   (no-special-glyphs . t)))
   :config
   (setq lsp-ui-sideline-enable nil
-        lsp-ui-flycheck-enable t
         lsp-ui-doc-position 'top
         lsp-ui-doc-header t
         lsp-ui-doc-enable t
         lsp-ui-doc-include-signature t
         lsp-ui-doc-use-childframe t
-        lsp-ui-sideline-show-flycheck t
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-ignore-duplicate t
         lsp-ui-sideline-show-symbol t
@@ -53,7 +51,11 @@
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
 
-
+(def-package! lsp-ui-flycheck
+  :commands (lsp-ui-flycheck-enable)
+  :after lsp-ui
+  :init
+  (lsp-ui-flycheck-enable t))
 
 (def-package! company-lsp
   :after lsp-mode

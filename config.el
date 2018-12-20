@@ -69,7 +69,9 @@
   :defer t
   :config
   (setq doom-modeline-buffer-file-name-style 'truncate-with-project
-        doom-modeline-github nil)
+        doom-modeline-github nil
+        doom-modeline-major-mode-icon nil
+        doom-modeline-icon t)
   :hook (after-init . doom-modeline-init))
 
 (def-package! anzu
@@ -86,10 +88,12 @@
     (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
     (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
+(after! flycheck
+  (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
+
 (after! company
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
-        company-quickhelp-mode t
         company-quickhelp-delay 0.4
         company-backends '((company-yasnippet
                             company-keywords
@@ -105,6 +109,7 @@
     '(company-abbrev
       company-dabbrev))
 
+  (company-quickhelp-mode)
   (global-company-mode))
 
 ;; (after! rainbow-identifiers
@@ -124,9 +129,6 @@
 (after! neotree
   (setq doom-neotree-file-icons t
         neo-theme 'icons))
-
-(after! company-quickhelp
-  (company-quickhelp-mode 1))
 
 ;; (after! elpy
 ;;   (setq elpy-syntax-check-command "epylint"

@@ -13,6 +13,10 @@
 ;;(package! rainbow-identifiers)
 ;;(package! solaire-mode :disable t)
 ;;(package! ivy-posframe :disable t)
+
+(package! magithub :disable t)
+(package! forge)
+
 (package! company)
 (package! company-quickhelp)
 (package! graphviz-dot-mode)

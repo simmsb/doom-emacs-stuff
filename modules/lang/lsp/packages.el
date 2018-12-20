@@ -4,7 +4,9 @@
 
 (when (featurep! +rust)
   ;; doom-local-dir would be better but idk how to eval exprs in the recipe
-  (package! lsp-rust :recipe (:fetcher github :repo "nitros12/lsp-rust"))
+  (package! lsp-rust :recipe (:fetcher github :repo "nitros12/lsp-rust")
+    ;; (:fetcher file :path "~/dev/lsp-rust")
+    )
   (package! racer :disable t)
   (package! company-racer :disable t)
   (package! flycheck-rust :disable t))
