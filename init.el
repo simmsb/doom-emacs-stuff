@@ -199,4 +199,4 @@
 ;; we still need this apparently
 (setq custom-file (concat doom-etc-dir "custom.el"))
 
-(setq lsp-print-io t)
+; (setq lsp-print-io t)

@@ -8,13 +8,13 @@
    :n "g/" #'alchemist-help-search-at-point)
 
  (:leader
-   (:desc "file" :prefix "f"
-     :desc "Treemacs" :n "t" #'+treemacs/toggle))
+   (:prefix "f"
+     :desc "Toggle Treemacs" "t" #'+treemacs/toggle))
 
- (:after evil-easymotion
-   (:map evilem-map
-     "<down>" #'evilem-motion-next-line
-     "<up>" #'evilem-motion-previous-line))
+ (:map evilem-map
+   :after evil-easymotion
+   "<down>" #'evilem-motion-next-line
+   "<up>" #'evilem-motion-previous-line)
 
  (:map evil-window-map
    "<left>"     #'evil-window-left
