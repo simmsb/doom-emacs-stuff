@@ -78,6 +78,9 @@
   :config
   (global-anzu-mode +1))
 
+(def-package! forge
+  :after magit)
+
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (if ON-LAPTOP
@@ -316,7 +319,7 @@
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)
 
-(use-package slack
+(def-package! slack
   :commands (slack-start)
   :init
   (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
@@ -329,7 +332,7 @@
    :client-id (password-store-get "slack/lucss/id")
    :client-secret (password-store-get "slack/lucss/secret")
    :token (password-store-get "slack/lucss/token")
-   :subscribed-channels '(general)
+   :subscribed-channels '(general exec tech)
    :full-and-display-names t)
 
   (evil-define-key 'normal slack-mode-map
@@ -355,7 +358,7 @@
     ",2" 'slack-message-embed-mention
     ",3" 'slack-message-embed-channel))
 
-(use-package alert
+(def-package! alert
   :commands (alert)
   :init
   (setq alert-default-style 'notifier))
