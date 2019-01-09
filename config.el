@@ -91,6 +91,9 @@
     (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
     (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
+(after! magit
+  (magit-wip-mode 1))
+
 (after! flycheck
   (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
 
