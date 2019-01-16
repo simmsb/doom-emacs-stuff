@@ -48,4 +48,9 @@
 (package! org-download)
 (package! sqlup-mode)
 
+(package! org-sticky-header)
+(package! smart-hungry-delete)
+(package! string-inflection)
+(package! backline)
+
 (package! f)

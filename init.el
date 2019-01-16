@@ -192,7 +192,7 @@
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
-   (setq doom-font (font-spec :family "Fira Mono" :size 14)
+   (setq doom-font (font-spec :family "Fira Mono" :size 17)
          doom-unicode-font (font-spec :family "Fira Mono")
          doom-big-font (font-spec :family "Fira Mono" :size 23))))
 

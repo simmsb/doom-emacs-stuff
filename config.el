@@ -25,6 +25,14 @@
  (:map evil-motion-state-map
    "?" #'counsel-grep-or-swiper)
 
+ ;; in lisp modes use default evil-delete for parinfer magic
+ (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
+   :i "<backspace>" #'parinfer-backward-delete-char
+   :i "C-d" #'delete-char)
+
+ :i "<backspace>" #'smart-hungry-delete-backward-char
+ :i "C-d" #'smart-hungry-delete-forwards-char
+
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
 
@@ -66,7 +74,6 @@
   :hook (elixir-mode . flycheck-credo-setup))
 
 (def-package! doom-modeline
-  :defer t
   :config
   (setq doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-github nil
@@ -80,6 +87,15 @@
 
 (def-package! forge
   :after magit)
+
+(def-package! smart-hungry-delete
+  ;; :ensure t
+  :defer nil
+  :config (smart-hungry-delete-add-default-hooks))
+
+(def-package! backline
+  :after outline
+  :config (advice-add 'outline-flag-region :after 'backline-update))
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
@@ -132,9 +148,9 @@
   (setq doom-theme 'doom-sourcerer))
 
 ;; hip shit
-(after! neotree
-  (setq doom-neotree-file-icons t
-        neo-theme 'icons))
+;; (after! neotree
+;;   (setq doom-neotree-file-icons t
+;;         neo-theme 'icons))
 
 ;; (after! elpy
 ;;   (setq elpy-syntax-check-command "epylint"
@@ -158,7 +174,14 @@
      (sql . t)))
   (setq org-tags-column 100)
   (setq org-latex-packages-alist
-        '(("" "physics" t))))
+        '(("" "physics" t)))
+  (setq org-sticky-header-full-path 'full)
+
+  (add-hook! org-mode
+    (org-sticky-header-mode 1))
+
+  (setq org-attach-screenshot-command-line "escrotum -s %f")
+  (setq org-reveal-root "~/dev/reveal.js"))
 
 (setq org-log-done 'time
       +org-default-notes-file (f-join org-directory "notes.org")
