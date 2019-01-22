@@ -61,6 +61,15 @@
     (after! flycheck
       (add-to-flycheck-list-or-set '(not c-mode c++mode))))
 
+  (when (featurep! +java)
+    (set-company-backend! java-mode 'company-capf)
+    (set-lookup-handlers! java-mode
+      :definition #'xref-find-definitions-other-window
+      :references #'xref-find-references)
+    (add-hook! java-mode #'eglot-ensure)
+    (after! flycheck
+      (add-to-flycheck-list-or-set '(not java-mode))))
+
   :config
   (when (featurep! +rust)
     (add-to-list 'eglot-server-programs '(rust-mode . (eglot-rls "rustup" "run" "nightly" "rls")))))

@@ -22,5 +22,8 @@
 (when (featurep! +cc)
   (package! ccls))
 
+(when (featurep! +java)
+  (package! lsp-java))
+
 ;; (when (featurep! +js)
 ;;   (package! lsp-javascript-typescript))

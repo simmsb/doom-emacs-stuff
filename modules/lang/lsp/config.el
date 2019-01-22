@@ -64,6 +64,17 @@
   (setq company-lsp-async t)
   (setq company-lsp-enable-snippet t))
 
+(when (featurep! +java)
+  (require 'lsp-java)
+  (def-package! lsp-java
+    :config
+    (set-formatter! 'java-mode #'lsp-format-buffer)
+    (set-company-backend! 'java-mode 'company-lsp)
+    (set-lookup-handlers! 'java-mode
+      :definition #'lsp-ui-peek-find-definitions
+      :references #'lsp-ui-peek-find-references)
+    :hook
+    (java-mode . lsp)))
 
 (when (featurep! +python) ; builtin
   (add-hook! python-mode #'lsp)
