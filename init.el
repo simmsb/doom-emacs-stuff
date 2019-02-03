@@ -57,10 +57,11 @@
        vc                ; remember, remember that commit in November
        (dired +ranger +icons) ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
+       hideshow
        ediff
        eshell            ; a consistent, cross-platform shell (WIP)
        imenu             ; an imenu sidebar and searchable code index
-       term              ; terminals in Emacs
+       ;;term              ; terminals in Emacs
 
        :tools
        ;;macos           ; MacOS-specific commands

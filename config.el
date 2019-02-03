@@ -288,7 +288,7 @@
       geiser-mode-start-repl-p t)
 
 
-;; persisit history
+;; persist history
 (setq undo-tree-auto-save-history t
       undo-tree-history-directory-alist `(("." . ,(concat doom-emacs-dir "undo"))))
 
@@ -391,3 +391,6 @@
 
 ;; (setq
 ;;  lsp-haskell-process-args-hie '("-d" "-l" "/tmp/hie.log" "+RTS" "-xc"))
+
+(setq deft-directory "~/org/lectures"
+      deft-recursive t)
