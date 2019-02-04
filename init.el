@@ -79,7 +79,7 @@
        common-lisp
        jade
        sourcepawn
-       (lsp +java +haskell +python +rust)
+       (lsp +java +python +rust)
        (lsp-eglot +js +cc)
        ebnf
        ;;racket

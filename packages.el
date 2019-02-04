@@ -14,12 +14,17 @@
 ;;(package! solaire-mode :disable t)
 ;;(package! ivy-posframe :disable t)
 
+
 (package! magithub :disable t)
 (package! forge)
 
 (package! company)
 (package! company-quickhelp)
 (package! graphviz-dot-mode)
+
+(when (string= (system-name) "laptop")
+  (package! lsp-haskell :disable t)
+  (package! flycheck-haskell :disable t))
 
 (unless (string= (system-name) "laptop")
   ;;(package! pretty-magit :recipe
