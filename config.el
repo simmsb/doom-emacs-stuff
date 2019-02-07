@@ -145,7 +145,7 @@
 
 (if ON-LAPTOP
     (setq doom-theme 'doom-tomorrow-night-eighties)
-  (setq doom-theme 'doom-sourcerer))
+  (setq doom-theme 'doom-opera))
 
 ;; hip shit
 ;; (after! neotree
@@ -280,7 +280,9 @@
       evil-insert-state-cursor '(bar "medium sea green")
       evil-visual-state-cursor '(hollow "orange"))
 
-(setq projectile-require-project-root t)
+(setq projectile-require-project-root t
+      projectile-enable-caching nil)
+
 (fset 'evil-visual-update-x-selection 'ignore)
 
 (setq geiser-mode-eval-last-sexp-to-buffer t
