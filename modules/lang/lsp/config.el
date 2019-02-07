@@ -85,7 +85,7 @@
     :references #'lsp-ui-peek-find-references))
 
 (when (featurep! +haskell)
-  (require 'lsp-haskell)
+  ;;(require 'lsp-haskell)
   (def-package! lsp-haskell
     :config
     (set-formatter! 'haskell-mode #'lsp-format-buffer)
