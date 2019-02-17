@@ -97,6 +97,9 @@
   :after outline
   :config (advice-add 'outline-flag-region :after 'backline-update))
 
+(def-package! esh-autosuggest
+  :hook (eshell-mode . esh-autosuggest-mode))
+
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (if ON-LAPTOP

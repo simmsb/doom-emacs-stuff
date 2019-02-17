@@ -85,20 +85,19 @@
     :references #'lsp-ui-peek-find-references))
 
 (when (featurep! +haskell)
-  ;;(require 'lsp-haskell)
   (def-package! lsp-haskell
+    :after lsp-mode
     :config
     (set-formatter! 'haskell-mode #'lsp-format-buffer)
     (set-company-backend! 'haskell-mode 'company-lsp)
     (set-lookup-handlers! 'haskell-mode
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
-    :hook
-    (haskell-mode . lsp)))
+    (add-hook! haskell-mode #'lsp)))
 
 (when (featurep! +rust)
-  (require 'lsp-rust)
   (def-package! lsp-rust
+    :after lsp-mode
     :config
     (add-hook! rust-mode #'lsp)
     (set-formatter! 'rust-mode #'lsp-format-buffer)
@@ -107,8 +106,7 @@
       :definition #'lsp-ui-peek-find-definitions
       :references #'lsp-ui-peek-find-references)
     (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-    :hook
-    (rust-mode . lsp)))
+    (add-hook! rust-mode #'lsp)))
 
 (when (featurep! +js)
   (add-hook! '(js-mode js3-mode rjsx-mode) #'lsp)
