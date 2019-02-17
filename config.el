@@ -85,9 +85,6 @@
   :config
   (global-anzu-mode +1))
 
-(def-package! forge
-  :after magit)
-
 (def-package! smart-hungry-delete
   ;; :ensure t
   :defer nil
