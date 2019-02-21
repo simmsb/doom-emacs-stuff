@@ -88,6 +88,7 @@
   (def-package! lsp-haskell
     :after lsp-mode
     :config
+    (setq lsp-enable-snippet nil)
     (set-formatter! 'haskell-mode #'lsp-format-buffer)
     (set-company-backend! 'haskell-mode 'company-lsp)
     (set-lookup-handlers! 'haskell-mode

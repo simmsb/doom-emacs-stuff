@@ -78,8 +78,9 @@
   (setq doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-github nil
         doom-modeline-major-mode-icon nil
-        doom-modeline-icon t)
-  :hook (after-init . doom-modeline-init))
+        doom-modeline-icon t
+        doom-modeline-enable-word-count t)
+  :hook (after-init . doom-modeline-mode))
 
 (def-package! anzu
   :config
