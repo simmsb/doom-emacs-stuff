@@ -10,9 +10,6 @@
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
        snippets          ; my elves. They type so I don't have to
-       spellcheck        ; tasing you for misspelling mispelling
-       (syntax-checker
-        +childframe)     ; tasing you for every semicolon you forget
        workspaces        ; tab emulation, persistence & separate workspaces
        proselint
 
@@ -63,6 +60,9 @@
        ;;term              ; terminals in Emacs
 
        :tools
+       flyspell        ; tasing you for misspelling mispelling
+       (flycheck
+        +childframe)     ; tasing you for every semicolon you forget
        ;;macos           ; MacOS-specific commands
        make              ; run make tasks from Emacs
        editorconfig
