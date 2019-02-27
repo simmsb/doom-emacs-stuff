@@ -108,6 +108,30 @@
     (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
     (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
+
+(after! lsp
+  (setq lsp-enable-xref t
+        lsp-enable-snippet t
+        lsp-enable-completion-at-point nil
+        lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
+
+(after! company-lsp
+  (setq company-lsp-enable-snippet t))
+
+(after! lsp-ui
+  (setq lsp-ui-sideline-enable nil
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-use-webkit t
+        lsp-ui-doc-header t
+        lsp-ui-doc-enable t
+        lsp-ui-doc-include-signature t
+        lsp-ui-doc-use-childframe t
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-ignore-duplicate t
+        lsp-ui-sideline-show-symbol t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-doc-border (doom-color 'fg)))
+
 (after! magit
   (magit-wip-mode 1))
 
