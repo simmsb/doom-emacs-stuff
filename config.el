@@ -121,7 +121,6 @@
 (after! lsp-ui
   (setq lsp-ui-sideline-enable nil
         lsp-ui-doc-position 'top
-        lsp-ui-doc-use-webkit t
         lsp-ui-doc-header t
         lsp-ui-doc-enable t
         lsp-ui-doc-include-signature t
