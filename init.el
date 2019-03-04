@@ -81,12 +81,12 @@
        jade
        sourcepawn
        ;; (lsp +java +haskell +python +rust)
-       (lsp-eglot +cc)
+       ;; (lsp-eglot +cc)
        ebnf
        ;;racket
        geiser
        assembly          ; assembly for fun or debugging
-       cc                ; C/C++/Obj-C madness
+       (cc +lsp)                ; C/C++/Obj-C madness
        ;;crystal         ; ruby at the speed of c
        ;;clojure         ; java with a lisp
        ;;csharp          ; unity, .NET, and mono shenanigans

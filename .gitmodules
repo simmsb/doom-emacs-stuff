@@ -4,6 +4,3 @@
 [submodule "local/sourcepawn-mode"]
 	path = local/sourcepawn-mode
 	url = https://github.com/agrif/sourcepawn-mode
-[submodule "local/alchemist.el"]
-	path = local/alchemist.el
-	url = https://github.com/Trevoke/alchemist.el
