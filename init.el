@@ -193,10 +193,10 @@
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
    (setq doom-font (font-spec :family "Fira Mono" :size 17)
-         doom-unicode-font (font-spec :family "Fira Mono")
+         doom-unicode-font (font-spec :family "DejaVu Sans mono")
          doom-big-font (font-spec :family "Fira Mono" :size 23))))
 
 ;; we still need this apparently
 (setq custom-file (concat doom-etc-dir "custom.el"))
 
-; (setq lsp-print-io t)
+;; (setq lsp-print-io t)

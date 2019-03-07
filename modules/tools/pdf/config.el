@@ -6,13 +6,7 @@
   (unless noninteractive
     (pdf-tools-install t))
 
-  (define-key! pdf-view-mode-map
-    "q" #'kill-this-buffer
-    (kbd doom-leader-key) nil)
-
-  (when (featurep! :feature evil +everywhere)
-    (evil-define-key* 'normal pdf-view-mode-map
-      "q" #'kill-this-buffer))
+  (map! :map pdf-view-mode-map :gn "q" #'kill-this-buffer)
 
   (defun +pdf|cleanup-windows ()
     "Kill left-over annotation buffers when the document is killed."
@@ -29,13 +23,10 @@
   (setq-default pdf-view-display-size 'fit-page)
   ;; Turn off cua so copy works
   (add-hook! 'pdf-view-mode-hook (cua-mode 0))
-  ;; Custom modeline that removes useless info and adds page numbers
-  (when (or (featurep! :ui doom-modeline) (featurep! :ui modeline))
-    (load! "+modeline"))
   ;; Handle PDF-tools related popups better
   (set-popup-rule! "^\\*Outline*" :side 'right :size 40 :select nil)
-  ;; TODO: Add additional important windows that should be handled differently
-  ;; TODO: These two next rules don't work (they should), investigate
+  ;; The next rules are not needed, they are defined in modules/ui/popups/+hacks.el
   ;; (set-popup-rule! "\\*Contents\\*" :side 'right :size 40)
   ;; (set-popup-rule! "* annots\\*$" :side 'left :size 40 :select nil)
-  )
+  ;; Fix #1107: flickering pdfs when evil-mode is enabled
+  (setq-hook! 'pdf-view-mode-hook evil-normal-state-cursor (list nil)))

@@ -3,10 +3,6 @@
 ;; bindings
 
 (map!
- (:after alchemist
-   :map alchemist-mode-map
-   :n "g/" #'alchemist-help-search-at-point)
-
  (:leader
    (:prefix "f"
      :desc "Toggle Treemacs" "t" #'+treemacs/toggle))
@@ -334,21 +330,9 @@
 (add-hook! js-mode
   (nuke-pretty-symbols 'js-mode))
 
-(setq alchemist-server-extension "sh")
-
 ;; dunno if there's a better way to starting in paren mode
 (add-hook! parinfer-mode
   (parinfer--switch-to-paren-mode))
-
-
-(set-popup-rule! "^\\*alchemist help"
-  :side 'right
-  :size 0.35)
-
-(set-popup-rule! "^\\*Alchemist-IEx"
-  :side 'right
-  :quit nil
-  :size 0.35)
 
 (set-popup-rule! "^\\* Racket REPL"
   :side 'right
@@ -364,10 +348,14 @@
 
 (after! treemacs
   (setq treemacs-silent-refresh t
-        treemacs-follow-mode t))
+        treemacs-follow-mode t
+        doom-treemacs-use-generic-icons nil))
 
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)
+
+(add-hook 'after-make-frame-functions (lambda (frame)
+                                        (doom/reload-font)))
 
 (def-package! slack
   :commands (slack-start)

@@ -3,10 +3,10 @@
 (defvar +doom-solaire-themes
   '((doom-city-lights . t)
     (doom-dracula . t)
-    (doom-molokai . t)
+    (doom-molokai)
     (doom-nord . t)
     (doom-nord-light . t)
-    (doom-nova . nil)
+    (doom-nova)
     (doom-one . t)
     (doom-one-light . t)
     (doom-opera . t)
@@ -17,7 +17,6 @@
   "An alist of themes that support `solaire-mode'. If CDR is t, then use
 `solaire-mode-swap-bg'.")
 
-
 ;;
 ;; Plugins
 ;;
@@ -25,23 +24,20 @@
 ;; <https://github.com/hlissner/emacs-doom-theme>
 (def-package! doom-themes
   :load-path "~/.doom.d/emacs-doom-themes"
-  :config
+  :init
   (unless doom-theme
     (setq doom-theme 'doom-one))
-
-  ;; Reload common faces when reloading doom-themes live
-  (defun +doom*reload-common (&rest _) (load "doom-themes-common.el" nil t))
-  (advice-add #'doom//reload-theme :before #'+doom*reload-common)
-
   ;; improve integration w/ org-mode
   (add-hook 'doom-load-theme-hook #'doom-themes-org-config)
-
-  ;; more Atom-esque file icons for neotree
-  (add-hook 'doom-load-theme-hook #'doom-themes-neotree-config)
-  (setq doom-neotree-enable-variable-pitch t
-        doom-neotree-file-icons 'simple
-        doom-neotree-line-spacing 2))
-
+  ;; more Atom-esque file icons for neotree/treemacs
+  (when (featurep! :ui neotree)
+    (add-hook 'doom-load-theme-hook #'doom-themes-neotree-config)
+    (setq doom-neotree-enable-variable-pitch t
+          doom-neotree-file-icons 'simple
+          doom-neotree-line-spacing 2))
+  (when (featurep! :ui treemacs)
+    (add-hook 'doom-load-theme-hook #'doom-themes-treemacs-config)
+    (setq doom-treemacs-enable-variable-pitch t)))
 
 (def-package! solaire-mode
   :defer t
@@ -52,7 +48,6 @@
       (if (cdr rule) (solaire-mode-swap-bg))))
   (add-hook 'doom-load-theme-hook #'+doom|solaire-mode-swap-bg-maybe t)
   :config
-  (add-hook 'change-major-mode-after-body-hook #'turn-on-solaire-mode)
   ;; fringe can become unstyled when deleting or focusing frames
   (add-hook 'focus-in-hook #'solaire-mode-reset)
   ;; Prevent color glitches when reloading either DOOM or loading a new theme
@@ -60,48 +55,37 @@
     #'solaire-mode-reset)
   ;; org-capture takes an org buffer and narrows it. The result is erroneously
   ;; considered an unreal buffer, so solaire-mode must be restored.
-  (add-hook 'org-capture-mode-hook #'turn-on-solaire-mode))
+  (add-hook 'org-capture-mode-hook #'turn-on-solaire-mode)
 
+  ;; On Emacs 26+, when point is on the last line and solaire-mode is remapping
+  ;; the hl-line face, hl-line's highlight bleeds into the rest of the window
+  ;; after eob.
+  (when EMACS26+
+    (defun +doom--line-range ()
+      (cons (line-beginning-position)
+            (cond ((let ((eol (line-end-position)))
+                     (and (=  eol (point-max))
+                          (/= eol (line-beginning-position))))
+                   (1- (line-end-position)))
+                  ((or (eobp)
+                       (= (line-end-position 2) (point-max)))
+                   (line-end-position))
+                  ((line-beginning-position 2)))))
+    (setq hl-line-range-function #'+doom--line-range))
 
-(after! hideshow
-  (defface +doom-folded-face `((t (:inherit font-lock-comment-face :weight light)))
-    "Face to hightlight `hideshow' overlays."
-    :group 'doom-themes)
+  ;; Because fringes can't be given a buffer-local face, they can look odd, so
+  ;; we remove them in the minibuffer and which-key popups (they serve no
+  ;; purpose there anyway).
+  (defun +doom|disable-fringes-in-minibuffer (&rest _)
+    (set-window-fringes (minibuffer-window) 0 0 nil))
+  (add-hook 'solaire-mode-hook #'+doom|disable-fringes-in-minibuffer)
 
-  ;; Nicer code-folding overlays (with fringe indicators)
-  (defun +doom-set-up-overlay (ov)
-    (when (eq 'code (overlay-get ov 'hs))
-      (when (featurep 'vimish-fold)
-        (overlay-put
-         ov 'before-string
-         (propertize "…" 'display
-                     (list vimish-fold-indication-mode
-                           'empty-line
-                           'vimish-fold-fringe))))
-      (overlay-put
-       ov 'display (propertize "  [...]  " 'face '+doom-folded-face))))
-  (setq hs-set-up-overlay #'+doom-set-up-overlay))
+  (defun doom*no-fringes-in-which-key-buffer (&rest _)
+    (+doom|disable-fringes-in-minibuffer)
+    (set-window-fringes (get-buffer-window which-key--buffer) 0 0 nil))
+  (advice-add 'which-key--show-buffer-side-window :after #'doom*no-fringes-in-which-key-buffer)
 
+  (add-hook! '(minibuffer-setup-hook window-configuration-change-hook)
+    #'+doom|disable-fringes-in-minibuffer)
 
-;; NOTE Adjust these bitmaps if you change `doom-fringe-size'
-(after! flycheck
-  ;; because git-gutter is in the left fringe
-  (setq flycheck-indication-mode 'right-fringe)
-  ;; A non-descript, left-pointing arrow
-  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-    [16 48 112 240 112 48 16] nil nil 'center))
-
-;; subtle diff indicators in the fringe
-(after! git-gutter-fringe
-  ;; places the git gutter outside the margins.
-  (setq-default fringes-outside-margins t)
-  ;; thin fringe bitmaps
-  (define-fringe-bitmap 'git-gutter-fr:added [224]
-    nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224]
-    nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
-    nil nil 'bottom))
-
-;; standardize default fringe width
-(if (fboundp 'fringe-mode) (fringe-mode '4))
+(solaire-global-mode +1))
