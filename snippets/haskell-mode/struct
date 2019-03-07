@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: struct
+# key: struct
+# --
+data $1 = $1
+  { $2
+  } deriving (Eq, Show, Generic)
+$0
