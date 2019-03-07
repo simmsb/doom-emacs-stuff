@@ -37,7 +37,6 @@
 (package! clang-format)
 (package! popup-kill-ring)
 (package! company-math)
-(package! flycheck-credo)
 (package! transpose-frame)
 (package! drag-stuff)
 (package! discover-my-major)

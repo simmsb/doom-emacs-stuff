@@ -65,10 +65,6 @@
 ;;    #'pipenv-projectile-after-switch-extended)
 ;;   :hook (python-mode . pipenv-mode))
 
-(def-package! flycheck-credo
-  :commands flycheck-credo-setup
-  :hook (elixir-mode . flycheck-credo-setup))
-
 (def-package! anzu
   :config
   (global-anzu-mode +1))
@@ -178,9 +174,6 @@
 ;;                        elpy-module-yasnippet
 ;;                        elpy-module-sane-defaults))
 ;;   (elpy-enable))
-
-(after! flycheck
-  (global-flycheck-mode))
 
 (after! org
   (org-babel-do-load-languages

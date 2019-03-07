@@ -177,6 +177,9 @@
 (add-to-list 'exec-path "~/.cargo/bin/")
 (add-to-list 'exec-path "~/.npm-packages/bin/")
 
+;; (setenv "GRADLE_HOME" "~/.gradle/wrapper/dists/gradle-5.1.1-bin")
+;; (setenv "GRADLE_USER_HOME" "~/.gradle")
+
 ;; Does this work? idk
 (setenv "PATH"
         (concat
