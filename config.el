@@ -91,14 +91,6 @@
     (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
     (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
-
-(after! doom-modeline
-  (setq doom-modeline-buffer-file-name-style 'truncate-with-project
-        doom-modeline-github nil
-        doom-modeline-major-mode-icon nil
-        doom-modeline-icon t
-        doom-modeline-enable-word-count t))
-
 (after! lsp
   (setq lsp-enable-xref t
         lsp-enable-snippet t
@@ -399,3 +391,9 @@
 
 (setq deft-directory "~/org/lectures"
       deft-recursive t)
+
+(setq doom-modeline-buffer-file-name-style 'truncate-with-project
+      doom-modeline-github nil
+      doom-modeline-major-mode-icon nil
+      doom-modeline-icon t
+      doom-modeline-enable-word-count t)
