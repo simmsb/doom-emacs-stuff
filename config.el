@@ -95,7 +95,10 @@
   (setq lsp-enable-xref t
         lsp-enable-snippet t
         lsp-enable-completion-at-point nil
-        lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
+        lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+
+  (set-formatter! 'lsp-formatter #'lsp-format-buffer
+    :modes '(lsp-mode)))
 
 (after! company-lsp
   (setq company-lsp-enable-snippet t))
@@ -283,10 +286,11 @@
       evil-insert-state-cursor '(bar "medium sea green")
       evil-visual-state-cursor '(hollow "orange"))
 
+;; stops the evil selection being added to the kill-ring
+(fset 'evil-visual-update-x-selection 'ignore)
+
 (setq projectile-require-project-root t
       projectile-enable-caching nil)
-
-(fset 'evil-visual-update-x-selection 'ignore)
 
 (setq geiser-mode-eval-last-sexp-to-buffer t
       geiser-mode-eval-to-buffer-prefix " ;=> "
@@ -397,3 +401,5 @@
       doom-modeline-major-mode-icon nil
       doom-modeline-icon t
       doom-modeline-enable-word-count t)
+
+(setq soundklaus-access-token (password-store-get "soundcloud/token"))
