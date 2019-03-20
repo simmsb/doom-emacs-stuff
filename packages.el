@@ -58,3 +58,4 @@
 (package! esh-autosuggest)
 
 (package! f)
+(package! ox-hugo)

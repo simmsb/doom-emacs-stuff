@@ -40,6 +40,9 @@
 (def-package! transpose-frame)
 (def-package! evil-anzu)
 
+(def-package! ox-hugo
+  :after ox)
+
 (def-package! emojify
   :init
   (add-hook! 'after-init-hook #'global-emojify-mode))
