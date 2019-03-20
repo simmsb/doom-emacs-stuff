@@ -203,7 +203,9 @@
         ("n" "Notes" entry (file+headline +org-default-notes-file "Inbox")
          "* %u %?\n%i" :prepend t :kill-buffer t)
         ("c" "Calendar" entry (file +org-default-calendar-file)
-         "* %?\n%^T")))
+         "* %?\n%^T")
+        ("h" "Hugo post" entry (file+olp "blog.org" "Blog")
+         (function org-hugo-new-subtree-post-capture-template))))
 
 (setq org-agenda-files (list +org-default-todo-file
                              +org-default-calendar-file
