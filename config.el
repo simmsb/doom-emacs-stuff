@@ -5,7 +5,9 @@
 (map!
  (:leader
    (:prefix "f"
-     :desc "Toggle Treemacs" "t" #'+treemacs/toggle))
+     :desc "Toggle Treemacs" "t" #'+treemacs/toggle)
+   (:prefix "o"
+     :desc "Open Shopping" "s" #'org-shopping-open))
 
  (:map evilem-map
    :after evil-easymotion
@@ -195,17 +197,21 @@
 (setq org-log-done 'time
       +org-default-notes-file (f-join org-directory "notes.org")
       +org-default-todo-file (f-join org-directory "todo.org")
-      +org-default-calendar-file (f-join org-directory "calendar.org"))
+      +org-default-calendar-file (f-join org-directory "calendar.org")
+      +org-shopping-file (f-join org-directory "shopping_list.org"))
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline +org-default-todo-file "Inbox")
+      '(("t" "Todo" entry (file +org-default-todo-file)
          "* [ ] %?\n%i" :prepend t :kill-buffer t)
-        ("n" "Notes" entry (file+headline +org-default-notes-file "Inbox")
+        ("n" "Notes" entry (file +org-default-notes-file)
          "* %u %?\n%i" :prepend t :kill-buffer t)
         ("c" "Calendar" entry (file +org-default-calendar-file)
          "* %?\n%^T")
         ("h" "Hugo post" entry (file+olp "blog.org" "Blog")
-         (function org-hugo-new-subtree-post-capture-template))))
+         (function org-hugo-new-subtree-post-capture-template))
+        ("s" "Shopping" plain (file +org-shopping-file)
+         (function org-shopping-goto-last-open-or-make-new))))
+
 
 (setq org-agenda-files (list +org-default-todo-file
                              +org-default-calendar-file

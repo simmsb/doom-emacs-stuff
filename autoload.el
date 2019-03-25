@@ -44,3 +44,26 @@ See `org-capture-templates' for more information."
                  ":END:"
                  "%?\n")          ;Place the cursor here finally
                "\n")))
+
+;;;###autoload
+(defun org-shopping-goto-last-open-or-make-new ()
+  (with-current-buffer (org-capture-target-buffer (eval (nth 1 (org-capture-get :target))))
+    (let ((last-shop
+           (progn
+             (goto-char (point-max))
+             (if (search-backward-regexp (rx bol "*" (* space) (or "TODO" "DONE") (* space) "Shop" (* space) (group (+ digit))) nil 'noerror)
+                 (string-to-number (match-string 1))
+               0))))
+      (goto-char (point-max))
+      (if (search-backward-regexp (rx bol "* TODO Shop" (* space) (+ digit)) nil 'noerror)
+          (progn
+            (goto-char (match-end 0))
+            "- [ ] %?")
+        (progn
+          (goto-char (point-max))
+          (concat "* TODO Shop " (number-to-string (+ last-shop 1)) "\n" "- [ ] %?"))))))
+
+;;;###autoload
+(defun org-shopping-open ()
+  (interactive)
+  (find-file +org-shopping-file))
