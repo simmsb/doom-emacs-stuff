@@ -12,6 +12,7 @@
        snippets          ; my elves. They type so I don't have to
        workspaces        ; tab emulation, persistence & separate workspaces
        proselint
+       lsp-python-poetry
 
        :editor
        fold
