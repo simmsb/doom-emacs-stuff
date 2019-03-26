@@ -213,8 +213,6 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-(add-hook! before-save #'delete-trailing-whitespace)
-
 ;; (defun sp-point-after-word-excepted (&rest words)
 ;;   "Return t if point is after a word, nil if otherwise or previous word is in the excepted list
 ;; This predicate is only tested on \"insert\" action."
