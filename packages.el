@@ -35,6 +35,8 @@
 
 
 ;;(package! elpy)
+(package! github-browse-file)
+(package! github-review)
 (package! py-isort)
 (package! evil-multiedit)
 (package! disable-mouse)

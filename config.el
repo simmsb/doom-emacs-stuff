@@ -41,13 +41,13 @@
 (def-package! popup-kill-ring)
 (def-package! transpose-frame)
 (def-package! evil-anzu)
+(def-package! github-review)
+(def-package! github-browse-file)
+(def-package! emojify)
 
 (def-package! ox-hugo
   :after ox)
 
-(def-package! emojify
-  :init
-  (add-hook! 'after-init-hook #'global-emojify-mode))
 
 (def-package! evil-lion
   :config
@@ -98,15 +98,17 @@
 
 (after! lsp
   (setq lsp-enable-xref t
-        lsp-enable-snippet t
         lsp-enable-completion-at-point nil
+        lsp-enable-snippet t
         lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
 
   (set-formatter! 'lsp-formatter #'lsp-format-buffer
     :modes '(lsp-mode)))
 
 (after! company-lsp
-  (setq company-lsp-enable-snippet t))
+  (setq company-lsp-enable-snippet t)
+
+  (add-hook! (python-mode haskell-mode) (setq company-lsp-enable-snippet t)))
 
 (after! lsp-ui
   (setq lsp-ui-sideline-enable nil
@@ -343,6 +345,7 @@
 
 ;; mhtml mode pls
 (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
 (after! treemacs
   (setq treemacs-silent-refresh t
@@ -412,3 +415,7 @@
       doom-modeline-enable-word-count t)
 
 (setq soundklaus-access-token (password-store-get "soundcloud/token"))
+
+
+;; yeet
+(setq +file-templates-alist (delq (assoc 'python-mode +file-templates-alist) +file-templates-alist))
