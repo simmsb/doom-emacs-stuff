@@ -9,12 +9,13 @@
 ;;                              :branch "use-elixir-ls"))
 
 
+(package! member-functions :recipe (:fetcher wiki :filename "member-functions.el"))
+
 ;;(package! color-theme-sanityinc-tomorrow)
 ;;(package! rainbow-identifiers)
 ;;(package! solaire-mode :disable t)
 ;;(package! ivy-posframe :disable t)
 (package! xclip :disable t)
-
 
 (package! doom-modeline :recipe (:fetcher github :repo "seagle0128/doom-modeline"))
 (package! lsp-mode      :recipe (:fetcher github :repo "emacs-lsp/lsp-mode"))

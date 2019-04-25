@@ -1,20 +1,10 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; init.el -*- lexical-binding: t; -*-
 
-(doom! :feature
-       org-ref
-       debugger          ; FIXME stepping through code, to help you add bugs
-       eval              ; run code, run (also, repls)
-       (evil +everywhere); come to the dark side, we have cookies
-       file-templates    ; auto-snippets for empty files
-       (lookup           ; helps you navigate your code and documentation
-        +docsets)        ; ...or in Dash docsets locally
-       snippets          ; my elves. They type so I don't have to
-       workspaces        ; tab emulation, persistence & separate workspaces
-       proselint
-       lsp-python-poetry
-
-       :editor
+(doom! :editor
+       file-templates
+       snippets
+       (evil +everywhere)
        fold
        format
        multiple-cursors
@@ -30,6 +20,7 @@
        ;;ido               ; the other *other* search engine...
 
        :ui
+       workspaces
        deft
        vc-gutter
        (popup            ; tame sudden yet inevitable temporary windows
@@ -43,8 +34,8 @@
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        hl-todo           ; highlight TODO/FIXME/NOTE tags
        nav-flash         ; blink the current line after jumping
-       evil-goggles      ; display visual hints when editing in evil
        unicode           ; extended unicode support for various languages
+       ophints
        ;;neotree           ; a project drawer, like NERDTree for vim
        treemacs
        ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
@@ -60,6 +51,12 @@
        ;;term              ; terminals in Emacs
 
        :tools
+       org-ref
+       debugger
+       eval
+       lookup
+       proselint
+       lsp-python-poetry
        lsp
        flyspell        ; tasing you for misspelling mispelling
        (flycheck
