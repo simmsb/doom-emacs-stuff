@@ -123,6 +123,10 @@
         lsp-ui-sideline-show-code-actions t
         lsp-ui-doc-border (doom-color 'fg)))
 
+(after! lsp-haskell
+  (lsp-haskell-set-completion-snippets-off)
+  (lsp-haskell-set-config "formattingProvider" "floskell"))
+
 (after! magit
   (magit-wip-mode 1))
 
