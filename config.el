@@ -420,6 +420,8 @@
 
 (setq soundklaus-access-token (password-store-get "soundcloud/token"))
 
-
 ;; yeet
 (setq +file-templates-alist (delq (assoc 'python-mode +file-templates-alist) +file-templates-alist))
+
+
+(set-formatter! 'floskell "floskell" :modes '(haskell-mode))
