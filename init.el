@@ -46,9 +46,9 @@
        vc                ; remember, remember that commit in November
        (dired +icons) ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
+
+       :term
        eshell            ; a consistent, cross-platform shell (WIP)
-       imenu             ; an imenu sidebar and searchable code index
-       ;;term              ; terminals in Emacs
 
        :tools
        org-ref
@@ -67,7 +67,7 @@
        ein
        magit
        gist              ; interacting with github gists
-       password-store    ; password manager for nerds
+       pass              ; password manager for nerds
        pdf               ; pdf enhancements
        rgb
        tmux            ; an API for interacting with tmux
@@ -112,7 +112,7 @@
         +present         ; Emacs for presentations
         +publish)        ; Emacs+Org as a static site generator
        ;;perl              ; write code no one else can comprehend
-       ;;php               ; perl's insecure younger brother
+       php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python +lsp)            ; beautiful is better than ugly

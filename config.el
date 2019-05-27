@@ -198,7 +198,9 @@
     (org-sticky-header-mode 1))
 
   (setq org-attach-screenshot-command-line "escrotum -s %f")
-  (setq org-reveal-root "~/dev/reveal.js"))
+  (setq org-reveal-root "~/dev/reveal.js")
+  (setq org-catch-invisible-edits 'show-and-error
+        org-cycle-separator-lines 0))
 
 (setq org-log-done 'time
       +org-default-notes-file (f-join org-directory "notes.org")
@@ -359,8 +361,10 @@
 ;; TODO: remove once treemacs is unborked
 (require 'treemacs)
 
-(add-hook 'after-make-frame-functions (lambda (frame)
-                                        (doom/reload-font)))
+(add-hook 'after-make-frame-functions
+          (lambda (_frame)
+            (doom/reload-font)
+            (run-at-time "1 sec" nil #'doom/reload-theme)))
 
 (def-package! slack
   :commands (slack-start)
