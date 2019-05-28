@@ -45,6 +45,12 @@
 (def-package! github-browse-file)
 (def-package! emojify)
 
+(def-package! geros
+  :config
+  (setq geros-eval-result-duration nil)
+  :hook
+  (geiser-mode . geros-mode))
+
 (def-package! ox-hugo
   :after ox)
 
@@ -163,9 +169,11 @@
 
 (add-hook! display-line-numbers-mode (global-display-line-numbers-mode -1))
 
+(add-hook! prog-mode #'rainbow-delimiters-mode)
+
 (if ON-LAPTOP
     (setq doom-theme 'doom-tomorrow-night-eighties)
-  (setq doom-theme 'doom-opera))
+  (setq doom-theme 'doom-city-lights))
 
 ;; hip shit
 ;; (after! neotree
@@ -309,10 +317,7 @@
 (setq projectile-require-project-root t
       projectile-enable-caching nil)
 
-(setq geiser-mode-eval-last-sexp-to-buffer t
-      geiser-mode-eval-to-buffer-prefix " ;=> "
-      geiser-mode-start-repl-p t)
-
+(setq geiser-mode-start-repl-p t)
 
 ;; persist history
 (setq undo-tree-auto-save-history t
@@ -364,7 +369,8 @@
 (add-hook 'after-make-frame-functions
           (lambda (_frame)
             (doom/reload-font)
-            (run-at-time "1 sec" nil #'doom/reload-theme)))
+            ;; (run-at-time "1 sec" nil #'doom/reload-theme)
+            ))
 
 (def-package! slack
   :commands (slack-start)

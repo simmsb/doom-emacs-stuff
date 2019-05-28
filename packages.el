@@ -20,9 +20,10 @@
 (package! doom-modeline :recipe (:fetcher github :repo "seagle0128/doom-modeline"))
 (package! lsp-mode      :recipe (:fetcher github :repo "emacs-lsp/lsp-mode"))
 (package! component     :recipe (:fetcher github :repo "nitros12/component-el"))
-;; (package! twooter       :recipe (:fetcher github :repo "nitros12/twooter.el"))
+(package! twooter       :recipe (:fetcher github :repo "nitros12/twooter.el"))
+(package! geros         :recipe (:fetcher github :repo "nitros12/geros"))
 
-(package! twooter       :recipe (:fetcher file :path "~/dev/twooter.el"))
+;; (package! twooter       :recipe (:fetcher file :path "~/dev/twooter.el"))
 ;; (package! component     :recipe (:fetcher file :path "~/dev/component-el"))
 (package! names)
 (package! aio)
