@@ -15,7 +15,7 @@
        (company
         +auto)
        ;; +childframe)    ; the ultimate code completion backend
-       (ivy +fuzzy)      ; a search engine for love and life
+       (ivy +fuzzy +prescient)      ; a search engine for love and life
        ;;(helm +fuzzy)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
 
@@ -118,7 +118,8 @@
        (python +lsp)            ; beautiful is better than ugly
        rest              ; Emacs as a REST client
        ;;ruby              ; 1.step do {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       rust-rustic
        ;;scala             ; java, but good
        sh                ; she sells (ba|z)sh shells on the C xor
        ;;swift             ; who asked for emoji variables?
