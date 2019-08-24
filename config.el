@@ -428,8 +428,6 @@
       doom-modeline-icon t
       doom-modeline-enable-word-count t)
 
-(setq soundklaus-access-token (password-store-get "soundcloud/token"))
-
 ;; yeet
 (setq +file-templates-alist (delq (assoc 'python-mode +file-templates-alist) +file-templates-alist))
 
