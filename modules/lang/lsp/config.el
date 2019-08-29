@@ -1,4 +1,4 @@
-(def-package! lsp-mode
+(use-package! lsp-mode
   :commands (lsp)
   :config
   (add-hook! lsp-after-open 'lsp-enable-imenu)
@@ -7,7 +7,7 @@
         lsp-enable-indentation t
         lsp-enable-completion-at-point nil))
 
-(def-package! lsp-ui
+(use-package! lsp-ui
   :init
   (setq-default lsp-ui-doc-frame-parameters
                 '((left . -1)
@@ -52,13 +52,13 @@
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
 
-(def-package! lsp-ui-flycheck
+(use-package! lsp-ui-flycheck
   :commands (lsp-ui-flycheck-enable)
   :after lsp-ui
   :init
   (lsp-ui-flycheck-enable t))
 
-(def-package! company-lsp
+(use-package! company-lsp
   :after lsp-mode
   :config
   ;;(set! :company-backend lsp-mode '(company-lsp company-capf))
@@ -67,7 +67,7 @@
 
 (when (featurep! +java)
   (require 'lsp-java)
-  (def-package! lsp-java
+  (use-package! lsp-java
     :config
     (set-formatter! 'java-mode #'lsp-format-buffer)
     (set-company-backend! 'java-mode 'company-lsp)
@@ -86,7 +86,7 @@
     :references #'lsp-ui-peek-find-references))
 
 (when (featurep! +haskell)
-  (def-package! lsp-haskell
+  (use-package! lsp-haskell
     :after lsp-mode
     :config
     (setq lsp-enable-snippet nil)
@@ -98,7 +98,7 @@
     (add-hook! haskell-mode #'lsp)))
 
 (when (featurep! +rust)
-  (def-package! lsp-rust
+  (use-package! lsp-rust
     :after lsp-mode
     :config
     (add-hook! rust-mode #'lsp)
@@ -118,7 +118,7 @@
     :definition #'lsp-ui-peek-find-definitions
     :references #'lsp-ui-peek-find-references)
 
-  ;; (def-package! lsp-javascript-typescript
+  ;; (use-package! lsp-javascript-typescript
   ;;   :config
   ;;   :hook
   ;;   ((js-mode js3-mode rjsx-mode) . lsp))

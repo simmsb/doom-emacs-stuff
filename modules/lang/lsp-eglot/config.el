@@ -13,7 +13,7 @@
           (append val flycheck-global-modes)))))
 
 
-(def-package! eglot
+(use-package! eglot
   :commands (eglot eglot-ensure)
   :init
   (when (featurep! +rust)

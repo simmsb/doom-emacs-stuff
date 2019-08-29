@@ -178,10 +178,6 @@
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
-(if ON-LAPTOP
-    (setq doom-theme 'doom-tomorrow-night-eighties)
-  (setq doom-theme 'doom-city-lights))
-
 ;; hip shit
 ;; (after! neotree
 ;;   (setq doom-neotree-file-icons t
@@ -366,10 +362,12 @@
 (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
 (setq treemacs-silent-refresh t
-      treemacs-follow-mode t)
+      treemacs-follow-mode t
+      doom-themes-treemacs-theme "Default")
 
-;; TODO: remove once treemacs is unborked
-;; (require 'treemacs)
+(add-hook 'after-make-frame-functions
+          (lambda (_)
+            (run-at-time "1 sec" nil #'doom/reload-theme)))
 
 ;; (add-hook 'after-make-frame-functions
 ;;           (lambda (_frame)

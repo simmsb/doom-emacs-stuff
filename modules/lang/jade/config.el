@@ -1,5 +1,5 @@
 ;;; lang/jade/config.el -*- lexical-binding: t; -*-
 
-(def-package! jade-mode
+(use-package! jade-mode
   :mode "\\.pug$"
   :mode "\\.jade$")

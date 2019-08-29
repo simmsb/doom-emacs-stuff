@@ -1,6 +1,6 @@
 ;;; lang/geiser/config.el -*- lexical-binding: t; -*-
 
-(def-package! geiser
+(use-package! geiser
   :commands geiser-mode geiser-company-backend
   :config
   (setq geiser-active-implementations '(racket)

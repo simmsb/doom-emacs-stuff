@@ -1,4 +1,4 @@
-(def-package! org-ref
+(use-package! org-ref
   :config
   (setq org-ref-bibliography-notes "~/org/bibliography/notes.org"
         org-ref-default-bibliography '("~/org/bibliography/references.bib")

@@ -5,7 +5,7 @@
        file-templates
        snippets
        (evil +everywhere)
-       fold
+       ;;fold
        format
        multiple-cursors
        parinfer
@@ -188,9 +188,11 @@
 (pcase (system-name)
   ("laptop"
    (toggle-frame-maximized)
+   (setq doom-theme 'doom-tomorrow-night-eighties)
    (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   (_
+   (setq doom-theme 'doom-city-lights)
    (setq doom-font (font-spec :family "Fira Mono" :size 17)
          doom-big-font (font-spec :family "Fira Mono" :size 23))))
 

@@ -1,4 +1,4 @@
 ;;; private/ebnf/config.el -*- lexical-binding: t; -*-
 
-(def-package! ebnf-mode
+(use-package! ebnf-mode
   :mode "\\.ebnf$")

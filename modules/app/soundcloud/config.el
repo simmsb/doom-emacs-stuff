@@ -1,11 +1,11 @@
 ;;; app/soundcliud/config.el -*- lexical-binding: t; -*-
 
 
-(def-package! emms
+(use-package! emms
   :config
   (emms-standard)
   (emms-default-players))
 
 
-(def-package! soundcloud
+(use-package! soundcloud
   :after emms)
