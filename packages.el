@@ -1,6 +1,8 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
+(package! xclip :disable t)
+
 (package! doom-modeline :recipe (:host github :repo "seagle0128/doom-modeline"))
 (package! lsp-mode      :recipe (:host github :repo "emacs-lsp/lsp-mode"))
 (package! component     :recipe (:host github :repo "nitros12/component-el"))
@@ -17,12 +19,12 @@
 (package! company-quickhelp)
 (package! graphviz-dot-mode)
 
-(when (string= (system-name) "laptop")
-  (eval '(progn (package! lsp-haskell :disable t)
-                (package! flycheck-haskell :disable t))))
+(setq ON-LAPTOP (string= (system-name) "laptop"))
 
+(package! lsp-haskell :disable ON-LAPTOP)
+(package! flycheck-haskell :disable ON-LAPTOP)
 (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el"
-                        :disable (string= (system-name) "laptop")))
+                        :disable ON-LAPTOP))
 
 
 ;;(package! elpy)
@@ -49,6 +51,7 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
+;; (package! el-patch)
 
 (package! f)
 (package! ox-hugo)

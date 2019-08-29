@@ -34,37 +34,37 @@
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
 
-;; (def-package! elpy)
-;; (def-package! rainbow-identifiers)
-(def-package! disable-mouse)
-(def-package! clang-format)
-(def-package! popup-kill-ring)
-(def-package! transpose-frame)
-(def-package! evil-anzu)
-(def-package! github-review)
-(def-package! github-browse-file)
-(def-package! emojify)
+;; (use-package! elpy)
+;; (use-package! rainbow-identifiers)
+(use-package! disable-mouse)
+(use-package! clang-format)
+(use-package! popup-kill-ring)
+(use-package! transpose-frame)
+(use-package! evil-anzu)
+(use-package! github-review)
+(use-package! github-browse-file)
+(use-package! emojify)
 
-(def-package! geros
+(use-package! geros
   :config
   (setq geros-eval-result-duration nil)
   :hook
   (geiser-mode . geros-mode))
 
-(def-package! ox-hugo
+(use-package! ox-hugo
   :after ox)
 
 
-(def-package! evil-lion
+(use-package! evil-lion
   :config
   (evil-lion-mode))
 
-(def-package! drag-stuff
+(use-package! drag-stuff
   :init
   (drag-stuff-global-mode 1)
   (drag-stuff-define-keys))
 
-(def-package! sqlup-mode
+(use-package! sqlup-mode
   :commands (sqlup-mode)
   :hook ((sql-mode . sqlup-mode)
          (sql-interactive-mode . sqlup-mode)))
@@ -76,28 +76,39 @@
 ;;    #'pipenv-projectile-after-switch-extended)
 ;;   :hook (python-mode . pipenv-mode))
 
-(def-package! anzu
+(use-package! anzu
   :config
   (global-anzu-mode +1))
 
-(def-package! smart-hungry-delete
+(use-package! smart-hungry-delete
   ;; :ensure t
   :defer nil
   :config (smart-hungry-delete-add-default-hooks))
 
-(def-package! backline
+(use-package! backline
   :after outline
   :config (advice-add 'outline-flag-region :after 'backline-update))
 
-(def-package! esh-autosuggest
+(use-package! esh-autosuggest
   :hook (eshell-mode . esh-autosuggest-mode))
+
+(use-package! lsp-haskell
+  :after haskell-mode
+  :hook (haskell-mode . lsp-deferred)
+  :config
+  (lsp-haskell-set-completion-snippets-off)
+  (lsp-haskell-set-config "formattingProvider" "floskell")
+  (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
+
+;; (use-package! el-patch
+;;   :config (setq el-patch-enable-use-package-integration t))
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (if ON-LAPTOP
     (progn)
   (progn
-    (def-package! discord-emacs)
+    (use-package! discord-emacs)
     (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
     (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
     (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
@@ -128,10 +139,6 @@
         lsp-ui-sideline-show-symbol t
         lsp-ui-sideline-show-code-actions t
         lsp-ui-doc-border (doom-color 'fg)))
-
-(after! lsp-haskell
-  (lsp-haskell-set-completion-snippets-off)
-  (lsp-haskell-set-config "formattingProvider" "floskell"))
 
 (after! magit
   (magit-wip-mode 1))
@@ -291,7 +298,7 @@
 
 (setq +doom-dashboard-pwd-policy 'last)
 
-(def-package! py-isort
+(use-package! py-isort
   :after python
   :config
   (map! :map python-mode-map
@@ -358,21 +365,19 @@
 (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
-(after! treemacs
-  (setq treemacs-silent-refresh t
-        treemacs-follow-mode t
-        doom-treemacs-use-generic-icons nil))
+(setq treemacs-silent-refresh t
+      treemacs-follow-mode t)
 
 ;; TODO: remove once treemacs is unborked
-(require 'treemacs)
+;; (require 'treemacs)
 
-(add-hook 'after-make-frame-functions
-          (lambda (_frame)
-            (doom/reload-font)
-            ;; (run-at-time "1 sec" nil #'doom/reload-theme)
-            ))
+;; (add-hook 'after-make-frame-functions
+;;           (lambda (_frame)
+;;             (doom/reload-font)
+;;             ;; (run-at-time "1 sec" nil #'doom/reload-theme)
+;;             ))
 
-(def-package! slack
+(use-package! slack
   :commands (slack-start)
   :init
   (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
@@ -411,7 +416,7 @@
     ",2" 'slack-message-embed-mention
     ",3" 'slack-message-embed-channel))
 
-(def-package! alert
+(use-package! alert
   :commands (alert)
   :init
   (setq alert-default-style 'notifier))
@@ -433,3 +438,7 @@
 
 
 (set-formatter! 'floskell "floskell" :modes '(haskell-mode))
+
+;; (use-package! smartparens
+;;   :init/el-patch
+;;   (el-patch-swap rust-mode rustic-mode))
