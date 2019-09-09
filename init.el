@@ -69,7 +69,7 @@
        magit
        gist              ; interacting with github gists
        pass              ; password manager for nerds
-       pdf               ; pdf enhancements
+       pdf_alt               ; pdf enhancements
        rgb
        tmux            ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
@@ -102,7 +102,7 @@
        ;;julia             ; a better, faster MATLAB
        (latex +pdf-tools) ; writing papers in Emacs has never been so fun
        ledger          ; an accounting system in Emacs
-       ;;lua             ; one-based indices? one-based indices
+       lua             ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
                                         ;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
@@ -135,8 +135,6 @@
        (write            ; emacs as a word processor (latex + org + markdown)
         +wordnut         ; wordnet (wn) search
         +langtool)       ; a proofreader (grammar/style check) for Emacs
-       :collab
-       impatient-mode
        :config
        ;; The default module set reasonable defaults for Emacs. It also provides
        ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,
