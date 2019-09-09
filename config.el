@@ -2,6 +2,9 @@
 
 ;; bindings
 
+;; why?
+(package-initialize)
+
 (map!
  (:leader
    (:prefix "f"
