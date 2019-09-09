@@ -102,7 +102,7 @@
        ;;julia             ; a better, faster MATLAB
        (latex +pdf-tools) ; writing papers in Emacs has never been so fun
        ledger          ; an accounting system in Emacs
-       ;;lua             ; one-based indices? one-based indices
+       lua             ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
                                         ;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text

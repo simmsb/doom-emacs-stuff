@@ -208,6 +208,8 @@
   (add-hook! org-mode
     (org-sticky-header-mode 1))
 
+  (add-to-list 'org-src-lang-modes '("rust" . rustic))
+
   (setq org-attach-screenshot-command-line "escrotum -s %f")
   (setq org-reveal-root "~/dev/reveal.js")
   (setq org-catch-invisible-edits 'show-and-error
