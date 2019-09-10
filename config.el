@@ -311,6 +311,8 @@
   (after! disable-mouse
     (global-disable-mouse-mode)))
 
+(after! ssh-deploy
+  (ssh-deploy-add-after-save-hook))
 
 (setq evil-normal-state-cursor '(box "light blue")
       evil-insert-state-cursor '(bar "medium sea green")
