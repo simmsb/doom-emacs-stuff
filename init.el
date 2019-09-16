@@ -57,7 +57,7 @@
        eval
        lookup
        proselint
-       lsp-python-poetry
+       ;; lsp-python-poetry
        lsp
        flyspell        ; tasing you for misspelling mispelling
        (flycheck
