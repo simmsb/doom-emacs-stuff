@@ -10,7 +10,10 @@
    (:prefix "f"
      :desc "Toggle Treemacs" "t" #'+treemacs/toggle)
    (:prefix "o"
-     :desc "Open Shopping" "s" #'org-shopping-open))
+     :desc "Open Shopping" "s" #'org-shopping-open
+     :desc "Open kill ring" "k" #'helm-show-kill-ring)
+   (:prefix "i"
+     :desc "Insert UCS schar" "c" #'helm-ucs))
 
  (:map evilem-map
    :after evil-easymotion
@@ -72,13 +75,6 @@
   :hook ((sql-mode . sqlup-mode)
          (sql-interactive-mode . sqlup-mode)))
 
-;; (use-package pipenv
-;;   :init
-;;   (setq
-;;    pipenv-projectile-after-switch-function
-;;    #'pipenv-projectile-after-switch-extended)
-;;   :hook (python-mode . pipenv-mode))
-
 (use-package! anzu
   :config
   (global-anzu-mode +1))
@@ -103,9 +99,6 @@
   (lsp-haskell-set-config "formattingProvider" "floskell")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-;; (use-package! el-patch
-;;   :config (setq el-patch-enable-use-package-integration t))
-
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (if ON-LAPTOP
@@ -117,6 +110,7 @@
     (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
 
 (after! lsp
+  (require 'yasnippet)
   (setq lsp-enable-xref t
         lsp-enable-completion-at-point nil
         lsp-enable-snippet t
@@ -181,20 +175,6 @@
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
-;; hip shit
-;; (after! neotree
-;;   (setq doom-neotree-file-icons t
-;;         neo-theme 'icons))
-
-;; (after! elpy
-;;   (setq elpy-syntax-check-command "epylint"
-;;         elpy-modules '(elpy-module-company
-;;                        elpy-module-eldoc
-;;                        elpy-module-pyvenv
-;;                        elpy-module-yasnippet
-;;                        elpy-module-sane-defaults))
-;;   (elpy-enable))
-
 (after! org
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -243,21 +223,6 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-;; (defun sp-point-after-word-excepted (&rest words)
-;;   "Return t if point is after a word, nil if otherwise or previous word is in the excepted list
-;; This predicate is only tested on \"insert\" action."
-;;   (let ((match-exp (format "(%s)\\Sw" (string-join words "|"))))
-;;     (lambda (id action context)
-;;       (when (eq action 'insert)
-;;         (and (not (save-excursion
-;;                     (backward-word)
-;;                     (let ((r (looking-at match-exp)))
-;;                       (message (format-message "matched? %s" r))
-;;                       r)))
-;;             (save-excursion
-;;               (backward-char 1)
-;;               (looking-back "\\sw\\|\\s_")))))))
-
 (defun sp-point-after-quote-p (id action context)
   "Pls."
   (when (eq action 'insert)
@@ -276,12 +241,6 @@
     (sp-local-pair "\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
     (sp-local-pair "\\'" "\\'")
     (sp-local-pair "\"\"\"" "\"\"\""))
-  ;; ;; This lets us have f"" and b"" etc in python
-  ;; (let ((unless-list `(sp-point-before-word-p
-  ;;                      ,(sp-point-after-word-excepted "f" "r" "b")
-  ;;                      sp-point-before-same-p)))
-  ;;   (sp-local-pair 'python-mode "'" nil :unless unless-list)
-  ;;   (sp-local-pair 'python-mode "\"" nil :unless unless-list))
 
   (let ((unless-list '(sp-point-before-word-p
                        sp-point-after-word-p
@@ -315,7 +274,8 @@
     (global-disable-mouse-mode)))
 
 (after! ssh-deploy
-  (ssh-deploy-add-after-save-hook))
+  (ssh-deploy-add-after-save-hook)
+  (setq ssh-deploy-on-explicit-save 1))
 
 (setq evil-normal-state-cursor '(box "light blue")
       evil-insert-state-cursor '(bar "medium sea green")
@@ -325,7 +285,8 @@
 (fset 'evil-visual-update-x-selection 'ignore)
 
 (setq projectile-require-project-root t
-      projectile-enable-caching nil)
+      ;; projectile-enable-caching nil
+      )
 
 (setq geiser-mode-start-repl-p t)
 
@@ -376,12 +337,6 @@
           (lambda (_)
             (run-at-time "1 sec" nil #'doom/reload-theme)))
 
-;; (add-hook 'after-make-frame-functions
-;;           (lambda (_frame)
-;;             (doom/reload-font)
-;;             ;; (run-at-time "1 sec" nil #'doom/reload-theme)
-;;             ))
-
 (use-package! slack
   :commands (slack-start)
   :init
@@ -426,9 +381,6 @@
   :init
   (setq alert-default-style 'notifier))
 
-;; (setq
-;;  lsp-haskell-process-args-hie '("-d" "-l" "/tmp/hie.log" "+RTS" "-xc"))
-
 (setq deft-directory "~/org/lectures"
       deft-recursive t)
 
@@ -439,11 +391,10 @@
       doom-modeline-enable-word-count t)
 
 ;; yeet
-(setq +file-templates-alist (delq (assoc 'python-mode +file-templates-alist) +file-templates-alist))
 
+(setq +file-templates-alist (delq (assoc 'python-mode +file-templates-alist) +file-templates-alist))
 
 (set-formatter! 'floskell "floskell" :modes '(haskell-mode))
 
-;; (use-package! smartparens
-;;   :init/el-patch
-;;   (el-patch-swap rust-mode rustic-mode))
+
+(setq safe-local-variable-values '((ssh-deploy-async . 1)))
