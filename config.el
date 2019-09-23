@@ -100,7 +100,7 @@
   (lsp-haskell-set-config "formattingProvider" "floskell")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-(setq ON-DESKTOP (string= (system-name) "desktop"))
+(setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (when ON-DESKTOP
@@ -268,9 +268,6 @@
         :n "s" #'py-isort-buffer
         :v "s" #'py-isort-region))
 
-(after! evil-multiedit
-  (evil-multiedit-default-keybinds))
-
 (when ON-LAPTOP
   (after! disable-mouse
     (global-disable-mouse-mode)))
@@ -286,9 +283,7 @@
 ;; stops the evil selection being added to the kill-ring
 (fset 'evil-visual-update-x-selection 'ignore)
 
-(setq projectile-require-project-root t
-      ;; projectile-enable-caching nil
-      )
+(setq projectile-require-project-root t)
 
 (setq geiser-mode-start-repl-p t)
 

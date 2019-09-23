@@ -184,7 +184,7 @@
          (getenv "PATH")))
 
 (pcase (system-name)
-  ("desktop"
+  ("home"
    (setq doom-theme 'doom-city-lights)
    (setq doom-font (font-spec :family "Fira Mono" :size 17)
          doom-big-font (font-spec :family "Fira Mono" :size 23)))
