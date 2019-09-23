@@ -20,11 +20,12 @@
 (package! graphviz-dot-mode)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
+(setq ON-DESKTOP (string= (system-name) "desktop"))
 
 (package! lsp-haskell :disable ON-LAPTOP)
 (package! flycheck-haskell :disable ON-LAPTOP)
 (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el"
-                        :disable ON-LAPTOP))
+                                       :disable (not ON-DESKTOP)))
 
 
 ;;(package! elpy)
@@ -50,6 +51,7 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
+(package! futhark-mode)
 
 (package! f)
 (package! ox-hugo)

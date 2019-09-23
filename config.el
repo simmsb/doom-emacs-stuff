@@ -54,6 +54,7 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 (use-package! emojify)
+(use-package! futhark-mode)
 
 (use-package! geros
   :config
@@ -103,15 +104,14 @@
   (lsp-haskell-set-config "formattingProvider" "floskell")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
+(setq ON-DESKTOP (string= (system-name) "desktop"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
-(if ON-LAPTOP
-    (progn)
-  (progn
-    (use-package! discord-emacs)
-    (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
-    (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
-    (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208")))
+(when ON-DESKTOP
+  (use-package! discord-emacs)
+  (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
+  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+  (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208"))
 
 (after! lsp
   (require 'yasnippet)
