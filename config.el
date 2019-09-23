@@ -15,10 +15,6 @@
    (:prefix "i"
      :desc "Insert UCS schar" "c" #'helm-ucs))
 
- (:after evil-multiedit
-   (:prefix "gz"
-     :nv "z" #'evil-multiedit-toggle-marker-here))
-
  (:map evilem-map
    :after evil-easymotion
    "<down>" #'evilem-motion-next-line
@@ -104,7 +100,7 @@
   (lsp-haskell-set-config "formattingProvider" "floskell")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-(setq ON-DESKTOP (string= (system-name) "desktop"))
+(setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (when ON-DESKTOP

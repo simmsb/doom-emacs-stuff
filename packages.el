@@ -20,7 +20,7 @@
 (package! graphviz-dot-mode)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
-(setq ON-DESKTOP (string= (system-name) "desktop"))
+(setq ON-DESKTOP (string= (system-name) "home"))
 
 (package! lsp-haskell :disable ON-LAPTOP)
 (package! flycheck-haskell :disable ON-LAPTOP)
