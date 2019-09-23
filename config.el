@@ -116,6 +116,8 @@
         lsp-enable-snippet t
         lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
 
+  (add-to-list 'lsp-language-id-configuration '(cuda-mode . "cuda"))
+
   (set-formatter! 'lsp-formatter #'lsp-format-buffer
     :modes '(lsp-mode)))
 
@@ -396,5 +398,7 @@
 
 (set-formatter! 'floskell "floskell" :modes '(haskell-mode))
 
-
 (setq safe-local-variable-values '((ssh-deploy-async . 1)))
+
+(add-hook! cuda-mode
+  (yas-minor-mode-on))
