@@ -15,6 +15,10 @@
    (:prefix "i"
      :desc "Insert UCS schar" "c" #'helm-ucs))
 
+ (:after evil-multiedit
+   (:prefix "gz"
+     :nv "z" #'evil-multiedit-toggle-marker-here))
+
  (:map evilem-map
    :after evil-easymotion
    "<down>" #'evilem-motion-next-line
@@ -266,9 +270,6 @@
         :n "s" #'py-isort-buffer
         :v "s" #'py-isort-region))
 
-(after! evil-multiedit
-  (evil-multiedit-default-keybinds))
-
 (when ON-LAPTOP
   (after! disable-mouse
     (global-disable-mouse-mode)))
@@ -284,9 +285,7 @@
 ;; stops the evil selection being added to the kill-ring
 (fset 'evil-visual-update-x-selection 'ignore)
 
-(setq projectile-require-project-root t
-      ;; projectile-enable-caching nil
-      )
+(setq projectile-require-project-root t)
 
 (setq geiser-mode-start-repl-p t)
 

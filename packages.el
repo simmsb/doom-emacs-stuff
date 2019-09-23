@@ -31,7 +31,6 @@
 (package! github-browse-file)
 (package! github-review)
 (package! py-isort)
-(package! evil-multiedit)
 (package! disable-mouse)
 (package! clang-format)
 (package! popup-kill-ring)
@@ -51,7 +50,6 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
-;; (package! el-patch)
 
 (package! f)
 (package! ox-hugo)
