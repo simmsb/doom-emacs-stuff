@@ -69,7 +69,7 @@
        magit
        gist              ; interacting with github gists
        pass              ; password manager for nerds
-       pdf_alt               ; pdf enhancements
+       pdf               ; pdf enhancements
        rgb
        tmux            ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
