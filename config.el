@@ -117,6 +117,7 @@
         lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
 
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "cuda"))
+  (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4"))
 
   (set-formatter! 'lsp-formatter #'lsp-format-buffer
     :modes '(lsp-mode)))

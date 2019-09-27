@@ -75,6 +75,7 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
+       p4
        common-lisp
        jade
        sourcepawn
