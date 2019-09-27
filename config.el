@@ -305,6 +305,11 @@
     :lambda "lambda"))
 
 (add-hook! c-mode
+  (nuke-pretty-symbols 'c-mode)
+  (nuke-pretty-symbols 'c++-mode))
+
+(add-hook! c++-mode
+  (nuke-pretty-symbols 'c++-mode)
   (nuke-pretty-symbols 'c-mode))
 
 (add-hook! js-mode
