@@ -226,7 +226,7 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-(defun sp-point-after-quote-p (id action context)
+(defun sp-point-after-quote-p (_id action _context)
   "Pls."
   (when (eq action 'insert)
     (save-excursion
@@ -403,3 +403,10 @@
 
 (add-hook! cuda-mode
   (yas-minor-mode-on))
+
+(set-irc-server! "chat.freenode.net"
+                 `(:tls t :port 6697 :nick "nitros_" :sasl-username "nitros_" :sasl-password (lambda (&rest _) (password-store-get "freenode/pass")) :channels ("#emacs" "#haskell")))
+
+(after! circe
+  (enable-circe-color-nicks)
+  (enable-circe-notifications))

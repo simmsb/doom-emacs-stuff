@@ -2,6 +2,8 @@
 ;;; private/ben/packages.el
 
 (package! xclip :disable t)
+(package! company-anaconda :disable t)
+(package! anaconda-mode :disable t)
 
 (package! doom-modeline :recipe (:host github :repo "seagle0128/doom-modeline"))
 (package! lsp-mode      :recipe (:host github :repo "emacs-lsp/lsp-mode"))

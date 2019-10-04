@@ -51,6 +51,7 @@
        eshell            ; a consistent, cross-platform shell (WIP)
 
        :tools
+       grip
        docker
        org-ref
        debugger
@@ -109,7 +110,8 @@
        (org              ; organize your plain life in plain text
         +gnuplot
         +dragndrop
-        +pandoc)
+        +pandoc
+        +present)
        ;;perl              ; write code no one else can comprehend
        php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
@@ -129,10 +131,7 @@
        ;; toward a specific purpose. They may have additional dependencies and
        ;; should be loaded late.
        :app
-       ;;(email +gmail)    ; emacs as an email client
-       ;;irc               ; how neckbeards socialize
-       ;;(rss +org)        ; emacs as an RSS reader
-       ;;twitter           ; twitter client https://twitter.com/vnought
+       irc
        (write            ; emacs as a word processor (latex + org + markdown)
         +wordnut         ; wordnet (wn) search
         +langtool)       ; a proofreader (grammar/style check) for Emacs
