@@ -1,10 +1,6 @@
 ;;; private/ben/config.el -*- lexical-binding: t; -*-
 
 ;; bindings
-
-;; why?
-(package-initialize)
-
 (map!
  (:leader
    (:prefix "f"
@@ -40,8 +36,6 @@
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
 
-;; (use-package! elpy)
-;; (use-package! rainbow-identifiers)
 (use-package! disable-mouse)
 (use-package! clang-format)
 (use-package! popup-kill-ring)
@@ -60,7 +54,6 @@
 
 (use-package! ox-hugo
   :after ox)
-
 
 (use-package! evil-lion
   :config
@@ -410,3 +403,9 @@
 (after! circe
   (enable-circe-color-nicks)
   (enable-circe-notifications))
+
+(after! evil-mc
+  (add-to-list 'evil-mc-known-commands
+               '(smart-hungry-delete-backward-char . ((:default . evil-mc-execute-default-call-with-count))))
+  (add-to-list 'evil-mc-known-commands
+               '(smart-hungry-delete-forwards-char . ((:default . evil-mc-execute-default-call-with-count)))))
