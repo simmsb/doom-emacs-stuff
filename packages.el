@@ -1,9 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(package! xclip :disable t)
-(package! company-anaconda :disable t)
-(package! anaconda-mode :disable t)
+(disable-packages! xclip company-anaconda anaconda-mode)
 
 (package! doom-modeline :recipe (:host github :repo "seagle0128/doom-modeline"))
 (package! lsp-mode      :recipe (:host github :repo "emacs-lsp/lsp-mode"))
@@ -24,10 +22,9 @@
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))
 
-(package! lsp-haskell :disable ON-LAPTOP)
-(package! flycheck-haskell :disable ON-LAPTOP)
-(package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el"
-                                       :disable (not ON-DESKTOP)))
+(if ON-LAPTOP
+  (disable-packages! lsp-haskell flycheck-haskell)
+  (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el")))
 
 
 ;;(package! elpy)
@@ -53,7 +50,6 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
-(package! futhark-mode)
 
 (package! f)
 (package! ox-hugo)

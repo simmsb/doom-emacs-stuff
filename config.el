@@ -44,7 +44,6 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 (use-package! emojify)
-(use-package! futhark-mode)
 
 (use-package! geros
   :config
