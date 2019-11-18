@@ -120,7 +120,7 @@
   (add-hook! (python-mode haskell-mode) (setq company-lsp-enable-snippet t)))
 
 (after! lsp-ui
-  (setq lsp-ui-sideline-enable nil
+  (setq lsp-ui-sideline-enable 1
         lsp-ui-doc-position 'top
         lsp-ui-doc-header t
         lsp-ui-doc-enable t
