@@ -44,6 +44,7 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 (use-package! emojify)
+(use-package! typescript-mode)
 
 (use-package! geros
   :config
@@ -306,6 +307,9 @@
 
 (add-hook! js-mode
   (nuke-pretty-symbols 'js-mode))
+
+(add-hook! typescript-mode
+  (nuke-pretty-symbols 'typescript-mode))
 
 ;; dunno if there's a better way to starting in paren mode
 (add-hook! parinfer-mode

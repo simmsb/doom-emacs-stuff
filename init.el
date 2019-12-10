@@ -100,7 +100,7 @@
        (haskell +lsp)
        hy                ; readability of scheme w/ speed of python
        (java +lsp) ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       (javascript +lsp)        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        (latex +pdf-tools) ; writing papers in Emacs has never been so fun
        ledger          ; an accounting system in Emacs
@@ -119,12 +119,11 @@
        (python +lsp)            ; beautiful is better than ugly
        rest              ; Emacs as a REST client
        ;;ruby              ; 1.step do {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       rust-rustic
+       (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;rust-rustic
        ;;scala             ; java, but good
        sh                ; she sells (ba|z)sh shells on the C xor
        ;;swift             ; who asked for emoji variables?
-       ;;typescript        ; javascript, but better
        web               ; the tubes
 
        ;; Applications are complex and opinionated modules that transform Emacs

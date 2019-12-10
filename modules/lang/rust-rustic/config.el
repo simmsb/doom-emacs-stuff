@@ -10,6 +10,7 @@
         rustic-indent-method-chain t))
 
 (after! rustic
+  (provide 'straight)
   (require 'smartparens-rust)
 
   (sp-with-modes '(rustic-mode)
@@ -22,11 +23,4 @@
 
   ;; Rust has no sexp suffices.  This fixes slurping
   ;; (|foo).bar -> (foo.bar)
-  (add-to-list 'sp-sexp-suffix (list #'rustic-mode 'regexp ""))
-
-  (defun rustic-setup-rls ()
-    (require 'lsp)
-    (require 'lsp-rust)
-    (setq rustic-lsp-server 'rls
-          rustic-analyzer-command '("rls"))
-    (lsp)))
+  (add-to-list 'sp-sexp-suffix (list #'rustic-mode 'regexp "")))

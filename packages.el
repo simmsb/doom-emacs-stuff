@@ -28,6 +28,7 @@
 
 
 ;;(package! elpy)
+(package! typescript-mode)
 (package! github-browse-file)
 (package! github-review)
 (package! py-isort)
