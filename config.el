@@ -107,7 +107,9 @@
   (setq lsp-enable-xref t
         lsp-enable-completion-at-point nil
         lsp-enable-snippet t
-        lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+        lsp-rust-server 'rls
+        ;; lsp-rust-rls-command '("rustup" "run" "nightly" "rls")
+        )
 
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "cuda"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4"))
@@ -127,6 +129,7 @@
         lsp-ui-doc-enable t
         lsp-ui-doc-include-signature t
         lsp-ui-doc-use-childframe t
+        lsp-ui-doc-use-webkit t
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-ignore-duplicate t
         lsp-ui-sideline-show-symbol t
@@ -138,6 +141,9 @@
 
 (after! flycheck
   (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
+
+(after! rustic
+  (setq rustic-lsp-server 'rls))
 
 (after! company
   (setq company-idle-delay 0.1
