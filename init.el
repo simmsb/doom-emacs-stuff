@@ -123,6 +123,9 @@
        ;;swift             ; who asked for emoji variables?
        web               ; the tubes
 
+       :email
+       (mu4e +gmail)
+
        ;; Applications are complex and opinionated modules that transform Emacs
        ;; toward a specific purpose. They may have additional dependencies and
        ;; should be loaded late.
@@ -141,14 +144,15 @@
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
+(setq +mu4e-backend 'offlineimap)
+
 (setq company-box-enable-icon nil)
 (setq custom-safe-themes t)
 
-(add-hook! text-mode
-  #'auto-save-mode)
+(add-hook! text-mode #'auto-save-mode)
 
-(fringe-mode 8)
-(setq doom-fringe-size 8)
+(fringe-mode 4)
+
 (show-paren-mode t)
 (setq show-paren-style 'mixed
       show-paren-delay 0)
@@ -193,9 +197,5 @@
    (setq doom-theme 'doom-wilmersdorf)
    (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-big-font (font-spec :family "Fira Mono" :size 18))))
-
-
-;; we still need this apparently
-(setq custom-file (concat doom-etc-dir "custom.el"))
 
 ;; (setq lsp-print-io t)

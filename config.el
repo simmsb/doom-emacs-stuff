@@ -1,4 +1,6 @@
 ;;; private/ben/config.el -*- lexical-binding: t; -*-
+(setq ON-DESKTOP (string= (system-name) "home"))
+(setq ON-LAPTOP (string= (system-name) "laptop"))
 
 ;; bindings
 (map!
@@ -93,8 +95,10 @@
   (lsp-haskell-set-config "formattingProvider" "floskell")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-(setq ON-DESKTOP (string= (system-name) "home"))
-(setq ON-LAPTOP (string= (system-name) "laptop"))
+(use-package! mu4e-alert
+  :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
+  :hook ((after-init . mu4e-alert-enable-notifications)
+         (after-init . mu4e-alert-enable-mode-line-display)))
 
 (when ON-DESKTOP
   (use-package! discord-emacs)
@@ -172,7 +176,6 @@
 (setq display-line-numbers nil)
 (setq doom-line-numbers-style nil)
 (global-display-line-numbers-mode -1)
-
 (add-hook! display-line-numbers-mode (global-display-line-numbers-mode -1))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
@@ -338,53 +341,9 @@
       treemacs-follow-mode t
       doom-themes-treemacs-theme "Default")
 
-(add-hook 'after-make-frame-functions
-          (lambda (_)
-            (run-at-time "1 sec" nil #'doom/reload-theme)))
-
-(use-package! slack
-  :commands (slack-start)
-  :init
-  (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
-  (setq slack-prefer-current-team t)
-  :config
-
-  (slack-register-team
-   :name "lucss"
-   :default t
-   :client-id (password-store-get "slack/lucss/id")
-   :client-secret (password-store-get "slack/lucss/secret")
-   :token (password-store-get "slack/lucss/token")
-   :subscribed-channels '(general exec tech)
-   :full-and-display-names t)
-
-  (evil-define-key 'normal slack-mode-map
-    ",c" 'slack-buffer-kill
-    ",ra" 'slack-message-add-reaction
-    ",rr" 'slack-message-remove-reaction
-    ",rs" 'slack-message-show-reaction-users
-    ",pl" 'slack-room-pins-list
-    ",pa" 'slack-message-pins-add
-    ",pr" 'slack-message-pins-remove
-    ",mm" 'slack-message-write-another-buffer
-    ",me" 'slack-message-edit
-    ",md" 'slack-message-delete
-    ",u" 'slack-room-update-messages
-    ",2" 'slack-message-embed-mention
-    ",3" 'slack-message-embed-channel
-    "\C-n" 'slack-buffer-goto-next-message
-    "\C-p" 'slack-buffer-goto-prev-message)
-
-  (evil-define-key 'normal slack-edit-message-mode-map
-    ",k" 'slack-message-cancel-edit
-    ",s" 'slack-message-send-from-buffer
-    ",2" 'slack-message-embed-mention
-    ",3" 'slack-message-embed-channel))
-
-(use-package! alert
-  :commands (alert)
-  :init
-  (setq alert-default-style 'notifier))
+;; (add-hook 'after-make-frame-functions
+;;           (lambda (_)
+;;             (run-at-time "1 sec" nil #'doom/reload-theme)))
 
 (setq deft-directory "~/org/lectures"
       deft-recursive t)
@@ -412,6 +371,13 @@
 (after! circe
   (enable-circe-color-nicks)
   (enable-circe-notifications))
+
+(set-email-account! "gmail.com"
+  `((mu4e-sent-folder . "/gmail.com/Sent Mail")
+    (mu4e-drafts-folder . "/gmail.com/Drafts")
+    (mu4e-trash-folder . "/gmail.com/Bin")
+    (mu4e-refile-folder . "/gmai.com/All Mail")
+    (smtpmail-smtp-user . ,user-mail-address)))
 
 (after! evil-mc
   (add-to-list 'evil-mc-known-commands
