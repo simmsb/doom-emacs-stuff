@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(disable-packages! xclip company-anaconda anaconda-mode)
+(disable-packages! company-anaconda anaconda-mode)
 
 (package! doom-modeline :recipe (:host github :repo "seagle0128/doom-modeline"))
 (package! lsp-mode      :recipe (:host github :repo "emacs-lsp/lsp-mode"))
