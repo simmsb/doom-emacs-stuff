@@ -51,6 +51,7 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
+(package! mu4e-alert)
 
 (package! f)
 (package! ox-hugo)
