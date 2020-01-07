@@ -95,10 +95,20 @@
   (lsp-haskell-set-config "formattingProvider" "floskell")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-(use-package! mu4e-alert
-  :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
-  :hook ((after-init . mu4e-alert-enable-notifications)
-         (after-init . mu4e-alert-enable-mode-line-display)))
+
+(unless IS-MAC
+  (use-package! mu4e-alert
+    :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
+    :hook ((after-init . mu4e-alert-enable-notifications)
+           (after-init . mu4e-alert-enable-mode-line-display)))
+
+  (use-package! mu4e
+    :config (set-email-account! "gmail.com"
+                                `((mu4e-sent-folder . "/gmail.com/Sent Mail")
+                                  (mu4e-drafts-folder . "/gmail.com/Drafts")
+                                  (mu4e-trash-folder . "/gmail.com/Bin")
+                                  (mu4e-refile-folder . "/gmai.com/All Mail")
+                                  (smtpmail-smtp-user . ,user-mail-address)))))
 
 (when ON-DESKTOP
   (use-package! discord-emacs)
@@ -371,13 +381,6 @@
 (after! circe
   (enable-circe-color-nicks)
   (enable-circe-notifications))
-
-(set-email-account! "gmail.com"
-  `((mu4e-sent-folder . "/gmail.com/Sent Mail")
-    (mu4e-drafts-folder . "/gmail.com/Drafts")
-    (mu4e-trash-folder . "/gmail.com/Bin")
-    (mu4e-refile-folder . "/gmai.com/All Mail")
-    (smtpmail-smtp-user . ,user-mail-address)))
 
 (after! evil-mc
   (add-to-list 'evil-mc-known-commands

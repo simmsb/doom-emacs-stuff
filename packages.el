@@ -23,7 +23,7 @@
 (setq ON-DESKTOP (string= (system-name) "home"))
 
 (if ON-LAPTOP
-  (disable-packages! lsp-haskell flycheck-haskell)
+    (disable-packages! lsp-haskell flycheck-haskell)
   (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el")))
 
 
@@ -51,7 +51,8 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
-(package! mu4e-alert)
+(unless IS-MAC
+  (package! mu4e-alert))
 
 (package! f)
 (package! ox-hugo)
