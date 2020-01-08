@@ -103,12 +103,14 @@
            (after-init . mu4e-alert-enable-mode-line-display)))
 
   (use-package! mu4e
-    :config (set-email-account! "gmail.com"
-                                `((mu4e-sent-folder . "/gmail.com/Sent Mail")
-                                  (mu4e-drafts-folder . "/gmail.com/Drafts")
-                                  (mu4e-trash-folder . "/gmail.com/Bin")
-                                  (mu4e-refile-folder . "/gmai.com/All Mail")
-                                  (smtpmail-smtp-user . ,user-mail-address)))))
+    :config
+    (setq mu4e-update-interval (* 60 5))
+    (set-email-account! "gmail.com"
+                        `((mu4e-sent-folder . "/gmail.com/Sent Mail")
+                          (mu4e-drafts-folder . "/gmail.com/Drafts")
+                          (mu4e-trash-folder . "/gmail.com/Bin")
+                          (mu4e-refile-folder . "/gmai.com/All Mail")
+                          (smtpmail-smtp-user . ,user-mail-address)))))
 
 (when ON-DESKTOP
   (use-package! discord-emacs)
