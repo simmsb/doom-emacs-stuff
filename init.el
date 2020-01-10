@@ -27,8 +27,8 @@
           +all             ; catch all popups that start with an asterix
           +defaults)       ; default popup rules
          ,@(unless IS-MAC
-             '(pretty-code      ; replace bits of code with pretty symbols
-               +fira))
+             '((pretty-code      ; replace bits of code with pretty symbols
+                 +fira)))
          doom              ; what makes DOOM look the way it does
          doom-dashboard    ; a nifty splash screen for Emacs
          modeline
@@ -61,9 +61,6 @@
          proselint
          ;; lsp-python-poetry
          lsp
-         flyspell        ; tasing you for misspelling mispelling
-         (flycheck
-          +childframe)     ; tasing you for every semicolon you forget
          ;;macos           ; MacOS-specific commands
          make              ; run make tasks from Emacs
          editorconfig
@@ -75,6 +72,10 @@
          rgb
          tmux            ; an API for interacting with tmux
          upload            ; map local to remote projects via ssh/ftp
+
+         :checkers
+         spell
+         (syntax +childframe)
 
          :lang
          p4
@@ -133,9 +134,6 @@
          ;; should be loaded late.
          :app
          irc
-         (write            ; emacs as a word processor (latex + org + markdown)
-          +wordnut         ; wordnet (wn) search
-          +langtool)       ; a proofreader (grammar/style check) for Emacs
          :config
          ;; The default module set reasonable defaults for Emacs. It also provides
          ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,
