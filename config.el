@@ -1,4 +1,5 @@
 ;;; private/ben/config.el -*- lexical-binding: t; -*-
+
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
@@ -96,7 +97,7 @@
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 
-(unless IS-MAC
+(when ON-DESKTOP
   (use-package! mu4e-alert
     :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
     :hook ((after-init . mu4e-alert-enable-notifications)

@@ -51,7 +51,7 @@
 (package! string-inflection)
 (package! backline)
 (package! esh-autosuggest)
-(unless IS-MAC
+(when ON-DESKTOP
   (package! mu4e-alert))
 
 (package! f)

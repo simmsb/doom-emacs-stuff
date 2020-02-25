@@ -1,6 +1,9 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; init.el -*- lexical-binding: t; -*-
 
+(setq ON-DESKTOP (string= (system-name) "home"))
+(setq ON-LAPTOP (string= (system-name) "laptop"))
+
 (doom! `(:editor
          file-templates
          snippets
@@ -125,7 +128,7 @@
          ;;swift             ; who asked for emoji variables?
          web               ; the tubes
 
-         ,@(unless IS-MAC
+         ,@(when ON-DESKTOP
              '(:email
                (mu4e +gmail)))
 
