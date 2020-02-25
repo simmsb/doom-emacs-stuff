@@ -122,10 +122,9 @@
   (require 'yasnippet)
   (setq lsp-enable-xref t
         lsp-enable-completion-at-point nil
-        lsp-enable-snippet t
-        lsp-rust-server 'rls
-        ;; lsp-rust-rls-command '("rustup" "run" "nightly" "rls")
-        )
+        lsp-enable-snippet t)
+  ;; lsp-rust-rls-command '("rustup" "run" "nightly" "rls")
+
 
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "cuda"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4"))
@@ -159,7 +158,8 @@
   (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
 
 (after! rustic
-  (setq rustic-lsp-server 'rls))
+  (setq rustic-lsp-server 'rust-analyzer)
+  (add-hook! rustic-mode (lsp-rust-analyzer-inlay-hints-mode t)))
 
 (after! company
   (setq company-idle-delay 0.1
@@ -213,30 +213,30 @@
   (setq org-attach-screenshot-command-line "escrotum -s %f")
   (setq org-reveal-root "~/dev/reveal.js")
   (setq org-catch-invisible-edits 'show-and-error
-        org-cycle-separator-lines 0))
+        org-cycle-separator-lines 0)
 
-(setq org-log-done 'time
-      +org-default-notes-file (f-join org-directory "notes.org")
-      +org-default-todo-file (f-join org-directory "todo.org")
-      +org-default-calendar-file (f-join org-directory "calendar.org")
-      +org-shopping-file (f-join org-directory "shopping_list.org"))
+  (setq org-log-done 'time
+        +org-default-notes-file (f-join org-directory "notes.org")
+        +org-default-todo-file (f-join org-directory "todo.org")
+        +org-default-calendar-file (f-join org-directory "calendar.org")
+        +org-shopping-file (f-join org-directory "shopping_list.org"))
 
-(setq org-capture-templates
-      '(("t" "Todo" entry (file +org-default-todo-file)
-         "* [ ] %?\n%i" :prepend t :kill-buffer t)
-        ("n" "Notes" entry (file +org-default-notes-file)
-         "* %u %?\n%i" :prepend t :kill-buffer t)
-        ("c" "Calendar" entry (file +org-default-calendar-file)
-         "* %?\n%^T")
-        ("h" "Hugo post" entry (file+olp "blog.org" "Blog")
-         (function org-hugo-new-subtree-post-capture-template))
-        ("s" "Shopping" plain (file +org-shopping-file)
-         (function org-shopping-goto-last-open-or-make-new))))
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file +org-default-todo-file)
+           "* [ ] %?\n%i" :prepend t :kill-buffer t)
+          ("n" "Notes" entry (file +org-default-notes-file)
+           "* %u %?\n%i" :prepend t :kill-buffer t)
+          ("c" "Calendar" entry (file +org-default-calendar-file)
+           "* %?\n%^T")
+          ("h" "Hugo post" entry (file+olp "blog.org" "Blog")
+           (function org-hugo-new-subtree-post-capture-template))
+          ("s" "Shopping" plain (file +org-shopping-file)
+           (function org-shopping-goto-last-open-or-make-new))))
 
 
-(setq org-agenda-files (list +org-default-todo-file
-                             +org-default-calendar-file
-                             (f-join org-directory "lectures.org")))
+  (setq org-agenda-files (list +org-default-todo-file
+                               +org-default-calendar-file
+                               (f-join org-directory "lectures.org"))))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
