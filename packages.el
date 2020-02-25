@@ -1,6 +1,8 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
+(package! magit-section)
+
 (disable-packages! company-anaconda anaconda-mode)
 
 (package! doom-modeline :recipe (:host github :repo "seagle0128/doom-modeline"))

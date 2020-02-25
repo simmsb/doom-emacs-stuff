@@ -57,8 +57,7 @@
          :tools
          grip
          docker
-         org-ref
-         debugger
+         ;org-ref
          eval
          lookup
          proselint
