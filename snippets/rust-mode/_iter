@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: .iter()
-# key: i
-# condition: (%without-trigger (eq (char-before) ?.))
-# --
-iter()

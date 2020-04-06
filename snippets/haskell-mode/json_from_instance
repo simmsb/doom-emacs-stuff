@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: json from instance
-# key: jsfrom
-# --
-instance FromJSON $1 where
-  parseJSON = genericParseJSON jsonOptions
-$0

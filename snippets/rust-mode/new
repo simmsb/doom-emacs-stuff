@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Type::new(...)
-# key: new
-# --
-${1:Vec}::new(${2:`%`})`(if (eolp) ";" "")`

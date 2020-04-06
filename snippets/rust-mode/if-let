@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: if let ...
-# key: ifl
-# --
-if let ${1:Some(${2:x})} => ${3:var} {
-   `%`$0
-}

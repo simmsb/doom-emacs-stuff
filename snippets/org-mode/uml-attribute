@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: uml-attribute
-# key: uml-attr
-# --
-{${1:name}} $0

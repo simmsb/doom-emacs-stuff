@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: use ...
-# key: use
-# condition: (%bolp)
-# --
-use ${1:std::${2:io}};$0

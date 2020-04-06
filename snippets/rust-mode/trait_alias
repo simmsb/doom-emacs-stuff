@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: trait ... { ... }
-# uuid: trait_alias
-# key: tr
-# type: command
-# --
-(%alias "trait")

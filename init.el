@@ -8,19 +8,14 @@
          file-templates
          snippets
          (evil +everywhere)
-         ;;fold
          format
          multiple-cursors
          parinfer
          rotate-text       ; cycle region at point between text candidates
 
          :completion
-         (company
-          +auto)
-         ;; +childframe)    ; the ultimate code completion backend
+         company
          (ivy +fuzzy +prescient)      ; a search engine for love and life
-         ;;(helm +fuzzy)              ; the *other* search engine for love and life
-         ;;ido               ; the other *other* search engine...
 
          :ui
          workspaces
@@ -31,22 +26,20 @@
           +defaults)       ; default popup rules
          ,@(unless IS-MAC
              '((pretty-code      ; replace bits of code with pretty symbols
-                 +fira)))
+                +fira)))
          doom              ; what makes DOOM look the way it does
          doom-dashboard    ; a nifty splash screen for Emacs
          modeline
-         ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
          hl-todo           ; highlight TODO/FIXME/NOTE tags
          nav-flash         ; blink the current line after jumping
          unicode           ; extended unicode support for various languages
          ophints
-         ;;neotree           ; a project drawer, like NERDTree for vim
          treemacs
-         ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
          vi-tilde-fringe   ; fringe tildes to mark beyond EOB
          window-select     ; visually switch windows
 
          :emacs
+         (ibuffer +icons)
          vc                ; remember, remember that commit in November
          (dired +icons) ; making dired pretty [functional]
          electric          ; smarter, keyword-based electric-indent
@@ -55,15 +48,13 @@
          eshell            ; a consistent, cross-platform shell (WIP)
 
          :tools
-         grip
          docker
-         ;org-ref
          eval
-         lookup
+         (lookup +dictionary +docsets)
          proselint
-         ;; lsp-python-poetry
          lsp
-         ;;macos           ; MacOS-specific commands
+         ,@(when IS-MAC
+             '(macos))
          make              ; run make tasks from Emacs
          editorconfig
          ein
@@ -123,7 +114,7 @@
          ;;ruby              ; 1.step do {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
          (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
          ;;scala             ; java, but good
-         sh                ; she sells (ba|z)sh shells on the C xor
+         (sh +fish)                ; she sells (ba|z)sh shells on the C xor
          ;;swift             ; who asked for emoji variables?
          web               ; the tubes
 
@@ -141,14 +132,13 @@
          ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,
          ;; and additional ex commands for evil-mode. Use it as a reference for
          ;; your own modules.
-         (default +bindings +snippets +evil-commands +smartparens)))
+         (default +bindings +smartparens)))
 
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
 (setq +mu4e-backend 'offlineimap)
 
-(setq company-box-enable-icon nil)
 (setq custom-safe-themes t)
 
 (add-hook! text-mode #'auto-save-mode)

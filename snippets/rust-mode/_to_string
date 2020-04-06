@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: .to_string()
-# key: ts
-# condition: (%without-trigger (eq (char-before) ?.))
-# --
-to_string()

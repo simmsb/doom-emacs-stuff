@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: use std::fs::File
-# key: ufile
-# condition: (%bolp)
-# --
-use std::fs::File;

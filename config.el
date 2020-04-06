@@ -10,9 +10,7 @@
      :desc "Toggle Treemacs" "t" #'+treemacs/toggle)
    (:prefix "o"
      :desc "Open Shopping" "s" #'org-shopping-open
-     :desc "Open kill ring" "k" #'helm-show-kill-ring)
-   (:prefix "i"
-     :desc "Insert UCS schar" "c" #'helm-ucs))
+     :desc "Open kill ring" "k" #'+default/yank-pop))
 
  (:map evilem-map
    :after evil-easymotion
@@ -25,25 +23,18 @@
    "<up>"       #'evil-window-up
    "<down>"     #'evil-window-down)
 
- (:map evil-motion-state-map
-   "?" #'counsel-grep-or-swiper)
-
  ;; in lisp modes use default evil-delete for parinfer magic
  (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
    :i "<backspace>" #'parinfer-backward-delete-char
    :i "C-d" #'delete-char)
 
- :i "<backspace>" #'smart-hungry-delete-backward-char
- :i "C-d" #'smart-hungry-delete-forwards-char
+ ;; :i "<backspace>" #'smart-hungry-delete-backward-char
+ ;; :i "C-d" #'smart-hungry-delete-forwards-char
 
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
 
 (use-package! disable-mouse)
-(use-package! clang-format)
-(use-package! popup-kill-ring)
-(use-package! transpose-frame)
-(use-package! evil-anzu)
 (use-package! github-review)
 (use-package! github-browse-file)
 (use-package! emojify)
@@ -55,26 +46,14 @@
   :hook
   (geiser-mode . geros-mode))
 
-(use-package! ox-hugo
-  :after ox)
-
 (use-package! evil-lion
   :config
   (evil-lion-mode))
-
-(use-package! drag-stuff
-  :init
-  (drag-stuff-global-mode 1)
-  (drag-stuff-define-keys))
 
 (use-package! sqlup-mode
   :commands (sqlup-mode)
   :hook ((sql-mode . sqlup-mode)
          (sql-interactive-mode . sqlup-mode)))
-
-(use-package! anzu
-  :config
-  (global-anzu-mode +1))
 
 (use-package! smart-hungry-delete
   ;; :ensure t
@@ -120,12 +99,9 @@
   (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208"))
 
 (after! lsp
-  (require 'yasnippet)
   (setq lsp-enable-xref t
-        lsp-enable-completion-at-point nil
-        lsp-enable-snippet t)
-  ;; lsp-rust-rls-command '("rustup" "run" "nightly" "rls")
-
+        lsp-enable-snippet t
+        lsp-document-sync-method lsp--sync-incremental)
 
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "cuda"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4"))
@@ -134,9 +110,7 @@
     :modes '(lsp-mode)))
 
 (after! company-lsp
-  (setq company-lsp-enable-snippet t)
-
-  (add-hook! (python-mode haskell-mode) (setq company-lsp-enable-snippet t)))
+  (setq company-lsp-enable-snippet t))
 
 (after! lsp-ui
   (setq lsp-ui-sideline-enable 1
@@ -164,46 +138,30 @@
 
 (after! company
   (setq company-idle-delay 0.1
-        company-minimum-prefix-length 2
-        company-quickhelp-delay 0.4
-        company-backends '((company-yasnippet
-                            company-keywords
-                            company-capf)))
+        company-quickhelp-delay 0.4)
 
-  (set-company-backend! 'org-mode
-    '(company-math-symbols-latex
-      company-latex-commands)
-    '(company-files
-      company-yasnippet
-      company-keywords
-      company-capf)
-    '(company-abbrev
-      company-dabbrev))
+  ;; (set-company-backend! 'org-mode
+  ;;   '(company-math-symbols-latex
+  ;;     company-latex-commands)
+  ;;   '(company-files
+  ;;     company-yasnippet
+  ;;     company-keywords
+  ;;     company-capf)
+  ;;   '(company-abbrev
+  ;;     company-dabbrev))
 
   (company-quickhelp-mode)
   (global-company-mode))
 
-;; (after! rainbow-identifiers
-;;   (add-hook 'prog-mode-hook #'rainbow-identifiers-mode))
-
-(setq display-line-numbers nil)
-(setq doom-line-numbers-style nil)
+(setq display-line-numbers nil
+      doom-line-numbers-style nil)
 (global-display-line-numbers-mode -1)
 (add-hook! display-line-numbers-mode (global-display-line-numbers-mode -1))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
 (after! org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (dot . t)
-     (ditaa . t)
-     (sql . t)))
   (setq org-tags-column 100)
-  (setq org-latex-packages-alist
-        '(("" "physics" t)))
   (setq org-sticky-header-full-path 'full)
 
   (add-hook! org-mode
@@ -212,7 +170,6 @@
   (add-to-list 'org-src-lang-modes '("rust" . rustic))
 
   (setq org-attach-screenshot-command-line "escrotum -s %f")
-  (setq org-reveal-root "~/dev/reveal.js")
   (setq org-catch-invisible-edits 'show-and-error
         org-cycle-separator-lines 0)
 
@@ -241,48 +198,8 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-(defun sp-point-after-quote-p (_id action _context)
-  "Pls."
-  (when (eq action 'insert)
-    (save-excursion
-      (backward-char 1)
-      (looking-back "\"|'"))))
-
 (after! smartparens
-  ;; Auto-close more conservatively and expand braces on RET
-  (show-smartparens-global-mode)
-  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-  (sp-local-pair 'org-mode "\\[" "\\]")
-
-  ;; Elixir stuff should work like python
-  (sp-with-modes 'elixir-mode
-    (sp-local-pair "\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
-    (sp-local-pair "\\'" "\\'")
-    (sp-local-pair "\"\"\"" "\"\"\""))
-
-  (let ((unless-list '(sp-point-before-word-p
-                       sp-point-after-word-p
-                       sp-point-before-same-p
-                       sp-point-after-quote-p)))
-    (sp-pair "'"  nil :unless unless-list)
-    (sp-pair "\"" nil :unless unless-list))
-  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
-           :unless '(sp-point-before-word-p sp-point-before-same-p))
-  (sp-pair "(" nil :post-handlers '(("||\n[i]" "RET") ("| " " "))
-           :unless '(sp-point-before-word-p sp-point-before-same-p))
-  (sp-pair "[" nil :post-handlers '(("| " " "))
-           :unless '(sp-point-before-word-p sp-point-before-same-p)))
-
-
-(setq +doom-dashboard-pwd-policy 'last)
-
-(use-package! py-isort
-  :after python
-  :config
-  (map! :map python-mode-map
-        :localleader
-        :n "s" #'py-isort-buffer
-        :v "s" #'py-isort-region))
+  (show-smartparens-global-mode))
 
 (when ON-LAPTOP
   (after! disable-mouse
@@ -300,8 +217,6 @@
 (fset 'evil-visual-update-x-selection 'ignore)
 
 (setq projectile-require-project-root t)
-
-(setq geiser-mode-start-repl-p t)
 
 ;; persist history
 (setq undo-tree-auto-save-history t
@@ -368,8 +283,6 @@
       doom-modeline-enable-word-count t)
 
 ;; yeet
-
-(setq +file-templates-alist (delq (assoc 'python-mode +file-templates-alist) +file-templates-alist))
 
 (set-formatter! 'floskell "floskell" :modes '(haskell-mode))
 

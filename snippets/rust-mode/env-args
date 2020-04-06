@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: env::args()
-# key: argv
-# --
-env::args()

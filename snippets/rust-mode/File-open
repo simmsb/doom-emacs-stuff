@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: File::open(...)
-# key: fo
-# --
-File::open(${1:`%`})`(if (eolp) ";" "")`

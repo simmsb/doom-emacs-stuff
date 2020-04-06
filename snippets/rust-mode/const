@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: const VAR = ...
-# key: const
-# --
-const ${1:VARNAME}${2: ${3:i32}} = ${4:value};

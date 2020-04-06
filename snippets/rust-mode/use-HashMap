@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: use std::collections::HashMap
-# key: uhashmap
-# condition: (%bolp)
-# --
-use std::collections::HashMap;

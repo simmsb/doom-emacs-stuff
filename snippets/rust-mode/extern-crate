@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: extern crate ...
-# key: ext
-# condition: (%bolp)
-# --
-extern crate ${1:rand};$0
