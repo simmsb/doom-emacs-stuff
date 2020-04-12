@@ -11,62 +11,61 @@
          format
          multiple-cursors
          parinfer
-         rotate-text       ; cycle region at point between text candidates
+         rotate-text
 
          :completion
+         ;; (company +tng)
          company
-         (ivy +fuzzy +prescient)      ; a search engine for love and life
+         (ivy +fuzzy +prescient)
 
          :ui
          workspaces
+         hydra
          deft
          vc-gutter
-         (popup            ; tame sudden yet inevitable temporary windows
-          +all             ; catch all popups that start with an asterix
-          +defaults)       ; default popup rules
+         (popup
+          +all
+          +defaults)
          ,@(unless IS-MAC
-             '((pretty-code      ; replace bits of code with pretty symbols
+             '((pretty-code
                 +fira)))
-         doom              ; what makes DOOM look the way it does
-         doom-dashboard    ; a nifty splash screen for Emacs
+         doom
+         doom-dashboard
          modeline
-         hl-todo           ; highlight TODO/FIXME/NOTE tags
-         nav-flash         ; blink the current line after jumping
-         unicode           ; extended unicode support for various languages
+         hl-todo
+         nav-flash
          ophints
          treemacs
-         vi-tilde-fringe   ; fringe tildes to mark beyond EOB
-         window-select     ; visually switch windows
+         vi-tilde-fringe
+         window-select
 
          :emacs
          (ibuffer +icons)
-         vc                ; remember, remember that commit in November
-         (dired +icons) ; making dired pretty [functional]
-         electric          ; smarter, keyword-based electric-indent
+         vc
+         (dired +icons)
+         electric
 
          :term
-         eshell            ; a consistent, cross-platform shell (WIP)
+         eshell
 
          :tools
          docker
-         eval
-         (lookup +dictionary +docsets)
-         proselint
-         lsp
+         (eval +overlay)
+         (lookup +dictionary +offline)
+         (lsp +peek)
          ,@(when IS-MAC
              '(macos))
-         make              ; run make tasks from Emacs
+         make
          editorconfig
-         ein
          magit
-         gist              ; interacting with github gists
-         pass              ; password manager for nerds
-         pdf               ; pdf enhancements
+         gist
+         pass
+         pdf
          rgb
-         tmux            ; an API for interacting with tmux
-         upload            ; map local to remote projects via ssh/ftp
+         upload
 
          :checkers
+         grammar
          spell
          (syntax +childframe)
 
@@ -76,47 +75,33 @@
          jade
          sourcepawn
          ebnf
-         ;;racket
          geiser
-         assembly          ; assembly for fun or debugging
-         (cc +lsp)                ; C/C++/Obj-C madness
-         ;;crystal         ; ruby at the speed of c
-         ;;clojure         ; java with a lisp
-         ;;csharp          ; unity, .NET, and mono shenanigans
-         data              ; config/data formats
-         elixir            ; erlang done right
-         elm             ; care for a cup of TEA?
-         emacs-lisp        ; drown in parentheses
-         ;;ess             ; emacs speaks statistics
-         ;;go              ; the hipster dialect
-         ;;(haskell +intero) ; a language that's lazier than I am
+         assembly
+         (cc +lsp)
+         data
+         elixir
+         elm
+         emacs-lisp
          (haskell +lsp)
-         hy                ; readability of scheme w/ speed of python
-         (java +lsp) ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-         (javascript +lsp)        ; all(hope(abandon(ye(who(enter(here))))))
-         ;;julia             ; a better, faster MATLAB
-         (latex +pdf-tools) ; writing papers in Emacs has never been so fun
-         ledger          ; an accounting system in Emacs
-         lua             ; one-based indices? one-based indices
-         markdown          ; writing docs for people to ignore
-                                        ;ocaml             ; an objective camel
-         (org              ; organize your plain life in plain text
+         hy
+         (java +lsp)
+         (javascript +lsp)
+
+         (latex +pdf-tools)
+         ledger
+         lua
+         markdown
+
+         (org
           +gnuplot
           +dragndrop
           +pandoc
           +present)
-         ;;perl              ; write code no one else can comprehend
-         php               ; perl's insecure younger brother
-         plantuml          ; diagrams for confusing people more
-         ;;purescript        ; javascript, but functional
-         (python +lsp)            ; beautiful is better than ugly
-         rest              ; Emacs as a REST client
-         ;;ruby              ; 1.step do {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-         (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-         ;;scala             ; java, but good
-         (sh +fish)                ; she sells (ba|z)sh shells on the C xor
-         ;;swift             ; who asked for emoji variables?
-         web               ; the tubes
+         (python +lsp)
+         rest
+         (rust +lsp)
+         (sh +fish)
+         web
 
          ,@(when ON-DESKTOP
              '(:email

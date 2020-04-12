@@ -17,8 +17,6 @@
 (package! aio)
 
 
-(package! company)
-(package! company-quickhelp)
 (package! graphviz-dot-mode)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))

@@ -20,9 +20,4 @@
   :hook
   ((scheme-mode racket-mode) . geiser-mode))
 
-;; haha yes
-(add-hook! geiser-mode
-  (when (eq geiser-impl--implementation 'racket)
-    (company-quickhelp-local-mode -1)))
-
 (add-to-list 'auto-mode-alist '("\\.rkt$" . scheme-mode))

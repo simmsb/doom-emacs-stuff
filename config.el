@@ -136,9 +136,9 @@
   (setq rustic-lsp-server 'rust-analyzer)
   (add-hook! rustic-mode (lsp-rust-analyzer-inlay-hints-mode t)))
 
+
 (after! company
-  (setq company-idle-delay 0.1
-        company-quickhelp-delay 0.4)
+  (setq company-idle-delay 0.1)
 
   ;; (set-company-backend! 'org-mode
   ;;   '(company-math-symbols-latex
@@ -149,14 +149,7 @@
   ;;     company-capf)
   ;;   '(company-abbrev
   ;;     company-dabbrev))
-
-  (company-quickhelp-mode)
-  (global-company-mode))
-
-(setq display-line-numbers nil
-      doom-line-numbers-style nil)
-(global-display-line-numbers-mode -1)
-(add-hook! display-line-numbers-mode (global-display-line-numbers-mode -1))
+  )
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
@@ -209,6 +202,9 @@
   (ssh-deploy-add-after-save-hook)
   (setq ssh-deploy-on-explicit-save 1))
 
+(after! haskell-mode
+  (setq haskell-auto-insert-module-format-string "-- | \nmodule %s\n    (\n     ) where"))
+
 (setq evil-normal-state-cursor '(box "light blue")
       evil-insert-state-cursor '(bar "medium sea green")
       evil-visual-state-cursor '(hollow "orange"))
@@ -218,11 +214,9 @@
 
 (setq projectile-require-project-root t)
 
-;; persist history
-(setq undo-tree-auto-save-history t
-      undo-tree-history-directory-alist `(("." . ,(concat doom-emacs-dir "undo"))))
-
 (setq posframe-mouse-banish nil)
+
+(setq display-line-numbers-type nil)
 
 (defun nuke-pretty-symbols (mode)
   (setq +pretty-code-symbols-alist

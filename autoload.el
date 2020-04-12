@@ -70,3 +70,15 @@ See `org-capture-templates' for more information."
 (defun org-shopping-open ()
   (interactive)
   (find-file +org-shopping-file))
+
+
+;;;###autoload
+(defun +file-templates/insert ()
+  "Force insert a file template expansion"
+  (interactive)
+  (and buffer-file-name
+       (not buffer-read-only)
+       (bobp) (eobp)
+       (not (member (substring (buffer-name) 0 1) '("*" " ")))
+       (when-let (rule (cl-find-if #'+file-template-p +file-templates-alist))
+         (apply #'+file-templates--expand rule))))
