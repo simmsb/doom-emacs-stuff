@@ -119,7 +119,7 @@
         lsp-ui-doc-enable t
         lsp-ui-doc-include-signature t
         lsp-ui-doc-use-childframe t
-        lsp-ui-doc-use-webkit t
+        lsp-ui-doc-use-webkit nil
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-ignore-duplicate t
         lsp-ui-sideline-show-symbol t

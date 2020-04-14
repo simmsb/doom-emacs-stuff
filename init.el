@@ -40,6 +40,7 @@
          window-select
 
          :emacs
+         undo
          (ibuffer +icons)
          vc
          (dired +icons)
