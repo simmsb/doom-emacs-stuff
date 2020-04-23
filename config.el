@@ -218,6 +218,8 @@
 
 (setq display-line-numbers-type nil)
 
+(global-subword-mode +1)
+
 (defun nuke-pretty-symbols (mode)
   (setq +pretty-code-symbols-alist
         (delq (assq mode +pretty-code-symbols-alist)

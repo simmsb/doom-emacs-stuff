@@ -59,6 +59,7 @@
          make
          editorconfig
          magit
+         direnv
          gist
          pass
          pdf
@@ -80,7 +81,7 @@
          assembly
          (cc +lsp)
          data
-         elixir
+         (elixir +lsp)
          elm
          emacs-lisp
          (haskell +lsp)

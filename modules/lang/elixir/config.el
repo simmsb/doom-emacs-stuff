@@ -12,7 +12,7 @@
 
   :config
   (setq lsp-clients-elixir-server-executable
-   (f-join doom-private-dir "local" "elixir-ls" "build" "language_server.sh"))
+        (f-join doom-private-dir "local" "elixir-ls" "build" "language_server.sh"))
 
   ;; ...and only complete the basics
   (sp-with-modes 'elixir-mode
@@ -22,6 +22,10 @@
                    :post-handlers '("||\n[i]"))
     (sp-local-pair "do " " end" :unless '(sp-in-comment-p sp-in-string-p))
     (sp-local-pair "fn " " end" :unless '(sp-in-comment-p sp-in-string-p)))
+
+  (add-to-list 'auto-mode-alist '("\\.leex\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
+  (add-to-list 'web-mode-engines-alist '("elixir" . "\\.leex\\'"))
 
   (when (featurep! +lsp)
     (add-hook 'elixir-mode-local-vars-hook #'lsp!)))
