@@ -38,6 +38,7 @@
          treemacs
          vi-tilde-fringe
          window-select
+         zen
 
          :emacs
          undo
@@ -77,7 +78,8 @@
          jade
          sourcepawn
          ebnf
-         geiser
+         scheme
+         racket
          assembly
          (cc +lsp)
          data
@@ -98,7 +100,8 @@
           +gnuplot
           +dragndrop
           +pandoc
-          +present)
+          +present
+          +hugo)
          (python +lsp)
          rest
          (rust +lsp)
