@@ -73,6 +73,8 @@
          (syntax +childframe)
 
          :lang
+         yaml
+         json
          p4
          common-lisp
          jade
@@ -80,11 +82,9 @@
          ebnf
          scheme
          racket
-         assembly
          (cc +lsp)
          data
          (elixir +lsp)
-         elm
          emacs-lisp
          (haskell +lsp)
          hy
@@ -92,7 +92,6 @@
          (javascript +lsp)
 
          (latex +pdf-tools)
-         ledger
          lua
          markdown
 
