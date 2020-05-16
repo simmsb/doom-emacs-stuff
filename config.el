@@ -6,30 +6,27 @@
 ;; bindings
 (map!
  (:leader
-   (:prefix "f"
-     :desc "Toggle Treemacs" "t" #'+treemacs/toggle)
-   (:prefix "o"
-     :desc "Open Shopping" "s" #'org-shopping-open
-     :desc "Open kill ring" "k" #'+default/yank-pop))
+  (:prefix "f"
+   :desc "Toggle Treemacs" "t" #'+treemacs/toggle)
+  (:prefix "o"
+   :desc "Open Shopping" "s" #'org-shopping-open
+   :desc "Open kill ring" "k" #'+default/yank-pop))
 
  (:map evilem-map
-   :after evil-easymotion
-   "<down>" #'evilem-motion-next-line
-   "<up>" #'evilem-motion-previous-line)
+  :after evil-easymotion
+  "<down>" #'evilem-motion-next-line
+  "<up>" #'evilem-motion-previous-line)
 
  (:map evil-window-map
-   "<left>"     #'evil-window-left
-   "<right>"    #'evil-window-right
-   "<up>"       #'evil-window-up
-   "<down>"     #'evil-window-down)
+  "<left>"     #'evil-window-left
+  "<right>"    #'evil-window-right
+  "<up>"       #'evil-window-up
+  "<down>"     #'evil-window-down)
 
  ;; in lisp modes use default evil-delete for parinfer magic
  (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
-   :i "<backspace>" #'parinfer-backward-delete-char
-   :i "C-d" #'delete-char)
-
- ;; :i "<backspace>" #'smart-hungry-delete-backward-char
- ;; :i "C-d" #'smart-hungry-delete-forwards-char
+  :i "<backspace>" #'parinfer-backward-delete-char
+  :i "C-d" #'delete-char)
 
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
@@ -55,11 +52,6 @@
   :hook ((sql-mode . sqlup-mode)
          (sql-interactive-mode . sqlup-mode)))
 
-(use-package! smart-hungry-delete
-  ;; :ensure t
-  :defer nil
-  :config (smart-hungry-delete-add-default-hooks))
-
 (use-package! backline
   :after outline
   :config (advice-add 'outline-flag-region :after 'backline-update))
@@ -68,8 +60,6 @@
   :hook (eshell-mode . esh-autosuggest-mode))
 
 (use-package! lsp-haskell
-  :after haskell-mode
-  :hook (haskell-mode . lsp-deferred)
   :config
   (lsp-haskell-set-completion-snippets-off)
   (lsp-haskell-set-config "formattingProvider" "floskell")
@@ -99,38 +89,20 @@
   (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208"))
 
 (after! lsp
-  (setq lsp-enable-xref t
-        lsp-enable-snippet t
-        lsp-document-sync-method lsp--sync-incremental)
-
+  (lsp-ui-mode +1)
+  (lsp-flycheck-enable)
+  (setq lsp-flycheck-live-reporting +1)
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "cuda"))
-  (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4"))
-
-  (set-formatter! 'lsp-formatter #'lsp-format-buffer
-    :modes '(lsp-mode)))
-
-(after! company-lsp
-  (setq company-lsp-enable-snippet t))
-
-(after! lsp-ui
-  (setq lsp-ui-sideline-enable 1
-        lsp-ui-doc-position 'top
-        lsp-ui-doc-header t
-        lsp-ui-doc-enable t
-        lsp-ui-doc-include-signature t
-        lsp-ui-doc-use-childframe t
-        lsp-ui-doc-use-webkit nil
-        lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-ignore-duplicate t
-        lsp-ui-sideline-show-symbol t
-        lsp-ui-sideline-show-code-actions t
-        lsp-ui-doc-border (doom-color 'fg)))
+  (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
 (after! magit
   (magit-wip-mode 1))
 
 (after! flycheck
-  (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
+  (add-hook! haskell-mode
+    (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc)
+    (add-to-list 'flycheck-disabled-checkers 'haskell-ghc)
+    (add-to-list 'flycheck-disabled-checkers 'haskell-hlint)))
 
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer)
@@ -139,17 +111,14 @@
 
 (after! company
   (setq company-idle-delay 0.1)
-
-  ;; (set-company-backend! 'org-mode
-  ;;   '(company-math-symbols-latex
-  ;;     company-latex-commands)
-  ;;   '(company-files
-  ;;     company-yasnippet
-  ;;     company-keywords
-  ;;     company-capf)
-  ;;   '(company-abbrev
-  ;;     company-dabbrev))
-  )
+  (add-hook! evil-normal-state-entry #'company-abort)
+  (set-company-backend! '(text-mode
+                          markdown-mode
+                          gfm-mode)
+    '(:seperate
+      company-ispell
+      company-files
+      company-yasnippet)))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
@@ -205,9 +174,13 @@
 (after! haskell-mode
   (setq haskell-auto-insert-module-format-string "-- | \nmodule %s\n    (\n     ) where"))
 
+(setq-default x-stretch-cursor t
+              uniquify-buffer-name-style 'forward)
+
 (setq evil-normal-state-cursor '(box "light blue")
       evil-insert-state-cursor '(bar "medium sea green")
-      evil-visual-state-cursor '(hollow "orange"))
+      evil-visual-state-cursor '(hollow "orange")
+      evil-want-fine-undo t)
 
 ;; stops the evil selection being added to the kill-ring
 (fset 'evil-visual-update-x-selection 'ignore)
@@ -243,6 +216,12 @@
 
 (add-hook! typescript-mode
   (nuke-pretty-symbols 'typescript-mode))
+
+(add-hook! elixir-mode
+  (nuke-pretty-symbols 'elixir-mode))
+
+(add-hook! web-mode
+  (nuke-pretty-symbols 'web-mode))
 
 ;; dunno if there's a better way to starting in paren mode
 (add-hook! parinfer-mode
@@ -294,8 +273,10 @@
   (enable-circe-color-nicks)
   (enable-circe-notifications))
 
-(after! evil-mc
-  (add-to-list 'evil-mc-known-commands
-               '(smart-hungry-delete-backward-char . ((:default . evil-mc-execute-default-call-with-count))))
-  (add-to-list 'evil-mc-known-commands
-               '(smart-hungry-delete-forwards-char . ((:default . evil-mc-execute-default-call-with-count)))))
+(after! forge
+  (if (atom forge-topic-list-limit)
+      (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
+    (setcdr forge-topic-list-limit -5)))
+
+(after! ivy
+  (setq +ivy-buffer-preview t))

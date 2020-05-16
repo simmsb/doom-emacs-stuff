@@ -26,7 +26,6 @@
     (disable-packages! lsp-haskell flycheck-haskell)
   (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el")))
 
-
 ;;(package! elpy)
 (package! typescript-mode)
 (package! github-browse-file)

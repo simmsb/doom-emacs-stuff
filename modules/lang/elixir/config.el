@@ -25,8 +25,9 @@
 
   (add-to-list 'auto-mode-alist '("\\.leex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
-  (add-to-list 'web-mode-engines-alist '("elixir" . "\\.leex\\'"))
 
   (when (featurep! +lsp)
     (add-hook 'elixir-mode-local-vars-hook #'lsp!)))
 
+(after! web-mode
+  (add-to-list 'web-mode-engines-alist '("elixir" . "\\.leex\\'")))

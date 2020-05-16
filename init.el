@@ -59,7 +59,7 @@
              '(macos))
          make
          editorconfig
-         magit
+         (magit +forge)
          direnv
          gist
          pass
