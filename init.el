@@ -54,7 +54,7 @@
          docker
          (eval +overlay)
          (lookup +dictionary +offline)
-         (lsp +peek)
+         lsp
          ,@(when IS-MAC
              '(macos))
          make

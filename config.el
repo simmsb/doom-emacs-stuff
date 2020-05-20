@@ -61,8 +61,10 @@
 
 (use-package! lsp-haskell
   :config
-  (lsp-haskell-set-completion-snippets-off)
+  ;; progress spams the minibuffer when we're viewing hovers, etc
+  (ht-set! (lsp--client-notification-handlers (gethash 'hie lsp-clients)) "$/progress" #'ignore)
   (lsp-haskell-set-config "formattingProvider" "floskell")
+  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 
