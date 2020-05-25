@@ -279,6 +279,3 @@
   (if (atom forge-topic-list-limit)
       (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
     (setcdr forge-topic-list-limit -5)))
-
-(after! ivy
-  (setq +ivy-buffer-preview t))
