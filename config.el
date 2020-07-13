@@ -34,8 +34,6 @@
 (use-package! disable-mouse)
 (use-package! github-review)
 (use-package! github-browse-file)
-(use-package! emojify)
-(use-package! typescript-mode)
 
 (use-package! geros
   :config
@@ -63,7 +61,7 @@
   :config
   ;; progress spams the minibuffer when we're viewing hovers, etc
   (ht-set! (lsp--client-notification-handlers (gethash 'hie lsp-clients)) "$/progress" #'ignore)
-  (lsp-haskell-set-config "formattingProvider" "floskell")
+  (lsp-haskell-set-formatter "ormolu")
   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
@@ -261,7 +259,7 @@
 
 ;; yeet
 
-(set-formatter! 'floskell "floskell" :modes '(haskell-mode))
+(set-formatter! 'ormolu "ormolu" :modes '(haskell-mode))
 
 (setq safe-local-variable-values '((ssh-deploy-async . 1)))
 
@@ -279,3 +277,15 @@
   (if (atom forge-topic-list-limit)
       (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
     (setcdr forge-topic-list-limit -5)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values '((ssh-deploy-on-explicit-save . 1) (ssh-deploy-async . 1))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
