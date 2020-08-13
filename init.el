@@ -166,7 +166,7 @@
 
 (pcase (system-name)
   ("home"
-   (setq doom-theme 'doom-wilmersdorf)
+   (setq doom-theme 'doom-molokai)
    (setq doom-font (font-spec :family "Fira Mono" :size 17)
          doom-big-font (font-spec :family "Fira Mono" :size 23)))
   ("laptop"
