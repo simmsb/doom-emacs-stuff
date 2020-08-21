@@ -66,21 +66,21 @@
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 
-(when ON-DESKTOP
-  (use-package! mu4e-alert
-    :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
-    :hook ((after-init . mu4e-alert-enable-notifications)
-           (after-init . mu4e-alert-enable-mode-line-display)))
+;; (when ON-DESKTOP
+;;   (use-package! mu4e-alert
+;;     :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
+;;     :hook ((after-init . mu4e-alert-enable-notifications)
+;;            (after-init . mu4e-alert-enable-mode-line-display)))
 
-  (use-package! mu4e
-    :config
-    (setq mu4e-update-interval (* 60 5))
-    (set-email-account! "gmail.com"
-                        `((mu4e-sent-folder . "/gmail.com/Sent Mail")
-                          (mu4e-drafts-folder . "/gmail.com/Drafts")
-                          (mu4e-trash-folder . "/gmail.com/Bin")
-                          (mu4e-refile-folder . "/gmai.com/All Mail")
-                          (smtpmail-smtp-user . ,user-mail-address)))))
+;;   (use-package! mu4e
+;;     :config
+;;     (setq mu4e-update-interval (* 60 5))
+;;     (set-email-account! "gmail.com"
+;;                         `((mu4e-sent-folder . "/gmail.com/Sent Mail")
+;;                           (mu4e-drafts-folder . "/gmail.com/Drafts")
+;;                           (mu4e-trash-folder . "/gmail.com/Bin")
+;;                           (mu4e-refile-folder . "/gmai.com/All Mail")
+;;                           (smtpmail-smtp-user . ,user-mail-address)))))
 
 (when ON-DESKTOP
   (use-package! discord-emacs)
@@ -135,8 +135,6 @@
   (add-hook! org-mode
     (org-sticky-header-mode 1))
 
-  (add-to-list 'org-src-lang-modes '("rust" . rustic))
-
   (setq org-attach-screenshot-command-line "escrotum -s %f")
   (setq org-catch-invisible-edits 'show-and-error
         org-cycle-separator-lines 0)
@@ -166,30 +164,32 @@
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
-(after! smartparens
-  (show-smartparens-global-mode))
-
 (when ON-LAPTOP
   (after! disable-mouse
     (global-disable-mouse-mode)))
 
-(after! ssh-deploy
-  (ssh-deploy-add-after-save-hook)
-  (setq ssh-deploy-on-explicit-save 1))
-
 (after! haskell-mode
   (setq haskell-auto-insert-module-format-string "-- | \nmodule %s\n    (\n     ) where"))
 
+(after! evil
+  (setq evil-normal-state-cursor '(box "light blue")
+        evil-insert-state-cursor '(bar "medium sea green")
+        evil-visual-state-cursor '(hollow "orange")
+        evil-want-fine-undo t)
+  (setq evil-vsplit-window-right t
+        evil-split-window-below t)
+  ;; stops the evil selection being added to the kill-ring
+  (fset 'evil-visual-update-x-selection 'ignore)
+  (defadvice! prompt-for-buffer (&rest _)
+    :after '(evil-window-split evil-window-vsplit)
+    (+ivy/switch-buffer))
+  (advice-add 'evil-ex-search-next :after
+              (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos))))
+  (advice-add 'evil-ex-search-previous :after
+              (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos)))))
+
 (setq-default x-stretch-cursor t
               uniquify-buffer-name-style 'forward)
-
-(setq evil-normal-state-cursor '(box "light blue")
-      evil-insert-state-cursor '(bar "medium sea green")
-      evil-visual-state-cursor '(hollow "orange")
-      evil-want-fine-undo t)
-
-;; stops the evil selection being added to the kill-ring
-(fset 'evil-visual-update-x-selection 'ignore)
 
 (setq projectile-require-project-root t)
 
@@ -197,37 +197,7 @@
 
 (setq display-line-numbers-type nil)
 
-(global-subword-mode +1)
-
-(defun nuke-pretty-symbols (mode)
-  (setq +pretty-code-symbols-alist
-        (delq (assq mode +pretty-code-symbols-alist)
-              +pretty-code-symbols-alist)))
-
-(add-hook! python-mode
-  (nuke-pretty-symbols 'python-mode)
-  (set-pretty-symbols! 'python-mode
-    :lambda "lambda"))
-
-(add-hook! c-mode
-  (nuke-pretty-symbols 'c-mode)
-  (nuke-pretty-symbols 'c++-mode))
-
-(add-hook! c++-mode
-  (nuke-pretty-symbols 'c++-mode)
-  (nuke-pretty-symbols 'c-mode))
-
-(add-hook! js-mode
-  (nuke-pretty-symbols 'js-mode))
-
-(add-hook! typescript-mode
-  (nuke-pretty-symbols 'typescript-mode))
-
-(add-hook! elixir-mode
-  (nuke-pretty-symbols 'elixir-mode))
-
-(add-hook! web-mode
-  (nuke-pretty-symbols 'web-mode))
+(global-subword-mode 1)
 
 ;; dunno if there's a better way to starting in paren mode
 (add-hook! parinfer-mode

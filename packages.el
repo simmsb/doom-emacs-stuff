@@ -4,7 +4,6 @@
 (disable-packages! company-anaconda anaconda-mode)
 
 (package! lsp-mode :recipe (:host github :repo "emacs-lsp/lsp-mode"))
-(package! doom-modeline :recipe (:host github :repo "seagle0128/doom-modeline"))
 (package! geros         :recipe (:host github :repo "nitros12/geros"))
 (package! lsp-haskell :recipe (:host github :repo "shaunplee/lsp-haskell"))
 
@@ -28,7 +27,7 @@
 (package! org-sticky-header)
 (package! backline)
 (package! esh-autosuggest)
-(when ON-DESKTOP
-  (package! mu4e-alert))
+;; (when ON-DESKTOP
+;;   (package! mu4e-alert))
 
 (package! f)

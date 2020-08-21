@@ -10,8 +10,13 @@
          (evil +everywhere)
          format
          multiple-cursors
-         parinfer
+         ;; parinfer -- Broken for emacs 28
          rotate-text
+         fold
+
+         :os
+         ,@(when IS-MAC
+             '(macos))
 
          :completion
          ;; (company +tng)
@@ -21,13 +26,12 @@
          :ui
          workspaces
          hydra
-         deft
          vc-gutter
          (popup
           +all
           +defaults)
          ,@(unless IS-MAC
-             '((pretty-code
+             '((ligatures
                 +fira)))
          doom
          doom-dashboard
@@ -53,10 +57,8 @@
          :tools
          docker
          (eval +overlay)
-         (lookup +dictionary +offline)
+         (lookup +dictionary)
          lsp
-         ,@(when IS-MAC
-             '(macos))
          make
          editorconfig
          (magit +forge)
@@ -68,7 +70,6 @@
          upload
 
          :checkers
-         grammar
          spell
          (syntax +childframe)
 
@@ -76,7 +77,6 @@
          yaml
          json
          p4
-         common-lisp
          jade
          sourcepawn
          ebnf
@@ -87,12 +87,9 @@
          (elixir +lsp)
          emacs-lisp
          (haskell +lsp)
-         hy
          (java +lsp)
          (javascript +lsp)
-
          (latex +pdf-tools)
-         lua
          markdown
 
          (org
@@ -107,15 +104,15 @@
          (sh +fish)
          web
 
-         ,@(when ON-DESKTOP
-             '(:email
-               (mu4e +gmail)))
+         ;; ,@(when ON-DESKTOP
+         ;;     '(:email
+         ;;       (mu4e +gmail)))
 
          ;; Applications are complex and opinionated modules that transform Emacs
          ;; toward a specific purpose. They may have additional dependencies and
          ;; should be loaded late.
-         :app
-         irc
+         ;; :app
+         ;; irc
          :config
          ;; The default module set reasonable defaults for Emacs. It also provides
          ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,
@@ -126,20 +123,17 @@
 (setq user-mail-address "ben@bensimms.moe"
       user-full-name "Ben Simms")
 
-(setq +mu4e-backend 'offlineimap)
+;; (setq +mu4e-backend 'offlineimap)
 
 (setq custom-safe-themes t)
 
-(add-hook! text-mode #'auto-save-mode)
-
 (fringe-mode 4)
 
-(show-paren-mode t)
-(setq show-paren-style 'mixed
-      show-paren-delay 0)
+;; (show-paren-mode t)
+;; (setq show-paren-style 'mixed
+;;       show-paren-delay 0)
 
-(setq default-directory "~/dev/"
-      default-tab-width 4)
+(setq default-directory "~/dev/")
 
 (setq +rust-src-dir (concat (replace-regexp-in-string
                              "\n\\'" ""
