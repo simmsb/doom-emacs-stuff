@@ -1,6 +1,8 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; init.el -*- lexical-binding: t; -*-
 
+(setq comp-speed 2)
+
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
@@ -98,7 +100,7 @@
           +pandoc
           +present
           +hugo)
-         (python +lsp)
+         (python +lsp +poetry +pyright)
          rest
          (rust +lsp)
          (sh +fish)

@@ -27,7 +27,12 @@
   (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
 
   (when (featurep! +lsp)
-    (add-hook 'elixir-mode-local-vars-hook #'lsp!)))
+    (add-hook 'elixir-mode-local-vars-hook #'lsp!))
+
+  (after! highlight-numbers
+    (puthash 'elixir-mode
+             "\\_<-?[[:digit:]]+\\(?:_[[:digit:]]\\{3\\}\\)*\\_>"
+             highlight-numbers-modelist)))
 
 (after! web-mode
   (add-to-list 'web-mode-engines-alist '("elixir" . "\\.leex\\'")))

@@ -24,9 +24,9 @@
   "<down>"     #'evil-window-down)
 
  ;; in lisp modes use default evil-delete for parinfer magic
- (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
-  :i "<backspace>" #'parinfer-backward-delete-char
-  :i "C-d" #'delete-char)
+ ;; (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
+ ;;  :i "<backspace>" #'parinfer-backward-delete-char
+ ;;  :i "C-d" #'delete-char)
 
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
@@ -91,6 +91,7 @@
 (after! lsp
   (lsp-ui-mode +1)
   (setq lsp-flycheck-live-reporting +1
+        lsp-lens-enable t
         lsp-modeline-diagnostics-scope :project
         lsp-enable-file-watchers t
         lsp-enable-text-document-color t
