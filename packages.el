@@ -4,9 +4,9 @@
 (disable-packages! company-anaconda anaconda-mode)
 
 (package! lsp-mode :recipe (:host github :repo "emacs-lsp/lsp-mode"))
+(package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! geros       :recipe (:host github :repo "nitros12/geros"))
-(package! lsp-haskell :recipe (:host github :repo "shaunplee/lsp-haskell"))
 
 (package! names)
 

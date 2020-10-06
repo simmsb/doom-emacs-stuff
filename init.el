@@ -76,6 +76,7 @@
          (syntax +childframe)
 
          :lang
+         pest
          yaml
          json
          p4

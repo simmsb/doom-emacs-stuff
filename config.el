@@ -60,8 +60,8 @@
 (use-package! lsp-haskell
   :config
   ;; progress spams the minibuffer when we're viewing hovers, etc
-  (ht-set! (lsp--client-notification-handlers (gethash 'hie lsp-clients)) "$/progress" #'ignore)
-  (lsp-haskell-set-formatter "ormolu")
+  ;; (ht-set! (lsp--client-notification-handlers (gethash 'hie lsp-clients)) "$/progress" #'ignore)
+  ;; (lsp-haskell-set-formatter "ormolu")
   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
@@ -91,11 +91,12 @@
 (after! lsp
   (lsp-ui-mode +1)
   (setq lsp-flycheck-live-reporting +1
-        lsp-lens-enable t
+        lsp-lens-enable nil
         lsp-modeline-diagnostics-scope :project
-        lsp-enable-file-watchers t
-        lsp-enable-text-document-color t
-        lsp-enable-semantic-highlighting t)
+        lsp-enable-indentation t
+        lsp-enable-file-watchers nil
+        lsp-enable-text-document-color nil
+        lsp-enable-semantic-highlighting nil)
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
@@ -217,9 +218,14 @@
 (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
-(setq treemacs-silent-refresh t
-      treemacs-follow-mode t
-      doom-themes-treemacs-theme "Default")
+(setq +treemacs-git-mode 'deferred)
+
+(after! treemacs
+  (add-hook! treemacs-mode )
+  (setq treemacs-silent-refresh t
+        treemacs-follow-mode t
+        doom-themes-treemacs-theme "Default"
+        doom-themes-treemacs-bitmap-indicator-width 7))
 
 ;; (add-hook 'after-make-frame-functions
 ;;           (lambda (_)
