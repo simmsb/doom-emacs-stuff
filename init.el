@@ -57,6 +57,7 @@
          eshell
 
          :tools
+         biblio
          docker
          (eval +overlay)
          (lookup +dictionary)
@@ -76,6 +77,7 @@
          (syntax +childframe)
 
          :lang
+         plantuml
          pest
          yaml
          json
@@ -91,6 +93,7 @@
          emacs-lisp
          (haskell +lsp)
          (java +lsp)
+         (kotlin +lsp)
          (javascript +lsp)
          (latex +pdf-tools)
          markdown

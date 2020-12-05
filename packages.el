@@ -6,7 +6,7 @@
 (package! lsp-mode :recipe (:host github :repo "emacs-lsp/lsp-mode"))
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
-(package! geros       :recipe (:host github :repo "nitros12/geros"))
+(package! geros :recipe (:host github :repo "nitros12/geros"))
 
 (package! names)
 
@@ -16,6 +16,8 @@
 (if ON-LAPTOP
     (disable-packages! lsp-haskell flycheck-haskell)
   (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el")))
+
+(package! org-ref)
 
 ;;(package! elpy)
 (package! typescript-mode)

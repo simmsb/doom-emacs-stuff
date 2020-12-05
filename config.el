@@ -66,6 +66,13 @@
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 
+(use-package! org-ref
+  :config
+  (setq bibtex-completion-bibliography '("~/org/bibliography/references.bib")
+        bibtex-completion-library-path '("~/org/research_stuff")
+        bibtex-completion-notes-path "~/org/bibliography/notes.org"))
+
+
 ;; (when ON-DESKTOP
 ;;   (use-package! mu4e-alert
 ;;     :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
@@ -85,7 +92,6 @@
 (when ON-DESKTOP
   (use-package! discord-emacs)
   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
-  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
   (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208"))
 
 (after! lsp
@@ -190,6 +196,11 @@
   (advice-add 'evil-ex-search-previous :after
               (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos)))))
 
+(after! ivy
+  (add-to-list 'ivy-re-builders-alist `(counsel-find-file . ,#'+ivy-prescient-non-fuzzy))
+  (add-to-list 'ivy-re-builders-alist `(counsel-file-jump . ,#'+ivy-prescient-non-fuzzy))
+  (add-to-list 'ivy-re-builders-alist `(counsel-projectile-find-file . ,#'+ivy-prescient-non-fuzzy)))
+
 (setq-default x-stretch-cursor t
               uniquify-buffer-name-style 'forward)
 
@@ -261,3 +272,5 @@
     (setcdr forge-topic-list-limit -5)))
 
 (defun cc-bytecomp-is-compiling (&rest _))
+
+(setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s 2>/dev/null || true")
