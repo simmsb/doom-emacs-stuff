@@ -26,6 +26,7 @@
          (ivy +fuzzy +prescient)
 
          :ui
+         tree-sitter
          workspaces
          hydra
          vc-gutter
