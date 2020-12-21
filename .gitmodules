@@ -3,4 +3,4 @@
 	url = https://github.com/agrif/sourcepawn-mode
 [submodule "local/elixir-ls"]
 	path = local/elixir-ls
-	url = git@github.com:JakeBecker/elixir-ls.git
+	url = git@github.com:nitros12/elixir-ls

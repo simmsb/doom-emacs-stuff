@@ -33,9 +33,7 @@
          (popup
           +all
           +defaults)
-         ,@(unless IS-MAC
-             '((ligatures
-                +fira)))
+         ligatures
          doom
          doom-dashboard
          modeline
@@ -168,8 +166,8 @@
 (pcase (system-name)
   ("home"
    (setq doom-theme 'doom-molokai)
-   (setq doom-font (font-spec :family "Fira Mono" :size 17)
-         doom-big-font (font-spec :family "Fira Mono" :size 23)))
+   (setq doom-font (font-spec :family "Fira Code" :size 16)
+         doom-big-font (font-spec :family "Fira Code" :size 22)))
   ("laptop"
    (toggle-frame-maximized)
    (setq doom-theme 'doom-tomorrow-night)
@@ -177,7 +175,7 @@
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   ("work-desktop"
    (setq doom-theme 'doom-wilmersdorf)
-   (setq doom-font (font-spec :family "Fira Mono" :size 14)
-         doom-big-font (font-spec :family "Fira Mono" :size 18))))
+   (setq doom-font (font-spec :family "Fira Code" :size 14)
+         doom-big-font (font-spec :family "Fira Code" :size 18))))
 
 ;; (setq lsp-print-io t)

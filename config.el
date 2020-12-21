@@ -232,9 +232,8 @@
 (setq +treemacs-git-mode 'deferred)
 
 (after! treemacs
-  (add-hook! treemacs-mode )
+  (treemacs-follow-mode +1)
   (setq treemacs-silent-refresh t
-        treemacs-follow-mode t
         doom-themes-treemacs-theme "Default"
         doom-themes-treemacs-bitmap-indicator-width 7))
 
