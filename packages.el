@@ -6,9 +6,13 @@
 (package! lsp-mode :recipe (:host github :repo "emacs-lsp/lsp-mode"))
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
+(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
+
 (package! geros :recipe (:host github :repo "nitros12/geros"))
 
 (package! names)
+
+(package! el-patch)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))

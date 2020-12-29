@@ -72,6 +72,44 @@
         bibtex-completion-library-path '("~/org/research_stuff")
         bibtex-completion-notes-path "~/org/bibliography/notes.org"))
 
+(use-package! screenshot
+  :commands (screenshot)
+  :config/el-patch
+  (defun screenshot--post-process (file)
+    "Apply any image post-processing to FILE."
+    (when (or (> screenshot-radius 0)
+              (> screenshot-shadow-radius 0))
+      (let ((result
+             (shell-command-to-string
+              (format (el-patch-concat "convert '%1$s' \\( +clone -alpha extract \\
+\\( -size %2$dx%2$d xc:black -draw 'fill white circle %2$d,%2$d %2$d,0' -write mpr:arc +delete \\) \\
+\\( mpr:arc \\) -gravity northwest -composite \\
+\\( mpr:arc -flip \\) -gravity southwest -composite \\
+\\( mpr:arc -flop \\) -gravity northeast -composite \\
+\\( mpr:arc -rotate 180 \\) -gravity southeast -composite \\) \\
+-alpha off -compose CopyOpacity -composite -compose over \\
+\\( +clone -background '%3$s' -shadow %4$dx%5$d+%6$d+%7$d \\) \\
++swap -background none -layers merge "
+                                       (el-patch-add "-matte -virtual-pixel transparent -distort perspective-projection '0.931507, -0.0205634, 5, -6.79666e-16, 0.89108, 10, -8.06666e-18, -0.00028169' ")
+                                       "'%1$s'")
+                      file
+                      screenshot-radius
+                      screenshot-shadow-color
+                      screenshot-shadow-intensity
+                      screenshot-shadow-radius
+                      screenshot-shadow-offset-horizontal
+                      screenshot-shadow-offset-vertical))))
+        (unless (string= result "")
+          (error "Could not apply imagemagick commants to image:\n%s" result))))
+    (run-hook-with-args 'screenshot-post-process-hook file))
+  :config
+  (setq screenshot-shadow-color "rgba(0, 0, 0, 0.55)"
+        screenshot-shadow-radius 20
+        screenshot-shadow-intensity 50
+        screenshot-shadow-offset-horizontal 0
+        screenshot-shadow-offset-vertical 20
+        screenshot-border-width 5))
+
 
 ;; (when ON-DESKTOP
 ;;   (use-package! mu4e-alert
