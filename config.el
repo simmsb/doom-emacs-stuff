@@ -65,12 +65,13 @@
   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-
 (use-package! org-ref
   :config
   (setq bibtex-completion-bibliography '("~/org/bibliography/references.bib")
         bibtex-completion-library-path '("~/org/research_stuff")
         bibtex-completion-notes-path "~/org/bibliography/notes.org"))
+
+(use-package! el-patch)
 
 (use-package! screenshot
   :commands (screenshot)
@@ -90,7 +91,7 @@
 -alpha off -compose CopyOpacity -composite -compose over \\
 \\( +clone -background '%3$s' -shadow %4$dx%5$d+%6$d+%7$d \\) \\
 +swap -background none -layers merge "
-                                       (el-patch-add "-matte -virtual-pixel transparent -distort perspective-projection '0.931507, -0.0205634, 5, -6.79666e-16, 0.89108, 10, -8.06666e-18, -0.00028169' ")
+                                       (el-patch-add "-matte -virtual-pixel transparent -distort barrel '0.04 0.0 0.0 0.9' ")
                                        "'%1$s'")
                       file
                       screenshot-radius
