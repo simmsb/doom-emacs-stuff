@@ -61,8 +61,8 @@
   :config
   ;; progress spams the minibuffer when we're viewing hovers, etc
   ;; (ht-set! (lsp--client-notification-handlers (gethash 'hie lsp-clients)) "$/progress" #'ignore)
-  ;; (lsp-haskell-set-formatter "ormolu")
-  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
+  (setq lsp-haskell-server-path "haskell-language-server-wrapper"
+        lsp-haskell-formatting-provider "fourmolu")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 (use-package! org-ref
@@ -141,7 +141,8 @@
         lsp-enable-indentation t
         lsp-enable-file-watchers nil
         lsp-enable-text-document-color nil
-        lsp-enable-semantic-highlighting nil)
+        lsp-semantic-tokens-enable nil
+        lsp-headerline-breadcrumb-enable nil)
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
@@ -290,7 +291,7 @@
       doom-modeline-enable-word-count t)
 
 ;; yeet
-(set-formatter! 'ormolu "ormolu" :modes '(haskell-mode))
+(set-formatter! 'fourmolu "fourmolu" :modes '(haskell-mode))
 
 (setq safe-local-variable-values '((ssh-deploy-async . 1)))
 
