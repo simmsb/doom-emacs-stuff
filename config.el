@@ -59,10 +59,24 @@
 
 (use-package! lsp-haskell
   :config
+  (require 'dash)
+  (require 's)
+  (require 'ht)
+
   ;; progress spams the minibuffer when we're viewing hovers, etc
-  ;; (ht-set! (lsp--client-notification-handlers (gethash 'hie lsp-clients)) "$/progress" #'ignore)
   (setq lsp-haskell-server-path "haskell-language-server-wrapper"
         lsp-haskell-formatting-provider "fourmolu")
+
+  ;; patch the result of haskell-language-server to select the first code fragment
+  (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
+    (-let* (((&hash "value") contents)
+            (groups (--partition-by (s-blank? it) (s-lines value)))
+            (sig (--> groups
+                   (--drop-while (not (s-equals? "```haskell" (car it))) it)
+                   (car it)
+                   (s-join "\n" it))))
+      (lsp--render-element sig)))
+
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 (use-package! org-ref
@@ -143,6 +157,8 @@
         lsp-enable-text-document-color nil
         lsp-semantic-tokens-enable nil
         lsp-headerline-breadcrumb-enable nil)
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.venv")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]assets\\'")
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
