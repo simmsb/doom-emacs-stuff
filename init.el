@@ -72,7 +72,7 @@
          upload
 
          :checkers
-         spell
+         (spell +enchant +flyspell)
          (syntax +childframe)
 
          :lang

@@ -147,18 +147,22 @@
   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
   (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208"))
 
-(after! lsp
+(after! lsp-mode
   (lsp-ui-mode +1)
   (setq lsp-flycheck-live-reporting +1
         lsp-lens-enable nil
         lsp-modeline-diagnostics-scope :project
         lsp-enable-indentation t
-        lsp-enable-file-watchers nil
-        lsp-enable-text-document-color nil
-        lsp-semantic-tokens-enable nil
+        lsp-enable-file-watchers t
+        lsp-enable-text-document-color t
+        lsp-semantic-tokens-enable t
         lsp-headerline-breadcrumb-enable nil)
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.venv")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]assets\\'")
+  (dolist (dir '(
+                 "[/\\\\]\\.venv"
+                 "[/\\\\]\\.venv\\'"
+                 "[/\\\\]assets\\'"
+                 ))
+    (push dir lsp-file-watch-ignored-directories))
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
@@ -256,6 +260,9 @@
   (add-to-list 'ivy-re-builders-alist `(counsel-find-file . ,#'+ivy-prescient-non-fuzzy))
   (add-to-list 'ivy-re-builders-alist `(counsel-file-jump . ,#'+ivy-prescient-non-fuzzy))
   (add-to-list 'ivy-re-builders-alist `(counsel-projectile-find-file . ,#'+ivy-prescient-non-fuzzy)))
+
+(after! ispell
+  (setq ispell-dictionary "english"))
 
 (setq-default x-stretch-cursor t
               uniquify-buffer-name-style 'forward)
