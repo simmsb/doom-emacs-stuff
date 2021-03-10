@@ -7,6 +7,7 @@
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
+(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
 
 (package! geros :recipe (:host github :repo "nitros12/geros"))
 

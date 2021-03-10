@@ -31,6 +31,9 @@
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line)
 
+(use-package! engrave-faces-latex
+  :after ox-latex)
+
 (use-package! disable-mouse)
 (use-package! github-review)
 (use-package! github-browse-file)
@@ -154,8 +157,6 @@
         lsp-modeline-diagnostics-scope :project
         lsp-enable-indentation t
         lsp-enable-file-watchers t
-        lsp-enable-text-document-color t
-        lsp-semantic-tokens-enable t
         lsp-headerline-breadcrumb-enable nil)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
@@ -181,7 +182,9 @@
 (after! lsp-rust
   (setq lsp-rust-analyzer-display-chaining-hints t
         lsp-rust-analyzer-display-parameter-hints t
-        lsp-rust-analyzer-server-display-inlay-hints t))
+        lsp-rust-analyzer-server-display-inlay-hints t
+        lsp-rust-analyzer-cargo-load-out-dirs-from-check t
+        lsp-rust-analyzer-proc-macro-enable t))
 
 (after! company
   (setq company-idle-delay 0.1)
@@ -196,12 +199,209 @@
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
+(after! ox-latex
+  (setq org-latex-listings 'engraved)
+
+  (setq org-latex-pdf-process
+        '("%latex -interaction nonstopmode -output-directory %o %f"
+          "biber %b"
+          "%latex -interaction nonstopmode -output-directory %o %f"
+          "%latex -interaction nonstopmode -output-directory %o %f"))
+
+  (defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
+    "Like `org-latex-src-block', but supporting an engraved backend"
+    :around #'org-latex-src-block
+    (if (eq 'engraved (plist-get info :latex-listings))
+        (org-latex-scr-block--engraved src-block contents info)
+      (funcall orig-fn src-block contents info)))
+
+  (defadvice! org-latex-inline-src-block-engraved (orig-fn inline-src-block contents info)
+    "Like `org-latex-inline-src-block', but supporting an engraved backend"
+    :around #'org-latex-inline-src-block
+    (if (eq 'engraved (plist-get info :latex-listings))
+        (org-latex-inline-scr-block--engraved inline-src-block contents info)
+      (funcall orig-fn src-block contents info)))
+
+  (defvar org-latex-universal-preamble "
+\\usepackage[main,include]{embedall}
+\\IfFileExists{./\\jobname.org}{\\embedfile[desc=The original file]{\\jobname.org}}{}
+"
+    "Preamble to be included in every export.")
+
+  (defvar org-latex-conditional-preambles
+    `((t . org-latex-universal-preamble)
+      ("\\[\\[file:.*\\.svg\\]\\]" . "\\usepackage{svg}"))
+    "Snippets which are conditionally included in the preamble of a LaTeX export.
+
+Alist where when the car results in a non-nil value, the cdr is inserted in
+the preamble.  The car may be a:
+- string, which is used as a regex search in the buffer
+- symbol, the value of which used
+- function, the result of the function is used
+
+The cdr may be a:
+- string, which is inserted without processing
+- symbol, the value of which is inserted
+- function, the result of which is inserted")
+
+  (defadvice! org-latex-header-smart-preamble (orig-fn tpl def-pkg pkg snippets-p &optional extra)
+    "Dynamically insert preamble content based on `org-latex-conditional-preambles'."
+    :around #'org-splice-latex-header
+    (let ((header (funcall orig-fn tpl def-pkg pkg snippets-p extra)))
+      (if snippets-p header
+        (concat header
+                (mapconcat (lambda (term-preamble)
+                             (when (pcase (car term-preamble)
+                                     ((pred stringp) (save-excursion
+                                                       (goto-char (point-min))
+                                                       (search-forward-regexp (car term-preamble) nil t)))
+                                     ((pred functionp) (funcall (car term-preamble)))
+                                     ((pred symbolp) (symbol-value (car term-preamble)))
+                                     (_ (user-error "org-latex-conditional-preambles key %s unable to be used" (car term-preamble))))
+                               (pcase (cdr term-preamble)
+                                 ((pred stringp) (cdr term-preamble))
+                                 ((pred functionp) (funcall (cdr term-preamble)))
+                                 ((pred symbolp) (symbol-value (cdr term-preamble)))
+                                 (_ (user-error "org-latex-conditional-preambles value %s unable to be used" (cdr term-preamble))))))
+                           org-latex-conditional-preambles
+                           "\n")))))
+
+  (setq org-latex-engraved-code-preamble "
+\\usepackage{fvextra}
+\\fvset{
+  commandchars=\\\\\\{\\},
+  highlightcolor=white!95!black!80!blue,
+  breaklines=true,
+  breaksymbol=\\color{white!60!black}\\tiny\\ensuremath{\\hookrightarrow}}
+\\renewcommand\\theFancyVerbLine{\\footnotesize\\color{black!40!white}\\arabic{FancyVerbLine}}
+
+% TODO have code boxes keep line vertical alignment
+\\usepackage[breakable,xparse]{tcolorbox}
+\\DeclareTColorBox[]{Code}{o}%
+{colback=white!97!black, colframe=white!94!black,
+  fontupper=\\color{EFD}\\footnotesize,
+  IfNoValueTF={#1}%
+  {boxsep=2pt, arc=2.5pt, outer arc=2.5pt,
+    boxrule=0.5pt, left=2pt}%
+  {boxsep=2.5pt, arc=0pt, outer arc=0pt,
+    boxrule=0pt, leftrule=1.5pt, left=0.5pt},
+  right=2pt, top=1pt, bottom=0.5pt,
+  breakable}
+")
+
+  (add-to-list 'org-latex-conditional-preambles '("#\\+BEGIN_SRC\\|#\\+begin_src" . org-latex-engraved-code-preamble) t)
+  (add-to-list 'org-latex-conditional-preambles '("#\\+BEGIN_SRC\\|#\\+begin_src" . engrave-faces-latex-gen-preamble) t)
+
+  (defun org-latex-scr-block--engraved (src-block _contents info)
+    (let* ((lang (org-element-property :language src-block))
+           (attributes (org-export-read-attribute :attr_latex src-block))
+           (float (plist-get attributes :float))
+           (num-start (org-export-get-loc src-block info))
+           (retain-labels (org-element-property :retain-labels src-block))
+           (caption (org-element-property :caption src-block))
+           (caption-above-p (org-latex--caption-above-p src-block info))
+           (caption-str (org-latex--caption/label-string src-block info))
+           (placement (or (org-unbracket-string "[" "]" (plist-get attributes :placement))
+                          (plist-get info :latex-default-figure-position)))
+           (float-env
+            (cond
+             ((string= "multicolumn" float)
+              (format "\\begin{listing*}[%s]\n%s%%s\n%s\\end{listing*}"
+                      placement
+                      (if caption-above-p caption-str "")
+                      (if caption-above-p "" caption-str)))
+             (caption
+              (format "\\begin{listing}[%s]\n%s%%s\n%s\\end{listing}"
+                      placement
+                      (if caption-above-p caption-str "")
+                      (if caption-above-p "" caption-str)))
+             ((string= "t" float)
+              (concat (format "\\begin{listing}[%s]\n"
+                              placement)
+                      "%s\n\\end{listing}"))
+             (t "%s")))
+           (options (plist-get info :latex-minted-options))
+           (content-buffer
+            (with-temp-buffer
+              (insert
+               (let* ((code-info (org-export-unravel-code src-block))
+                      (max-width
+                       (apply 'max
+                              (mapcar 'length
+                                      (org-split-string (car code-info)
+                                                        "\n")))))
+                 (org-export-format-code
+                  (car code-info)
+                  (lambda (loc _num ref)
+                    (concat
+                     loc
+                     (when ref
+                       ;; Ensure references are flushed to the right,
+                       ;; separated with 6 spaces from the widest line
+                       ;; of code.
+                       (concat (make-string (+ (- max-width (length loc)) 6)
+                                            ?\s)
+                               (format "(%s)" ref)))))
+                  nil (and retain-labels (cdr code-info)))))
+              (funcall (org-src-get-lang-mode lang))
+              (engrave-faces-latex-buffer)))
+           (content
+            (with-current-buffer content-buffer
+              (buffer-string)))
+           (body
+            (format
+             "\\begin{Code}\n\\begin{Verbatim}[%s]\n%s\\end{Verbatim}\n\\end{Code}"
+             ;; Options.
+             (concat
+              (org-latex--make-option-string
+               (if (or (not num-start) (assoc "linenos" options))
+                   options
+                 (append
+                  `(("linenos")
+                    ("firstnumber" ,(number-to-string (1+ num-start))))
+                  options)))
+              (let ((local-options (plist-get attributes :options)))
+                (and local-options (concat "," local-options))))
+             content)))
+      (kill-buffer content-buffer)
+      ;; Return value.
+      (format float-env body)))
+
+  (defun org-latex-inline-scr-block--engraved (inline-src-block _contents info)
+    (let ((options (org-latex--make-option-string
+                    (plist-get info :latex-minted-options)))
+          code-buffer code)
+      (setq code-buffer
+            (with-temp-buffer
+              (insert (org-element-property :value inline-src-block))
+              (funcall (org-src-get-lang-mode
+                        (org-element-property :language inline-src-block)))
+              (engrave-faces-latex-buffer)))
+      (setq code (with-current-buffer code-buffer
+                   (buffer-string)))
+      (kill-buffer code-buffer)
+      (format "\\Verb%s{%s}"
+              (if (string= options "") ""
+                (format "[%s]" options))
+              code)))
+
+  (defadvice! org-latex-example-block-engraved (orig-fn example-block contents info)
+    "Like `org-latex-example-block', but supporting an engraved backend"
+    :around #'org-latex-example-block
+    (let ((output-block (funcall orig-fn example-block contents info)))
+      (if (eq 'engraved (plist-get info :latex-listings))
+          (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
+        output-block))))
+
 (after! org
-  (setq org-tags-column 100)
-  (setq org-sticky-header-full-path 'full)
+  (setq org-tags-column 100
+        org-sticky-header-full-path 'full)
 
   (add-hook! org-mode
     (org-sticky-header-mode 1))
+
+  (add-to-list 'org-src-lang-modes
+               '("p4" . p4lang))
 
   (setq org-attach-screenshot-command-line "escrotum -s %f")
   (setq org-catch-invisible-edits 'show-and-error
