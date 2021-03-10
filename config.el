@@ -222,15 +222,154 @@
         (org-latex-inline-scr-block--engraved inline-src-block contents info)
       (funcall orig-fn src-block contents info)))
 
+  (add-to-list 'org-latex-classes
+               '("fancy-article"
+                 "\\documentclass{scrartcl}\n
+[DEFAULT-PACKAGES]
+[PACKAGES]
+
+\\usepackage[osf,largesc,helvratio=0.9]{newpxtext}
+\\usepackage[scale=0.9]{sourcecodepro}
+
+\\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=2000]{microtype}
+
+\\setlength{\\parskip}{\\baselineskip}
+\\setlength{\\parindent}{0pt}
+
+\\AtBeginEnvironment{quote}{\\itshape}
+"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (defvar latex-fancy-hyperref "
+\\colorlet{greenyblue}{blue!70!green}
+\\colorlet{blueygreen}{blue!40!green}
+\\providecolor{link}{named}{greenyblue}
+\\providecolor{cite}{named}{blueygreen}
+\\hypersetup{
+  pdfauthor={%a},
+  pdftitle={%t},
+  pdfkeywords={%k},
+  pdfsubject={%d},
+  pdfcreator={%c},
+  pdflang={%L},
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=,
+  urlcolor=link,
+  citecolor=cite\n}
+\\urlstyle{same}
+")
+
   (defvar org-latex-universal-preamble "
 \\usepackage[main,include]{embedall}
 \\IfFileExists{./\\jobname.org}{\\embedfile[desc=The original file]{\\jobname.org}}{}
 "
     "Preamble to be included in every export.")
 
+  (defvar org-latex-caption-preamble "
+\\usepackage{subcaption}
+\\usepackage[hypcap=true]{caption}
+\\setkomafont{caption}{\\sffamily\\small}
+\\setkomafont{captionlabel}{\\upshape\\bfseries}
+\\captionsetup{justification=raggedright,singlelinecheck=true}
+\\setcapindent{0pt}
+\\usepackage{capt-of} % required by Org
+")
+
+  (defvar org-latex-checkbox-preamble "
+#+begin_src LaTeX
+\\usepackage{pifont}
+\\usepackage{amssymb} % for \square
+\\newcommand{\\checkboxUnchecked}{$\\square$}
+\\newcommand{\\checkboxTransitive}{\\rlap{\\raisebox{-0.1ex}{\\hspace{0.35ex}\\Large\\textbf -}}$\\square$}
+\\newcommand{\\checkboxChecked}{\\rlap{\\raisebox{0.2ex}{\\hspace{0.35ex}\\scriptsize \\ding{52}}}$\\square$}
+")
+
+  (defvar org-latex-box-preamble "
+% args = #1 Name, #2 Colour, #3 Ding, #4 Label
+\\usepackage{pifont}
+\\newcommand{\\defsimplebox}[4]{%
+  \\definecolor{#1}{HTML}{#2}
+  \\newenvironment{#1}
+  {%
+    \\par\\vspace{-0.7\\baselineskip}%
+    \\textcolor{#1}{#3} \\textcolor{#1}{\\textbf{#4}}%
+    \\vspace{-0.8\\baselineskip}
+    \\begin{addmargin}[1em]{1em}
+  }{%
+    \\end{addmargin}
+    \\vspace{-0.5\\baselineskip}
+  }%
+}
+\\defsimplebox{warning}{e66100}{\\ding{68}}{Warning}
+\\defsimplebox{info}{3584e4}{\\ding{68}}{Information}
+\\defsimplebox{success}{26a269}{\\ding{68}}{\\vspace{-\\baselineskip}}
+\\defsimplebox{error}{c01c28}{\\ding{68}}{Important}
+")
+
+  (setq org-latex-default-class "fancy-article"
+        org-latex-tables-booktabs t
+        org-latex-hyperref-template latex-fancy-hyperref)
+
+  (defun org-babel-tangle-files ()
+    "All files that may be tangled to.
+Uses a stripped-down version of `org-babel-tangle'"
+    (let (files)
+      (save-excursion
+        (mapc ;; map over all languages
+         (lambda (by-lang)
+           (let* ((lang (car by-lang))
+                  (specs (cdr by-lang))
+                  (ext (or (cdr (assoc lang org-babel-tangle-lang-exts)) lang)))
+             (mapc
+              (lambda (spec)
+                (let ((get-spec (lambda (name) (cdr (assoc name (nth 4 spec))))))
+                  (let* ((tangle (funcall get-spec :tangle))
+                         (base-name (cond
+                                     ((string= "yes" tangle)
+                                      (file-name-sans-extension
+                                       (nth 1 spec)))
+                                     ((string= "no" tangle) nil)
+                                     ((> (length tangle) 0) tangle)))
+                         (file-name (when base-name
+                                      ;; decide if we want to add ext to base-name
+                                      (if (and ext (string= "yes" tangle))
+                                          (concat base-name "." ext) base-name))))
+                    (push file-name files))))
+              specs)))
+         (org-babel-tangle-collect-blocks)))
+      (delq nil (cl-delete-duplicates files :test #'string=))))
+
+  (defun org-latex-embed-tangled-files ()
+    "Return a string that uses embedfile to embed all tangled files."
+    (mapconcat
+     (lambda (tangle-file)
+       (format "\\IfFileExists{%1$s}{\\embedfile[desc=A tangled file]{%1$s}}{}"
+               (->> tangle-file
+                 (replace-regexp-in-string "\\\\" "\\\\\\\\")
+                 (replace-regexp-in-string "~" "\\\\string~"))))
+     (org-babel-tangle-files)
+     "\n"))
+
   (defvar org-latex-conditional-preambles
-    `((t . org-latex-universal-preamble)
-      ("\\[\\[file:.*\\.svg\\]\\]" . "\\usepackage{svg}"))
+    '((t . org-latex-universal-preamble)
+      ("^[ 	]*#\\+begin_src" . org-latex-embed-tangled-files)
+      ("\\[\\[file:\\(?:[^\\]]+?|\\\\\\]\\)\\.svg\\]\\]" . "\\usepackage{svg}")
+      ("\\[\\[file:\\(?:[^]]\\|\\\\\\]\\)+\\.\\(?:eps\\|pdf\\|png\\|jpeg\\|jpg\\|jbig2\\)\\]\\]" . "\\usepackage{graphicx}")
+      ("^[ 	]*|" . "\\usepackage{longtable}\n\\usepackage{booktabs}")
+      ("\\\\(\\|\\\\\\[\\|\\\\begin{\\(?:math\\|displaymath\\|equation\\|align\\|flalign\\|multiline\\|gather\\)[a-z]*\\*?}"
+       . "\\usepackage{bmc-maths}")
+      ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith"
+       . "\\usepackage[normalem]{ulem}")
+      (":float wrap" . "\\usepackage{wrapfig}")
+      (":float sideways" . "\\usepackage{rotating}")
+      ("^[ 	]*#\\+caption:\\|\\\\caption" . org-latex-caption-preamble)
+      ("^[ 	]*\\(?:[-+*]\\|[0-9]+[.)]\\|[A-Za-z]+[.)]\\) \\[[ -X]\\]" . org-latex-checkbox-preamble)
+      ("^[ 	]*#\\+begin_\\(?:warning\\|info\\|success\\|error\\)\\|\\\\begin{\\(?:warning\\|info\\|success\\|error\\)}"
+       . org-latex-box-preamble))
     "Snippets which are conditionally included in the preamble of a LaTeX export.
 
 Alist where when the car results in a non-nil value, the cdr is inserted in
@@ -258,13 +397,15 @@ The cdr may be a:
                                      ((pred functionp) (funcall (car term-preamble)))
                                      ((pred symbolp) (symbol-value (car term-preamble)))
                                      (_ (user-error "org-latex-conditional-preambles key %s unable to be used" (car term-preamble))))
-                               (pcase (cdr term-preamble)
-                                 ((pred stringp) (cdr term-preamble))
-                                 ((pred functionp) (funcall (cdr term-preamble)))
-                                 ((pred symbolp) (symbol-value (cdr term-preamble)))
-                                 (_ (user-error "org-latex-conditional-preambles value %s unable to be used" (cdr term-preamble))))))
+                               (concat
+                                (pcase (cdr term-preamble)
+                                  ((pred stringp) (cdr term-preamble))
+                                  ((pred functionp) (funcall (cdr term-preamble)))
+                                  ((pred symbolp) (symbol-value (cdr term-preamble)))
+                                  (_ (user-error "org-latex-conditional-preambles value %s unable to be used" (cdr term-preamble))))
+                                "\n")))
                            org-latex-conditional-preambles
-                           "\n")))))
+                           "") "\n"))))
 
   (setq org-latex-engraved-code-preamble "
 \\usepackage{fvextra}
@@ -289,10 +430,50 @@ The cdr may be a:
   breakable}
 ")
 
-  (add-to-list 'org-latex-conditional-preambles '("#\\+BEGIN_SRC\\|#\\+begin_src" . org-latex-engraved-code-preamble) t)
-  (add-to-list 'org-latex-conditional-preambles '("#\\+BEGIN_SRC\\|#\\+begin_src" . engrave-faces-latex-gen-preamble) t)
+  (add-to-list 'org-latex-conditional-preambles '("^[ 	]*#\\+BEGIN_SRC\\|#\\+begin_src" . org-latex-engraved-code-preamble) t)
+  (add-to-list 'org-latex-conditional-preambles '("^[ 	]*#\\+BEGIN_SRC\\|#\\+begin_src" . engrave-faces-latex-gen-preamble) t)
 
-  (defun org-latex-scr-block--engraved (src-block _contents info)
+  (defun org-latex--caption/label-string (element info)
+    "Return caption and label LaTeX string for ELEMENT.
+
+INFO is a plist holding contextual information.  If there's no
+caption nor label, return the empty string.
+
+For non-floats, see `org-latex--wrap-label'."
+    (let* ((label (org-latex--label element info nil t))
+           (main (org-export-get-caption element))
+           (attr (org-export-read-attribute :attr_latex element))
+           (type (org-element-type element))
+           (nonfloat t)
+           (short (org-export-get-caption element t))
+           (caption-from-attr-latex (plist-get attr :caption)))
+      (cond
+       ((org-string-nw-p caption-from-attr-latex)
+        (concat caption-from-attr-latex "\n"))
+       ((and (not main) (equal label "")) "")
+       ((not main) label)
+       ;; Option caption format with short name.
+       (t
+        (format (if nonfloat "\\captionof{%s}%s{%s}\n%s"
+                  "\\caption%s%s{%s}\n%s")
+                (let ((type* (if (eq type 'latex-environment)
+                                 (org-latex--environment-type element)
+                               type)))
+                  (if nonfloat
+                      (cl-case type*
+                        (paragraph "figure")
+                        (image "figure")
+                        (special-block "figure")
+                        (src-block (if (plist-get info :latex-listings)
+                                       "listing"
+                                     "figure"))
+                        (t (symbol-name type*)))
+                    ""))
+                (if short (format "[%s]" (org-export-data short info)) "")
+                (org-export-data main info)
+                label)))))
+
+  (defun org-latex-scr-block--engraved (src-block contents info)
     (let* ((lang (org-element-property :language src-block))
            (attributes (org-export-read-attribute :attr_latex src-block))
            (float (plist-get attributes :float))
@@ -306,19 +487,15 @@ The cdr may be a:
            (float-env
             (cond
              ((string= "multicolumn" float)
-              (format "\\begin{listing*}[%s]\n%s%%s\n%s\\end{listing*}"
-                      placement
+              (format "%s%%s\n%s"
                       (if caption-above-p caption-str "")
                       (if caption-above-p "" caption-str)))
              (caption
-              (format "\\begin{listing}[%s]\n%s%%s\n%s\\end{listing}"
-                      placement
+              (format "%s%%s\n%s"
                       (if caption-above-p caption-str "")
                       (if caption-above-p "" caption-str)))
              ((string= "t" float)
-              (concat (format "\\begin{listing}[%s]\n"
-                              placement)
-                      "%s\n\\end{listing}"))
+                      "%s\n\\end{listing}")
              (t "%s")))
            (options (plist-get info :latex-minted-options))
            (content-buffer
@@ -384,7 +561,6 @@ The cdr may be a:
               (if (string= options "") ""
                 (format "[%s]" options))
               code)))
-
   (defadvice! org-latex-example-block-engraved (orig-fn example-block contents info)
     "Like `org-latex-example-block', but supporting an engraved backend"
     :around #'org-latex-example-block
