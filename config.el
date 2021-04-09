@@ -39,6 +39,7 @@
 (use-package! github-browse-file)
 
 (use-package! geros
+  :defer t
   :config
   (setq geros-eval-result-duration nil)
   :hook
@@ -49,6 +50,7 @@
   (evil-lion-mode))
 
 (use-package! sqlup-mode
+  :defer t
   :commands (sqlup-mode)
   :hook ((sql-mode . sqlup-mode)
          (sql-interactive-mode . sqlup-mode)))
@@ -58,10 +60,10 @@
   :config (advice-add 'outline-flag-region :after 'backline-update))
 
 (use-package! esh-autosuggest
+  :defer t
   :hook (eshell-mode . esh-autosuggest-mode))
 
-(use-package! lsp-haskell
-  :config
+(after! lsp-haskell
   (require 'dash)
   (require 's)
   (require 'ht)
@@ -155,6 +157,7 @@
   (setq lsp-flycheck-live-reporting +1
         lsp-lens-enable nil
         lsp-modeline-diagnostics-scope :project
+        lsp-restart 'auto-restart
         lsp-enable-indentation t
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil)
@@ -198,6 +201,10 @@
       company-yasnippet)))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
+
+(after! engrave-faces
+  (setq engrave-faces-attributes-of-interest
+        '(:foreground :slant :weight :height :strike-through)))
 
 (after! ox-latex
   (setq org-latex-listings 'engraved)
@@ -280,7 +287,6 @@
 ")
 
   (defvar org-latex-checkbox-preamble "
-#+begin_src LaTeX
 \\usepackage{pifont}
 \\usepackage{amssymb} % for \square
 \\newcommand{\\checkboxUnchecked}{$\\square$}
@@ -360,10 +366,10 @@ Uses a stripped-down version of `org-babel-tangle'"
       ("\\[\\[file:\\(?:[^\\]]+?|\\\\\\]\\)\\.svg\\]\\]" . "\\usepackage{svg}")
       ("\\[\\[file:\\(?:[^]]\\|\\\\\\]\\)+\\.\\(?:eps\\|pdf\\|png\\|jpeg\\|jpg\\|jbig2\\)\\]\\]" . "\\usepackage{graphicx}")
       ("^[ 	]*|" . "\\usepackage{longtable}\n\\usepackage{booktabs}")
-      ("\\\\(\\|\\\\\\[\\|\\\\begin{\\(?:math\\|displaymath\\|equation\\|align\\|flalign\\|multiline\\|gather\\)[a-z]*\\*?}"
-       . "\\usepackage{bmc-maths}")
-      ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith"
-       . "\\usepackage[normalem]{ulem}")
+      ;; ("\\\\(\\|\\\\\\[\\|\\\\begin{\\(?:math\\|displaymath\\|equation\\|align\\|flalign\\|multiline\\|gather\\)[a-z]*\\*?}"
+      ;;  . "\\usepackage{bmc-maths}")
+      ;; ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith"
+      ;;  . "\\usepackage[normalem]{ulem}")
       (":float wrap" . "\\usepackage{wrapfig}")
       (":float sideways" . "\\usepackage{rotating}")
       ("^[ 	]*#\\+caption:\\|\\\\caption" . org-latex-caption-preamble)
@@ -487,15 +493,15 @@ For non-floats, see `org-latex--wrap-label'."
            (float-env
             (cond
              ((string= "multicolumn" float)
-              (format "%s%%s\n%s"
+              (format "\\begingroup\n%s%%s\n%s\\endgroup"
                       (if caption-above-p caption-str "")
                       (if caption-above-p "" caption-str)))
              (caption
-              (format "%s%%s\n%s"
+              (format "\\begingroup\n%s%%s\n%s\\endgroup"
                       (if caption-above-p caption-str "")
                       (if caption-above-p "" caption-str)))
              ((string= "t" float)
-                      "%s\n\\end{listing}")
+                      "\\begingroup\n%s\n\\endgroup")
              (t "%s")))
            (options (plist-get info :latex-minted-options))
            (content-buffer
@@ -711,4 +717,9 @@ For non-floats, see `org-latex--wrap-label'."
 
 (defun cc-bytecomp-is-compiling (&rest _))
 
-(setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s 2>/dev/null || true")
+(after! counsel
+  (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s 2>/dev/null || true"))
+
+(after! geiser
+  (setq geiser-scheme-implementation 'guile
+        geiser-active-implementations '(guile)))
