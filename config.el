@@ -38,6 +38,10 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 
+(use-package! mermaid-mode
+  :defer t
+  :mode "\\.mmd$")
+
 (use-package! geros
   :defer t
   :config
@@ -160,7 +164,8 @@
         lsp-restart 'auto-restart
         lsp-enable-indentation t
         lsp-enable-file-watchers t
-        lsp-headerline-breadcrumb-enable nil)
+        lsp-headerline-breadcrumb-enable nil
+        lsp-ui-doc-show-with-cursor nil)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
                  "[/\\\\]\\.venv\\'"
@@ -501,7 +506,7 @@ For non-floats, see `org-latex--wrap-label'."
                       (if caption-above-p caption-str "")
                       (if caption-above-p "" caption-str)))
              ((string= "t" float)
-                      "\\begingroup\n%s\n\\endgroup")
+              "\\begingroup\n%s\n\\endgroup")
              (t "%s")))
            (options (plist-get info :latex-minted-options))
            (content-buffer
@@ -703,12 +708,21 @@ For non-floats, see `org-latex--wrap-label'."
 (add-hook! cuda-mode
   (yas-minor-mode-on))
 
-(set-irc-server! "chat.freenode.net"
-                 `(:tls t :port 6697 :nick "nitros_" :sasl-username "nitros_" :sasl-password (lambda (&rest _) (password-store-get "freenode/pass")) :channels ("#emacs" "#haskell")))
+(set-irc-server! "irc.libera.chat"
+                 `(:tls t
+                   :port 6697
+                   :nick "simmsb"
+                   :sasl-username "simmsb"
+                   :sasl-password (lambda (&rest _) (+pass-get-secret "libera/password"))
+                   :channels (:after-auth "#haskell" "#haskell-in-depth")))
 
 (after! circe
   (enable-circe-color-nicks)
-  (enable-circe-notifications))
+  (enable-circe-notifications)
+  (enable-circe-display-images)
+  (circe-lagmon-mode +1)
+  (setq lui-logging-directory "~/.irc-logs")
+  (enable-lui-logging-globally))
 
 (after! forge
   (if (atom forge-topic-list-limit)
@@ -723,3 +737,12 @@ For non-floats, see `org-latex--wrap-label'."
 (after! geiser
   (setq geiser-scheme-implementation 'guile
         geiser-active-implementations '(guile)))
+
+(pcase (system-name)
+  ("home"
+   (setq doom-theme 'doom-horizon))
+  ("laptop"
+   (toggle-frame-maximized)
+   (setq doom-theme 'doom-tomorrow-night))
+  ("work-desktop"
+   (setq doom-theme 'doom-wilmersdorf)))

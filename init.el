@@ -84,7 +84,7 @@
          jade
          sourcepawn
          ebnf
-         scheme
+         (scheme +racket)
          racket
          (cc +lsp)
          data
@@ -116,8 +116,8 @@
          ;; Applications are complex and opinionated modules that transform Emacs
          ;; toward a specific purpose. They may have additional dependencies and
          ;; should be loaded late.
-         ;; :app
-         ;; irc
+         :app
+         irc
          :config
          ;; The default module set reasonable defaults for Emacs. It also provides
          ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,
@@ -167,7 +167,9 @@
   ("home"
    (setq doom-theme 'doom-horizon)
    (setq doom-font (font-spec :family "Fira Code" :size 16)
-         doom-big-font (font-spec :family "Fira Code" :size 22)))
+         doom-big-font (font-spec :family "Fira Code" :size 22)
+         doom-variable-pitch-font (font-spec :family "Fira Sans")
+         doom-unicode-font (font-spec :family "Fira Sans Mono")))
   ("laptop"
    (toggle-frame-maximized)
    (setq doom-theme 'doom-tomorrow-night)

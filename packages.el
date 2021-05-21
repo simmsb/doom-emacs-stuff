@@ -11,6 +11,8 @@
 
 (package! geros :recipe (:host github :repo "nitros12/geros"))
 
+(package! mermaid :recipe (:host github :repo "abrochard/mermaid-mode"))
+
 (package! names)
 
 (package! el-patch)
