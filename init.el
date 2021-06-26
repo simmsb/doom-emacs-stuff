@@ -12,7 +12,7 @@
          (evil +everywhere)
          format
          multiple-cursors
-         ;; parinfer -- Broken for emacs 28
+         (parinfer +rust)
          rotate-text
          fold
 
@@ -23,7 +23,8 @@
          :completion
          ;; (company +tng)
          company
-         (ivy +fuzzy +prescient)
+         ;(ivy +fuzzy +prescient)
+         (selectrum)
 
          :ui
          tree-sitter
@@ -33,7 +34,7 @@
          (popup
           +all
           +defaults)
-         ligatures
+         ;ligatures
          doom
          doom-dashboard
          modeline
@@ -44,6 +45,7 @@
          vi-tilde-fringe
          window-select
          zen
+         (emoji +unicode)
 
          :emacs
          undo
@@ -84,7 +86,7 @@
          jade
          sourcepawn
          ebnf
-         (scheme +racket)
+         ;; (scheme +racket)
          racket
          (cc +lsp)
          data
@@ -169,7 +171,7 @@
    (setq doom-font (font-spec :family "Fira Code" :size 16)
          doom-big-font (font-spec :family "Fira Code" :size 22)
          doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-unicode-font (font-spec :family "Fira Sans Mono")))
+         doom-unicode-font (font-spec :family "Twemoji")))
   ("laptop"
    (toggle-frame-maximized)
    (setq doom-theme 'doom-tomorrow-night)

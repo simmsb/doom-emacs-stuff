@@ -124,7 +124,7 @@
                       screenshot-shadow-offset-horizontal
                       screenshot-shadow-offset-vertical))))
         (unless (string= result "")
-          (error "Could not apply imagemagick commants to image:\n%s" result))))
+          (error "Could not apply imagemagick commands to image:\n%s" result))))
     (run-hook-with-args 'screenshot-post-process-hook file))
   :config
   (setq screenshot-shadow-color "rgba(0, 0, 0, 0.55)"
@@ -133,7 +133,6 @@
         screenshot-shadow-offset-horizontal 0
         screenshot-shadow-offset-vertical 20
         screenshot-border-width 5))
-
 
 ;; (when ON-DESKTOP
 ;;   (use-package! mu4e-alert
@@ -169,8 +168,8 @@
   (dolist (dir '(
                  "[/\\\\]\\.venv"
                  "[/\\\\]\\.venv\\'"
-                 "[/\\\\]assets\\'"
-                 ))
+                 "[/\\\\]assets\\'"))
+
     (push dir lsp-file-watch-ignored-directories))
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
@@ -191,8 +190,11 @@
   (setq lsp-rust-analyzer-display-chaining-hints t
         lsp-rust-analyzer-display-parameter-hints t
         lsp-rust-analyzer-server-display-inlay-hints t
-        lsp-rust-analyzer-cargo-load-out-dirs-from-check t
-        lsp-rust-analyzer-proc-macro-enable t))
+        lsp-rust-analyzer-proc-macro-enable t
+        lsp-rust-analyzer-diagnostics-enable-experimental t
+        lsp-rust-analyzer-call-info-full t
+        lsp-rust-analyzer-cargo-watch-command "clippy"))
+
 
 (after! company
   (setq company-idle-delay 0.1)
@@ -367,19 +369,19 @@ Uses a stripped-down version of `org-babel-tangle'"
 
   (defvar org-latex-conditional-preambles
     '((t . org-latex-universal-preamble)
-      ("^[ 	]*#\\+begin_src" . org-latex-embed-tangled-files)
+      ("^[\t ]*#\\+begin_src" . org-latex-embed-tangled-files)
       ("\\[\\[file:\\(?:[^\\]]+?|\\\\\\]\\)\\.svg\\]\\]" . "\\usepackage{svg}")
       ("\\[\\[file:\\(?:[^]]\\|\\\\\\]\\)+\\.\\(?:eps\\|pdf\\|png\\|jpeg\\|jpg\\|jbig2\\)\\]\\]" . "\\usepackage{graphicx}")
-      ("^[ 	]*|" . "\\usepackage{longtable}\n\\usepackage{booktabs}")
+      ("^[      ]*|" . "\\usepackage{longtable}\n\\usepackage{booktabs}")
       ;; ("\\\\(\\|\\\\\\[\\|\\\\begin{\\(?:math\\|displaymath\\|equation\\|align\\|flalign\\|multiline\\|gather\\)[a-z]*\\*?}"
       ;;  . "\\usepackage{bmc-maths}")
       ;; ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith"
       ;;  . "\\usepackage[normalem]{ulem}")
       (":float wrap" . "\\usepackage{wrapfig}")
       (":float sideways" . "\\usepackage{rotating}")
-      ("^[ 	]*#\\+caption:\\|\\\\caption" . org-latex-caption-preamble)
-      ("^[ 	]*\\(?:[-+*]\\|[0-9]+[.)]\\|[A-Za-z]+[.)]\\) \\[[ -X]\\]" . org-latex-checkbox-preamble)
-      ("^[ 	]*#\\+begin_\\(?:warning\\|info\\|success\\|error\\)\\|\\\\begin{\\(?:warning\\|info\\|success\\|error\\)}"
+      ("^[\t ]*#\\+caption:\\|\\\\caption" . org-latex-caption-preamble)
+      ("^[\t ]*\\(?:[-+*]\\|[0-9]+[.)]\\|[A-Za-z]+[.)]\\) \\[[ -X]\\]" . org-latex-checkbox-preamble)
+      ("^[\t ]*#\\+begin_\\(?:warning\\|info\\|success\\|error\\)\\|\\\\begin{\\(?:warning\\|info\\|success\\|error\\)}"
        . org-latex-box-preamble))
     "Snippets which are conditionally included in the preamble of a LaTeX export.
 
@@ -441,8 +443,8 @@ The cdr may be a:
   breakable}
 ")
 
-  (add-to-list 'org-latex-conditional-preambles '("^[ 	]*#\\+BEGIN_SRC\\|#\\+begin_src" . org-latex-engraved-code-preamble) t)
-  (add-to-list 'org-latex-conditional-preambles '("^[ 	]*#\\+BEGIN_SRC\\|#\\+begin_src" . engrave-faces-latex-gen-preamble) t)
+  (add-to-list 'org-latex-conditional-preambles '("^[\t ]*#\\+BEGIN_SRC\\|#\\+begin_src" . org-latex-engraved-code-preamble) t)
+  (add-to-list 'org-latex-conditional-preambles '("^[\t ]*#\\+BEGIN_SRC\\|#\\+begin_src" . engrave-faces-latex-gen-preamble) t)
 
   (defun org-latex--caption/label-string (element info)
     "Return caption and label LaTeX string for ELEMENT.
@@ -637,11 +639,16 @@ For non-floats, see `org-latex--wrap-label'."
   (fset 'evil-visual-update-x-selection 'ignore)
   (defadvice! prompt-for-buffer (&rest _)
     :after '(evil-window-split evil-window-vsplit)
-    (+ivy/switch-buffer))
+    (consult-buffer))
   (advice-add 'evil-ex-search-next :after
               (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos))))
   (advice-add 'evil-ex-search-previous :after
               (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos)))))
+
+(after! consult
+  (setq consult-async-refresh-delay 0.1
+        consult-async-input-throttle 0.1
+        consult-async-refresh-delay 0.1))
 
 (after! ivy
   (add-to-list 'ivy-re-builders-alist `(counsel-find-file . ,#'+ivy-prescient-non-fuzzy))
@@ -661,10 +668,6 @@ For non-floats, see `org-latex--wrap-label'."
 (setq display-line-numbers-type nil)
 
 (global-subword-mode 1)
-
-;; dunno if there's a better way to starting in paren mode
-(add-hook! parinfer-mode
-  (parinfer--switch-to-paren-mode))
 
 (set-popup-rule! "^\\* Racket REPL"
   :side 'right
@@ -694,12 +697,6 @@ For non-floats, see `org-latex--wrap-label'."
 (setq deft-directory "~/org/lectures"
       deft-recursive t)
 
-(setq doom-modeline-buffer-file-name-style 'truncate-with-project
-      doom-modeline-github nil
-      doom-modeline-major-mode-icon nil
-      doom-modeline-icon t
-      doom-modeline-enable-word-count t)
-
 ;; yeet
 (set-formatter! 'fourmolu "fourmolu" :modes '(haskell-mode))
 
@@ -712,6 +709,8 @@ For non-floats, see `org-latex--wrap-label'."
                  `(:tls t
                    :port 6697
                    :nick "simmsb"
+                   :user "simmsb"
+                   :realname "Ben Simms"
                    :sasl-username "simmsb"
                    :sasl-password (lambda (&rest _) (+pass-get-secret "libera/password"))
                    :channels (:after-auth "#haskell" "#haskell-in-depth")))

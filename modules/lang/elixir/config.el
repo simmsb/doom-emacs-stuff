@@ -11,8 +11,13 @@
   (provide 'smartparens-elixir)
 
   :config
-  (setq lsp-clients-elixir-server-executable
-        (f-join doom-private-dir "local" "elixir-ls" "build" "language_server.sh"))
+  (when (featurep! +lsp)
+    (add-hook 'elixir-mode-local-vars-hook #'lsp!)
+    (after! lsp-mode
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]_build\\'")))
+
+  (setq lsp-elixir-server-command
+        (list (f-join doom-private-dir "local" "elixir-ls" "build" "language_server.sh")))
 
   ;; ...and only complete the basics
   (sp-with-modes 'elixir-mode
