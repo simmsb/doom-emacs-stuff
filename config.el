@@ -7,10 +7,11 @@
 (map!
  (:leader
   (:prefix "f"
-   :desc "Toggle Treemacs" "t" #'+treemacs/toggle)
+   :desc "Toggle Treemacs" "t" #'+treemacs/toggle-project)
   (:prefix "o"
    :desc "Open Shopping" "s" #'org-shopping-open
-   :desc "Open kill ring" "k" #'+default/yank-pop))
+   :desc "Open kill ring" "k" #'+default/yank-pop
+   :desc "Open notes.org" "n" #'org-notes-open))
 
  (:map evilem-map
   :after evil-easymotion
@@ -220,7 +221,8 @@
         '("%latex -interaction nonstopmode -output-directory %o %f"
           "biber %b"
           "%latex -interaction nonstopmode -output-directory %o %f"
-          "%latex -interaction nonstopmode -output-directory %o %f"))
+          "%latex -interaction nonstopmode -output-directory %o %f")
+        org-latex-reference-command "\\cref{%s}")
 
   (defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
     "Like `org-latex-src-block', but supporting an engraved backend"
@@ -246,6 +248,7 @@
 \\usepackage[scale=0.9]{sourcecodepro}
 
 \\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=2000]{microtype}
+\\usepackage[capitalize]{cleveref}
 
 \\setlength{\\parskip}{\\baselineskip}
 \\setlength{\\parindent}{0pt}

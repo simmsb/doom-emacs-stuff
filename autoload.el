@@ -71,6 +71,9 @@ See `org-capture-templates' for more information."
   (interactive)
   (find-file +org-shopping-file))
 
+(defun org-notes-open ()
+  (interactive)
+  (find-file +org-default-notes-file))
 
 ;;;###autoload
 (defun +file-templates/insert ()
@@ -82,3 +85,13 @@ See `org-capture-templates' for more information."
        (not (member (substring (buffer-name) 0 1) '("*" " ")))
        (when-let (rule (cl-find-if #'+file-template-p +file-templates-alist))
          (apply #'+file-templates--expand rule))))
+
+;;;###autoload
+(defun +treemacs/toggle-project ()
+  (interactive)
+  (require 'treemacs)
+  (pcase (treemacs-current-visibility)
+    (`visible (delete-window (treemacs-get-local-window)))
+    (_ (if (doom-project-p)
+           (treemacs-display-current-project-exclusively)
+         (treemacs)))))

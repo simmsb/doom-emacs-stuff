@@ -24,7 +24,7 @@
          ;; (company +tng)
          company
          ;(ivy +fuzzy +prescient)
-         (selectrum)
+         (vertico)
 
          :ui
          tree-sitter
@@ -78,6 +78,7 @@
          (syntax +childframe)
 
          :lang
+         (clojure +lsp)
          plantuml
          pest
          yaml
