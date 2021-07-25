@@ -39,6 +39,9 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 
+;; why is this getting lazy loaded?
+(use-package! dired)
+
 (use-package! mermaid-mode
   :defer t
   :mode "\\.mmd$")
@@ -89,16 +92,51 @@
 
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-(use-package! org-ref
-  :config
-  (setq bibtex-completion-bibliography '("~/org/bibliography/references.bib")
+(setq my/bib '("~/org/bibliography/references.bib"))
+
+(after! bibtex-actions
+  (setq bibtex-completion-bibliography my/bib
         bibtex-completion-library-path '("~/org/research_stuff")
         bibtex-completion-notes-path "~/org/bibliography/notes.org"))
+
+(use-package! citeproc
+  :defer t)
+
+(use-package! oc
+  :after org
+  :config
+  (setq org-cite-activate-processor 'basic
+        org-cite-follow-processor 'oc-bibtex-actions
+        org-cite-insert-processor 'oc-bibtex-actions
+        org-cite-export-proccessors
+                '((beamer natbib)
+                  (latex biblatex)
+                  (t csl))
+        org-cite-global-bibliography my/bib))
+
+(use-package! oc-basic
+  :after oc)
+
+(use-package! oc-biblatex
+  :after oc)
+
+(use-package! oc-csl
+  :after oc
+  :config
+  (setq org-cite-csl-styles-dir "~/org/csl/styles"
+        org-cite-csl-locales-dir "~/org/csl/locales"))
+
+(use-package! bibtex-actions
+  :functions (oc-bibtex-actions))
+
+(use-package! oc-bibtex-actions
+  :after (org oc bibtex-actions))
 
 (use-package! el-patch)
 
 (use-package! screenshot
   :commands (screenshot)
+  :defer t
   :config/el-patch
   (defun screenshot--post-process (file)
     "Apply any image post-processing to FILE."
@@ -248,7 +286,7 @@
 \\usepackage[scale=0.9]{sourcecodepro}
 
 \\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=2000]{microtype}
-\\usepackage[capitalize]{cleveref}
+\\usepackage[capitalize,nameinlink]{cleveref}
 
 \\setlength{\\parskip}{\\baselineskip}
 \\setlength{\\parindent}{0pt}

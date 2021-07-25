@@ -28,7 +28,8 @@
     (disable-packages! lsp-haskell flycheck-haskell)
   (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el")))
 
-(package! org-ref)
+(package! citeproc)
+;; (package! org-ref)
 
 ;;(package! elpy)
 (package! typescript-mode)
