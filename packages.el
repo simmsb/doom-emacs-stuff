@@ -26,7 +26,7 @@
 
 (if ON-LAPTOP
     (disable-packages! lsp-haskell flycheck-haskell)
-  (package! discord-emacs :recipe (:host github :repo "nitros12/discord-emacs.el")))
+  (package! discord-emacs :recipe (:host github :repo "simmsb/discord-emacs.el")))
 
 (package! citeproc)
 ;; (package! org-ref)

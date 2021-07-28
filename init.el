@@ -78,6 +78,7 @@
          (syntax +childframe)
 
          :lang
+         ;; poly
          (clojure +lsp)
          plantuml
          pest

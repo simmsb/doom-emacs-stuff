@@ -85,9 +85,9 @@
     (-let* (((&hash "value") contents)
             (groups (--partition-by (s-blank? it) (s-lines value)))
             (sig (--> groups
-                   (--drop-while (not (s-equals? "```haskell" (car it))) it)
-                   (car it)
-                   (s-join "\n" it))))
+                      (--drop-while (not (s-equals? "```haskell" (car it))) it)
+                      (car it)
+                      (s-join "\n" it))))
       (lsp--render-element sig)))
 
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
@@ -109,9 +109,9 @@
         org-cite-follow-processor 'oc-bibtex-actions
         org-cite-insert-processor 'oc-bibtex-actions
         org-cite-export-proccessors
-                '((beamer natbib)
-                  (latex biblatex)
-                  (t csl))
+        '((beamer natbib)
+          (latex biblatex)
+          (t csl))
         org-cite-global-bibliography my/bib))
 
 (use-package! oc-basic
@@ -403,8 +403,8 @@ Uses a stripped-down version of `org-babel-tangle'"
      (lambda (tangle-file)
        (format "\\IfFileExists{%1$s}{\\embedfile[desc=A tangled file]{%1$s}}{}"
                (->> tangle-file
-                 (replace-regexp-in-string "\\\\" "\\\\\\\\")
-                 (replace-regexp-in-string "~" "\\\\string~"))))
+                    (replace-regexp-in-string "\\\\" "\\\\\\\\")
+                    (replace-regexp-in-string "~" "\\\\string~"))))
      (org-babel-tangle-files)
      "\n"))
 
@@ -658,7 +658,49 @@ For non-floats, see `org-latex--wrap-label'."
 
   (setq org-agenda-files (list +org-default-todo-file
                                +org-default-calendar-file
-                               (f-join org-directory "lectures.org"))))
+                               (f-join org-directory "lectures.org")))
+
+  ;;  "\\(#\\+label:[ \t]*listing:dpdkcapsule\\)\\|\\(\\\\label{fig:lookuptrie}\\)"
+
+  (org-link-set-parameters "fig"
+                           :follow (lambda (path _)
+                                     (re-search-forward
+                                      (rx (or
+                                           (: line-start
+                                            "#+label:"
+                                            (* blank)
+                                            "fig:"
+                                            (literal path))
+                                           (:
+                                            "\\label{"
+                                            "fig:"
+                                            (literal path)
+                                            "}")))))
+                           :export (lambda (link _description format _)
+                                     (let ((path (concat "fig:" link)))
+                                       (pcase format
+                                         (`latex (format org-latex-reference-command path))
+                                         (_ path)))))
+
+  (org-link-set-parameters "listing"
+                           :follow (lambda (path _)
+                                     (re-search-forward
+                                      (rx (or
+                                           (: line-start
+                                            "#+label:"
+                                            (* blank)
+                                            "listing:"
+                                            (literal path))
+                                           (:
+                                            "\\label{"
+                                            "listing:"
+                                            (literal path)
+                                            "}")))))
+                           :export (lambda (link _description format _)
+                                     (let ((path (concat "listing:" link)))
+                                       (pcase format
+                                         (`latex (format org-latex-reference-command path))
+                                         (_ path))))))
 
 (setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
@@ -747,14 +789,14 @@ For non-floats, see `org-latex--wrap-label'."
   (yas-minor-mode-on))
 
 (set-irc-server! "irc.libera.chat"
-                 `(:tls t
-                   :port 6697
-                   :nick "simmsb"
-                   :user "simmsb"
-                   :realname "Ben Simms"
-                   :sasl-username "simmsb"
-                   :sasl-password (lambda (&rest _) (+pass-get-secret "libera/password"))
-                   :channels (:after-auth "#haskell" "#haskell-in-depth")))
+  `(:tls t
+    :port 6697
+    :nick "simmsb"
+    :user "simmsb"
+    :realname "Ben Simms"
+    :sasl-username "simmsb"
+    :sasl-password (lambda (&rest _) (+pass-get-secret "libera/password"))
+    :channels (:after-auth "#haskell" "#haskell-in-depth")))
 
 (after! circe
   (enable-circe-color-nicks)
