@@ -813,9 +813,6 @@ For non-floats, see `org-latex--wrap-label'."
 
 (defun cc-bytecomp-is-compiling (&rest _))
 
-(after! counsel
-  (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s 2>/dev/null || true"))
-
 (after! geiser
   (setq geiser-scheme-implementation 'guile
         geiser-active-implementations '(guile)))
