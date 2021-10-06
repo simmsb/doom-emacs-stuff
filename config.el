@@ -71,6 +71,9 @@
   :defer t
   :hook (eshell-mode . esh-autosuggest-mode))
 
+(after! gcmh
+  (setq gcmh-idle-delay 15))
+
 (after! lsp-haskell
   (require 'dash)
   (require 's)
@@ -134,6 +137,22 @@
 
 (use-package! el-patch)
 
+(use-package! vertico-repeat
+  :defer t
+  :config/el-patch
+  (defun vertico-repeat--save ()
+    "Save Vertico status for `vertico-repeat'."
+    (when vertico--input
+      (unless vertico-repeat--restore
+        (setq vertico-repeat--command (if (el-patch-wrap 1 1 (and (boundp 'current-minibuffer-command) current-minibuffer-command))
+                                          current-minibuffer-command
+                                        this-command)
+              vertico-repeat--input ""
+              vertico-repeat--candidate nil
+              vertico-repeat--restore nil))
+      (add-hook 'post-command-hook #'vertico-repeat--save-input nil 'local)
+      (add-hook 'minibuffer-exit-hook #'vertico-repeat--save-candidate nil 'local))))
+
 (use-package! screenshot
   :commands (screenshot)
   :defer t
@@ -153,7 +172,7 @@
 -alpha off -compose CopyOpacity -composite -compose over \\
 \\( +clone -background '%3$s' -shadow %4$dx%5$d+%6$d+%7$d \\) \\
 +swap -background none -layers merge "
-                                       (el-patch-add "-matte -virtual-pixel transparent -distort barrel '0.04 0.0 0.0 0.9' ")
+                                       (el-patch-add "-matte -virtual-pixel transparent ")
                                        "'%1$s'")
                       file
                       screenshot-radius
@@ -214,7 +233,8 @@
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
 (after! magit
-  (magit-wip-mode 1))
+  (magit-wip-mode 1)
+  (magit-todos-mode 1))
 
 (after! flycheck
   (add-hook! haskell-mode
@@ -226,13 +246,14 @@
   (setq rustic-lsp-server 'rust-analyzer))
 
 (after! lsp-rust
-  (setq lsp-rust-analyzer-display-chaining-hints t
+  (setq lsp-rust-analyzer-display-chaining-hints nil
         lsp-rust-analyzer-display-parameter-hints t
-        lsp-rust-analyzer-server-display-inlay-hints t
+        lsp-rust-analyzer-server-display-inlay-hints nil
         lsp-rust-analyzer-proc-macro-enable t
         lsp-rust-analyzer-diagnostics-enable-experimental t
-        lsp-rust-analyzer-call-info-full t
-        lsp-rust-analyzer-cargo-watch-command "clippy"))
+        lsp-rust-analyzer-call-info-full t))
+;; lsp-rust-analyzer-cargo-watch-command "clippy")
+
 
 
 (after! company
@@ -624,6 +645,7 @@ For non-floats, see `org-latex--wrap-label'."
         output-block))))
 
 (after! org
+  (require 's)
   (setq org-tags-column 100
         org-sticky-header-full-path 'full)
 
@@ -657,8 +679,13 @@ For non-floats, see `org-latex--wrap-label'."
 
 
   (setq org-agenda-files (list +org-default-todo-file
-                               +org-default-calendar-file
-                               (f-join org-directory "lectures.org")))
+                               +org-default-calendar-file))
+
+  (async-shell-command-to-string
+   "fd -a -c never -d 3 TODO.org ~/dev/"
+   (lambda (s)
+     (setq org-agenda-files (append (s-lines s) org-agenda-files))))
+                               
 
   ;;  "\\(#\\+label:[ \t]*listing:dpdkcapsule\\)\\|\\(\\\\label{fig:lookuptrie}\\)"
 
@@ -711,6 +738,10 @@ For non-floats, see `org-latex--wrap-label'."
 (after! haskell-mode
   (setq haskell-auto-insert-module-format-string "-- | \nmodule %s\n    (\n     ) where"))
 
+;; (use-package! evil-textobj-treesitter
+;;   :defer t
+;;   :commands evil-textobj-treesitter-get-textobj)
+
 (after! evil
   (setq evil-normal-state-cursor '(box "light blue")
         evil-insert-state-cursor '(bar "medium sea green")
@@ -727,6 +758,26 @@ For non-floats, see `org-latex--wrap-label'."
               (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos))))
   (advice-add 'evil-ex-search-previous :after
               (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos)))))
+
+;; ( 'ts-function-o (evil-textobj-treesitter-get-textobj "function.outer"))
+;; (defalias 'ts-block-o (evil-textobj-treesitter-get-textobj "block.outer"))
+;; (defalias 'ts-parameter-o (evil-textobj-treesitter-get-textobj "parameter.outer"))
+;; (defalias 'ts-comment-o (evil-textobj-treesitter-get-textobj "comment.outer"))
+
+;; (map!
+;;  (:map evil-outer-text-objects-map
+;;   :desc "Via Tree Sitter"
+;;   (:prefix ("T" . "Via tree sitter")
+;;    :desc "Function" "f" #'ts-function-o
+;;    :desc "Block" "b"  #'ts-block-o
+;;    :desc "Parameter" "p"  #'ts-parameter-o
+;;    :desc "Comment" "c" #'ts-comment-o))
+;;  (:map evil-inner-text-objects-map
+;;   (:prefix ("T" . "Via tree sitter")
+;;    :desc "Function" "f" (evil-textobj-treesitter-get-textobj "function.inner")
+;;    :desc "Block" "b" (evil-textobj-treesitter-get-textobj "block.inner")
+;;    :desc "Parameter" "p" (evil-textobj-treesitter-get-textobj "parameter.inner")
+;;    :desc "Comment" "c" (evil-textobj-treesitter-get-textobj "comment.inner")))))
 
 (after! consult
   (setq consult-async-refresh-delay 0.1
@@ -817,11 +868,18 @@ For non-floats, see `org-latex--wrap-label'."
   (setq geiser-scheme-implementation 'guile
         geiser-active-implementations '(guile)))
 
-(pcase (system-name)
-  ("home"
-   (setq doom-theme 'doom-horizon))
-  ("laptop"
-   (toggle-frame-maximized)
-   (setq doom-theme 'doom-tomorrow-night))
-  ("work-desktop"
-   (setq doom-theme 'doom-wilmersdorf)))
+(use-package! circadian
+  :config
+  (setq circadian-themes '(("8:00" . doom-flatwhite)
+                           ("17:00" . doom-monokai-ristretto)))
+  (circadian-setup))
+
+
+;; (pcase (system-name)
+;;   ("home"
+;;    (setq doom-theme 'doom-horizon))
+;;   ("laptop"
+;;    (toggle-frame-maximized)
+;;    (setq doom-theme 'doom-tomorrow-night))
+;;   ("work-desktop"
+;;    (setq doom-theme 'doom-wilmersdorf)))

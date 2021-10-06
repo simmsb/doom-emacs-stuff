@@ -27,7 +27,6 @@
          (vertico)
 
          :ui
-         tree-sitter
          workspaces
          hydra
          vc-gutter
@@ -58,6 +57,7 @@
          eshell
 
          :tools
+         tree-sitter
          biblio
          docker
          (eval +overlay)
@@ -78,6 +78,7 @@
          (syntax +childframe)
 
          :lang
+         (go +lsp)
          ;; poly
          (clojure +lsp)
          plantuml
@@ -106,7 +107,8 @@
           +dragndrop
           +pandoc
           +present
-          +hugo)
+          +hugo
+          +pretty)
          (python +lsp +poetry +pyright)
          rest
          (rust +lsp)
@@ -167,20 +169,19 @@
          (expand-file-name "~/.cargo/bin/") path-separator
          (getenv "PATH")))
 
+(setq doom-theme 'doom-flatwhite)
+
 (pcase (system-name)
   ("home"
-   (setq doom-theme 'doom-horizon)
    (setq doom-font (font-spec :family "Fira Code" :size 16)
          doom-big-font (font-spec :family "Fira Code" :size 22)
          doom-variable-pitch-font (font-spec :family "Fira Sans")
          doom-unicode-font (font-spec :family "Twemoji")))
   ("laptop"
    (toggle-frame-maximized)
-   (setq doom-theme 'doom-tomorrow-night)
    (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   ("work-desktop"
-   (setq doom-theme 'doom-wilmersdorf)
    (setq doom-font (font-spec :family "Fira Code" :size 14)
          doom-big-font (font-spec :family "Fira Code" :size 18))))
 
