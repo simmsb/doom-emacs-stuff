@@ -685,7 +685,7 @@ For non-floats, see `org-latex--wrap-label'."
    "fd -a -c never -d 3 TODO.org ~/dev/"
    (lambda (s)
      (setq org-agenda-files (append (s-lines s) org-agenda-files))))
-                               
+
 
   ;;  "\\(#\\+label:[ \t]*listing:dpdkcapsule\\)\\|\\(\\\\label{fig:lookuptrie}\\)"
 
@@ -780,9 +780,13 @@ For non-floats, see `org-latex--wrap-label'."
 ;;    :desc "Comment" "c" (evil-textobj-treesitter-get-textobj "comment.inner")))))
 
 (after! consult
-  (setq consult-async-refresh-delay 0.1
-        consult-async-input-throttle 0.1
-        consult-async-refresh-delay 0.1))
+  (consult-customize
+   +vertico/project-search consult-ripgrep consult-git-grep consult-grep
+   :preview-key '(:debounce 0.5 any)))
+;; (setq consult-async-refresh-delay 0.1
+;;       consult-async-input-throttle 0.1
+;;       consult-async-refresh-delay 0.1)
+
 
 (after! ivy
   (add-to-list 'ivy-re-builders-alist `(counsel-find-file . ,#'+ivy-prescient-non-fuzzy))
