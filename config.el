@@ -97,10 +97,10 @@
 
 (setq my/bib '("~/org/bibliography/references.bib"))
 
-(after! bibtex-actions
-  (setq bibtex-completion-bibliography my/bib
-        bibtex-completion-library-path '("~/org/research_stuff")
-        bibtex-completion-notes-path "~/org/bibliography/notes.org"))
+(after! citar
+  (setq citar-bibliography my/bib
+        citar-library-paths '("~/org/research_stuff")
+        citar-notes-paths "~/org/bibliography/notes.org"))
 
 (use-package! citeproc
   :defer t)
@@ -108,10 +108,7 @@
 (use-package! oc
   :after org
   :config
-  (setq org-cite-activate-processor 'basic
-        org-cite-follow-processor 'oc-bibtex-actions
-        org-cite-insert-processor 'oc-bibtex-actions
-        org-cite-export-proccessors
+  (setq org-cite-export-proccessors
         '((beamer natbib)
           (latex biblatex)
           (t csl))
@@ -129,11 +126,15 @@
   (setq org-cite-csl-styles-dir "~/org/csl/styles"
         org-cite-csl-locales-dir "~/org/csl/locales"))
 
-(use-package! bibtex-actions
-  :functions (oc-bibtex-actions))
+(use-package! citar
+  :config
+  (setq org-cite-global-bibliography my/bib
+        org-cite-insert-processor 'citar
+        org-cite-follow-processor 'citar
+        org-cite-activate-processor 'citar)) 
 
-(use-package! oc-bibtex-actions
-  :after (org oc bibtex-actions))
+;; (use-package! oc-citar
+;;   :after (org oc citar))
 
 (use-package! el-patch)
 
@@ -872,12 +873,13 @@ For non-floats, see `org-latex--wrap-label'."
   (setq geiser-scheme-implementation 'guile
         geiser-active-implementations '(guile)))
 
-(use-package! circadian
-  :config
-  (setq circadian-themes '(("8:00" . doom-flatwhite)
-                           ("17:00" . doom-monokai-ristretto)))
-  (circadian-setup))
-
+(if (string-equal (system-name) "work-desktop")
+    (setq doom-theme 'doom-monokai-ristretto)
+    (use-package! circadian
+      :config
+      (setq circadian-themes '(("8:00" . doom-flatwhite)
+                               ("17:00" . doom-monokai-ristretto)))
+      (circadian-setup)))
 
 ;; (pcase (system-name)
 ;;   ("home"

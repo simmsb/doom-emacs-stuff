@@ -101,6 +101,7 @@
          (javascript +lsp)
          (latex +pdf-tools)
          markdown
+         (csharp +lsp)
 
          (org
           +gnuplot
