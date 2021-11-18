@@ -78,27 +78,27 @@
          (syntax +childframe)
 
          :lang
-         (go +lsp)
+         (go +lsp +tree-sitter)
          ;; poly
          (clojure +lsp)
          plantuml
          pest
          yaml
-         json
+         (json +tree-sitter)
          p4
          jade
          sourcepawn
          ebnf
          ;; (scheme +racket)
          racket
-         (cc +lsp)
+         (cc +lsp +tree-sitter)
          data
          (elixir +lsp)
          emacs-lisp
          (haskell +lsp)
          (java +lsp)
          (kotlin +lsp)
-         (javascript +lsp)
+         (javascript +lsp +tree-sitter)
          (latex +pdf-tools)
          markdown
          (csharp +lsp)
@@ -110,11 +110,11 @@
           +present
           +hugo
           +pretty)
-         (python +lsp +poetry +pyright)
+         (python +lsp +poetry +pyright +tree-sitter)
          rest
-         (rust +lsp)
+         (rust +lsp +tree-sitter)
          (sh +fish)
-         web
+         (web +tree-sitter)
 
          ;; ,@(when ON-DESKTOP
          ;;     '(:email
