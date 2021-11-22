@@ -138,21 +138,21 @@
 
 (use-package! el-patch)
 
-(use-package! vertico-repeat
-  :defer t
-  :config/el-patch
-  (defun vertico-repeat--save ()
-    "Save Vertico status for `vertico-repeat'."
-    (when vertico--input
-      (unless vertico-repeat--restore
-        (setq vertico-repeat--command (if (el-patch-wrap 1 1 (and (boundp 'current-minibuffer-command) current-minibuffer-command))
-                                          current-minibuffer-command
-                                        this-command)
-              vertico-repeat--input ""
-              vertico-repeat--candidate nil
-              vertico-repeat--restore nil))
-      (add-hook 'post-command-hook #'vertico-repeat--save-input nil 'local)
-      (add-hook 'minibuffer-exit-hook #'vertico-repeat--save-candidate nil 'local))))
+; (use-package! vertico-repeat
+;   :defer t
+;   :config/el-patch
+;   (defun vertico-repeat--save ()
+;     "Save Vertico status for `vertico-repeat'."
+;     (when vertico--input
+;       (unless vertico-repeat--restore
+;         (setq vertico-repeat--command (if (el-patch-wrap 1 1 (and (boundp 'current-minibuffer-command) current-minibuffer-command))
+;                                           current-minibuffer-command
+;                                         this-command)
+;               vertico-repeat--input ""
+;               vertico-repeat--candidate nil
+;               vertico-repeat--restore nil))
+;       (add-hook 'post-command-hook #'vertico-repeat--save-input nil 'local)
+;       (add-hook 'minibuffer-exit-hook #'vertico-repeat--save-candidate nil 'local))))
 
 (use-package! screenshot
   :commands (screenshot)
