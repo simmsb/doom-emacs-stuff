@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(disable-packages! company-anaconda anaconda-mode)
+(disable-packages! company-anaconda anaconda-mode ocamlformat)
 
 ;; (package! evil-textobj-treesitter)
 

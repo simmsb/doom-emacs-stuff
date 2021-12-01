@@ -78,6 +78,7 @@
          (syntax +childframe)
 
          :lang
+         (ocaml +tree-sitter +lsp)
          (go +lsp +tree-sitter)
          ;; poly
          (clojure +lsp)
