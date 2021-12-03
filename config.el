@@ -155,8 +155,7 @@
 ;       (add-hook 'minibuffer-exit-hook #'vertico-repeat--save-candidate nil 'local))))
 
 (use-package! screenshot
-  :commands (screenshot)
-  :defer t
+  :load-path "~/.doom.d/local/screenshot"
   :config/el-patch
   (defun screenshot--post-process (file)
     "Apply any image post-processing to FILE."
