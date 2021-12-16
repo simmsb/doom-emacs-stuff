@@ -876,7 +876,7 @@ For non-floats, see `org-latex--wrap-label'."
     (setq doom-theme 'doom-monokai-ristretto)
     (use-package! circadian
       :config
-      (setq circadian-themes '(("8:00" . doom-flatwhite)
+      (setq circadian-themes '(;;("8:00" . doom-flatwhite)
                                ("15:00" . doom-monokai-ristretto)))
       (circadian-setup)))
 
