@@ -248,7 +248,7 @@
 (after! lsp-rust
   (setq lsp-rust-analyzer-display-chaining-hints nil
         lsp-rust-analyzer-display-parameter-hints t
-        lsp-rust-analyzer-server-display-inlay-hints nil
+        lsp-rust-analyzer-server-display-inlay-hints t
         lsp-rust-analyzer-proc-macro-enable t
         lsp-rust-analyzer-diagnostics-enable-experimental t
         lsp-rust-analyzer-call-info-full t))
@@ -837,6 +837,7 @@ For non-floats, see `org-latex--wrap-label'."
 
 ;; yeet
 (set-formatter! 'fourmolu "fourmolu" :modes '(haskell-mode))
+(set-formatter! 'black "black -q --target-version py310 -")
 
 (setq safe-local-variable-values '((ssh-deploy-async . 1)))
 
@@ -871,6 +872,10 @@ For non-floats, see `org-latex--wrap-label'."
 (after! geiser
   (setq geiser-scheme-implementation 'guile
         geiser-active-implementations '(guile)))
+
+(after! smartparens
+  (sp-local-pair 'python-mode "f\"" "\"" :trigger "f\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
+  (sp-local-pair 'python-mode "f'" "'"))
 
 (if (string-equal (system-name) "work-desktop")
     (setq doom-theme 'doom-monokai-ristretto)

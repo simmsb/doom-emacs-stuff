@@ -114,7 +114,7 @@
          (python +lsp +poetry +pyright +tree-sitter)
          rest
          (rust +lsp +tree-sitter)
-         (sh +fish)
+         (sh +fish +tree-sitter)
          (web +tree-sitter)
 
          ;; ,@(when ON-DESKTOP

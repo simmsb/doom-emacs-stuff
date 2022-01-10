@@ -21,7 +21,9 @@
 
 (package! names)
 
-(package! el-patch)
+(package! el-patch
+          :recipe (:host github :repo "raxod502/el-patch")
+          :pin "4a4e040fcede0c320e860571d5e96100cac05bb5")
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))
