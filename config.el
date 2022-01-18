@@ -249,6 +249,7 @@
   (setq lsp-rust-analyzer-display-chaining-hints nil
         lsp-rust-analyzer-display-parameter-hints t
         lsp-rust-analyzer-server-display-inlay-hints t
+        lsp-rust-analyzer-max-inlay-hint-length 20
         lsp-rust-analyzer-proc-macro-enable t
         lsp-rust-analyzer-diagnostics-enable-experimental t
         lsp-rust-analyzer-call-info-full t))
@@ -825,6 +826,7 @@ For non-floats, see `org-latex--wrap-label'."
 (after! treemacs
   (treemacs-follow-mode +1)
   (setq treemacs-silent-refresh t
+        treemacs-read-string-input 'from-minibuffer
         doom-themes-treemacs-theme "Default"
         doom-themes-treemacs-bitmap-indicator-width 7))
 

@@ -111,7 +111,7 @@
           +present
           +hugo
           +pretty)
-         (python +lsp +poetry +pyright +tree-sitter)
+         (python +lsp +pyright +tree-sitter)
          rest
          (rust +lsp +tree-sitter)
          (sh +fish +tree-sitter)
