@@ -173,18 +173,35 @@
 
 (setq doom-theme 'doom-flatwhite)
 
+(require 'cl-lib)
+
+(defun first-font (&rest fonts)
+  (cl-find-if #'find-font fonts))
+
 (pcase (system-name)
   ("home"
-   (setq doom-font (font-spec :family "Fira Code" :size 16)
-         doom-big-font (font-spec :family "Fira Code" :size 22)
+   (setq doom-font (first-font
+                    (font-spec :family "MonoLisa" :size 16)
+                    (font-spec :family "Fira Code" :size 16))
+         doom-big-font (first-font
+                        (font-spec :family "MonoLisa" :size 22)
+                        (font-spec :family "Fira Code" :size 22))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-unicode-font (font-spec :family "Twemoji")))
+         doom-unicode-font (font-spec :family "Twemoji")
+         doom-serif-font (font-spec :family "Fira Code" :size 16)))
   ("laptop"
    (toggle-frame-maximized)
    (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
   ("work-desktop"
-   (setq doom-font (font-spec :family "Fira Code" :size 14)
-         doom-big-font (font-spec :family "Fira Code" :size 18))))
+   (setq doom-font (first-font
+                    (font-spec :family "MonoLisa" :size 14)
+                    (font-spec :family "Fira Code" :size 14))
+         doom-big-font (first-font
+                        (font-spec :family "MonoLisa" :size 18)
+                        (font-spec :family "Fira Code" :size 18))
+         doom-variable-pitch-font (font-spec :family "Fira Sans")
+         doom-unicode-font (font-spec :family "Twemoji")
+         doom-serif-font (font-spec :family "Fira Code" :size 14))))
 
 ;; (setq lsp-print-io t)
