@@ -9,9 +9,6 @@
 (package! magit-libgit)
 (package! libgit :recipe (:host github :repo "magit/libegit2"))
 (unpin! lsp-mode)
-(package! lsp-mode :recipe (:host github :repo "rjmac/lsp-mode"
-                            :branch "rust-analyzer-inlay-hints"))
-                            
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces
