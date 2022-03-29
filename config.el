@@ -80,22 +80,41 @@
   (require 'ht)
 
   ;; progress spams the minibuffer when we're viewing hovers, etc
-  (setq lsp-haskell-server-path "haskell-language-server-wrapper"
+  (setq lsp-haskell-server-path "haskell-language-server"
         lsp-haskell-formatting-provider "fourmolu")
 
   ;; patch the result of haskell-language-server to select the first code fragment
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
     (-let* (((&hash "value") contents)
-            (groups (--partition-by (s-blank? it) (s-lines value)))
+            (groups (--partition-by (s-blank? it) (s-lines (s-replace "file://" "http://" value))))
             (sig (--> groups
                       (--drop-while (not (s-equals? "```haskell" (car it))) it)
                       (car it)
                       (s-join "\n" it))))
       (lsp--render-element sig)))
 
+  (defun markdown-raw-links (&rest ignore)
+    "Convert link markup [ANCHOR](URL) to raw URL
+     so lsp-ui-doc--make-clickable-link can find it"
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward markdown-regex-link-inline nil t)
+          (replace-match (replace-regexp-in-string "\n" "" (s-concat (match-string 3) ": " (match-string 6)))))))
+  (advice-add 'lsp--render-markdown :before #'markdown-raw-links)
+
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
+
+;; no idea mate
+(after! browse-url
+  (defun browse-url (url)
+    (browse-url-firefox url)))
+
 (setq my/bib '("~/org/bibliography/references.bib"))
+
+(after! nix
+  (setq nix-nixfmt-bin "nixpkgs-fmt")
+  (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
 
 (after! citar
   (setq citar-bibliography my/bib
@@ -131,28 +150,28 @@
   (setq org-cite-global-bibliography my/bib
         org-cite-insert-processor 'citar
         org-cite-follow-processor 'citar
-        org-cite-activate-processor 'citar)) 
+        org-cite-activate-processor 'citar))
 
 ;; (use-package! oc-citar
 ;;   :after (org oc citar))
 
 (use-package! el-patch)
 
-; (use-package! vertico-repeat
-;   :defer t
-;   :config/el-patch
-;   (defun vertico-repeat--save ()
-;     "Save Vertico status for `vertico-repeat'."
-;     (when vertico--input
-;       (unless vertico-repeat--restore
-;         (setq vertico-repeat--command (if (el-patch-wrap 1 1 (and (boundp 'current-minibuffer-command) current-minibuffer-command))
-;                                           current-minibuffer-command
-;                                         this-command)
-;               vertico-repeat--input ""
-;               vertico-repeat--candidate nil
-;               vertico-repeat--restore nil))
-;       (add-hook 'post-command-hook #'vertico-repeat--save-input nil 'local)
-;       (add-hook 'minibuffer-exit-hook #'vertico-repeat--save-candidate nil 'local))))
+                                        ; (use-package! vertico-repeat
+                                        ;   :defer t
+                                        ;   :config/el-patch
+                                        ;   (defun vertico-repeat--save ()
+                                        ;     "Save Vertico status for `vertico-repeat'."
+                                        ;     (when vertico--input
+                                        ;       (unless vertico-repeat--restore
+                                        ;         (setq vertico-repeat--command (if (el-patch-wrap 1 1 (and (boundp 'current-minibuffer-command) current-minibuffer-command))
+                                        ;                                           current-minibuffer-command
+                                        ;                                         this-command)
+                                        ;               vertico-repeat--input ""
+                                        ;               vertico-repeat--candidate nil
+                                        ;               vertico-repeat--restore nil))
+                                        ;       (add-hook 'post-command-hook #'vertico-repeat--save-input nil 'local)
+                                        ;       (add-hook 'minibuffer-exit-hook #'vertico-repeat--save-candidate nil 'local))))
 
 (use-package! screenshot
   :load-path "~/.doom.d/local/screenshot"
@@ -884,11 +903,11 @@ For non-floats, see `org-latex--wrap-label'."
 
 (if (string-equal (system-name) "work-desktop")
     (setq doom-theme 'doom-monokai-ristretto)
-    (use-package! circadian
-      :config
-      (setq circadian-themes '(;;("8:00" . doom-flatwhite)
-                               ("15:00" . doom-monokai-ristretto)))
-      (circadian-setup)))
+  (use-package! circadian
+    :config
+    (setq circadian-themes '(;;("8:00" . doom-flatwhite)
+                             ("15:00" . doom-monokai-ristretto)))
+    (circadian-setup)))
 
 ;; (pcase (system-name)
 ;;   ("home"

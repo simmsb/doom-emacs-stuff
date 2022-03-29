@@ -9,6 +9,7 @@
 (package! magit-libgit)
 (package! libgit :recipe (:host github :repo "magit/libegit2"))
 (unpin! lsp-mode)
+(unpin! lsp-haskell)
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces
