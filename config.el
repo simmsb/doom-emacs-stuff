@@ -79,9 +79,17 @@
   (require 's)
   (require 'ht)
 
+  (defcustom-lsp lsp-haskell-plugin-rename-on
+    t
+    "Enables rename plugin"
+    :group 'lsp-haskell-plugins
+    :type 'boolean
+    :lsp-path "haskell.plugin.rename.globalOn")
+
   ;; progress spams the minibuffer when we're viewing hovers, etc
   (setq lsp-haskell-server-path "haskell-language-server"
-        lsp-haskell-formatting-provider "fourmolu")
+        lsp-haskell-formatting-provider "fourmolu"
+        lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported")
 
   ;; patch the result of haskell-language-server to select the first code fragment
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
