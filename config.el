@@ -219,6 +219,16 @@
         screenshot-shadow-offset-vertical 20
         screenshot-border-width 5))
 
+(after! screenshot
+  (defun screenshot-copy (&optional _args)
+    (interactive (list (transient-args 'screenshot-transient)))
+    (screenshot--process)
+    (call-process "wl-copy" screenshot--tmp-file nil nil
+                  "-t" "image/png")
+    (delete-file screenshot--tmp-file)
+    (message "Screenshot copied")))
+
+
 ;; (when ON-DESKTOP
 ;;   (use-package! mu4e-alert
 ;;     :config (mu4e-alert-set-default-style (if ON-LAPTOP 'notifier 'libnotify))
