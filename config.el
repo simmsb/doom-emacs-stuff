@@ -40,7 +40,11 @@
 (use-package! github-browse-file)
 
 ;; why is this getting lazy loaded?
-(use-package! dired)
+(use-package! dired
+  :defer t)
+
+(use-package! outline-minor-faces
+  :defer t)
 
 (use-package! mermaid-mode
   :defer t
@@ -89,7 +93,8 @@
   ;; progress spams the minibuffer when we're viewing hovers, etc
   (setq lsp-haskell-server-path "haskell-language-server"
         lsp-haskell-formatting-provider "fourmolu"
-        lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported")
+        lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
+        lsp-haskell-max-completions 10)
 
   ;; patch the result of haskell-language-server to select the first code fragment
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
@@ -298,7 +303,8 @@
 
 
 (after! company
-  (setq company-idle-delay 0.1)
+  (setq company-idle-delay 0.1
+        company-minimum-prefix-length 2)
   (add-hook! evil-normal-state-entry #'company-abort)
   (set-company-backend! '(text-mode
                           markdown-mode

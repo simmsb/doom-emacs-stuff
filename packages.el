@@ -5,6 +5,7 @@
 
 ;; (package! evil-textobj-treesitter)
 
+(package! outline-minor-faces)
 (package! circadian)
 (package! magit-libgit)
 (package! libgit :recipe (:host github :repo "magit/libegit2"))
