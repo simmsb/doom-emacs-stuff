@@ -39,9 +39,7 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 
-;; why is this getting lazy loaded?
-(use-package! dired
-  :defer t)
+(use-package! dired)
 
 (use-package! outline-minor-faces
   :defer t)
