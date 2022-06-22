@@ -294,7 +294,8 @@
         lsp-rust-analyzer-diagnostics-enable-experimental t
         lsp-rust-analyzer-experimental-proc-attr-macros t
         lsp-rust-analyzer-import-granularity "module"
-        lsp-rust-analyzer-call-info-full t)
+        lsp-rust-analyzer-call-info-full t
+        lsp-rust-analyzer-cargo-run-build-scripts t)
   (lsp-rust-analyzer-inlay-hints-mode t))
 ;; lsp-rust-analyzer-cargo-watch-command "clippy")
 
