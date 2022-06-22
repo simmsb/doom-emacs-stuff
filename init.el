@@ -78,7 +78,7 @@
          (syntax +childframe)
 
          :lang
-         nix
+         (nix +tree-sitter)
          (ocaml +tree-sitter +lsp)
          (go +lsp +tree-sitter)
          ;; poly
@@ -95,7 +95,7 @@
          racket
          (cc +lsp +tree-sitter)
          data
-         (elixir +lsp)
+         (elixir +lsp +tree-sitter)
          emacs-lisp
          (haskell +lsp)
          (java +lsp)
