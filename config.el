@@ -301,17 +301,17 @@
 
 
 
-(after! company
-  (setq company-idle-delay 0.1
-        company-minimum-prefix-length 2)
-  (add-hook! evil-normal-state-entry #'company-abort)
-  (set-company-backend! '(text-mode
-                          markdown-mode
-                          gfm-mode)
-    '(:seperate
-      company-ispell
-      company-files
-      company-yasnippet)))
+;; (after! company
+;;   (setq company-idle-delay 0.1
+;;         company-minimum-prefix-length 2)
+;;   (add-hook! evil-normal-state-entry #'company-abort)
+;;   (set-company-backend! '(text-mode
+;;                           markdown-mode
+;;                           gfm-mode)
+;;     '(:seperate
+;;       company-ispell
+;;       company-files
+;;       company-yasnippet)))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 

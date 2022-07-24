@@ -22,7 +22,8 @@
 
          :completion
          ;; (company +tng)
-         company
+         ;; company
+         corfu
          ;(ivy +fuzzy +prescient)
          (vertico)
 
