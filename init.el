@@ -79,7 +79,7 @@
          (syntax +childframe)
 
          :lang
-         (nix +tree-sitter)
+         (nix +tree-sitter +lsp)
          (ocaml +tree-sitter +lsp)
          (go +lsp +tree-sitter)
          ;; poly
