@@ -22,10 +22,35 @@
                 (setq lsp-completion-provider :none))))
   (add-hook 'lsp-completion-mode-hook
             (lambda ()
-              (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless flex)))))))
+              (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (fussy basic)))))))
+
+(use-package! fzf-native
+  :custom
+  (fussy-score-fn 'fussy-fzf-native-score)
+  :config
+  (fzf-native-load-dyn))
+
+(use-package! fussy
+  :custom
+  (fussy-score-fn 'fussy-fzf-native-score)
+  (fussy-filter-fn 'fussy-filter-default)
+  :config
+  (push 'fussy completion-styles)
+  (setq completion-category-defaults nil
+        completion-category-overrides nil)
+
+  (add-hook 'corfu-mode-hook
+            (lambda ()
+              (setq-local fussy-max-candidate-limit 200
+                          fussy-default-regex-fn 'fussy-pattern-default
+                          fussy-prefer-prefix t))))
+
+(after! eglot
+  (setq completion-category-defaults nil
+        completion-category-overrides '((eglot (styles . (fussy basic))))))
 
 (after! lsp-mode
-  (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless flex))))
+  (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (fussy basic))))
   (setq lsp-completion-provider :none))
 
 (use-package! corfu-doc
@@ -35,7 +60,7 @@
 
 (use-package! orderless
   :init
-  (setq completion-styles '(orderless partial-completion)
+  (setq completion-styles '(orderless basic)
         completion-category-defaults nil
         completion-category-overrides '((file (styles . (partial-completion))))))
 

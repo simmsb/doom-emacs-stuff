@@ -73,6 +73,9 @@
   :defer t
   :hook (eshell-mode . esh-autosuggest-mode))
 
+(after! emojify
+  (setq emojify-download-emojis-p t))
+
 (after! gcmh
   (setq gcmh-idle-delay 15))
 
@@ -110,7 +113,7 @@
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward markdown-regex-link-inline nil t)
-          (replace-match (replace-regexp-in-string "\n" "" (s-concat (match-string 3) ": " (match-string 6)))))))
+        (replace-match (replace-regexp-in-string "\n" "" (s-concat (match-string 3) ": " (match-string 6)))))))
   (advice-add 'lsp--render-markdown :before #'markdown-raw-links)
 
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
@@ -262,7 +265,8 @@
         lsp-enable-indentation t
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil
-        lsp-ui-doc-show-with-cursor nil)
+        lsp-ui-doc-show-with-cursor nil
+        lsp-response-timeout 0.5)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
                  "[/\\\\]\\.venv\\'"

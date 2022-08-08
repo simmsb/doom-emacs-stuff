@@ -155,6 +155,8 @@
                              (shell-command-to-string "rustc --print sysroot"))
                             "/lib/rustlib/src"))
 
+(setenv "LSP_USE_PLISTS" "true")
+
 (setq explicit-shell-file-name "/bin/bash"
       shell-file-name "/bin/bash")
 
