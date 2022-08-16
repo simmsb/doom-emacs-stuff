@@ -39,7 +39,7 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 
-(use-package! dired)
+; (use-package! dired)
 
 (use-package! outline-minor-faces
   :defer t)
@@ -270,9 +270,11 @@
   (dolist (dir '(
                  "[/\\\\]\\.venv"
                  "[/\\\\]\\.venv\\'"
-                 "[/\\\\]assets\\'"))
+                 "[/\\\\]assets\\'"
+                 "[/\\\\]\\.embuild\\'"
+                 "[/\\\\]result\\'"))
+    (add-to-list 'lsp-file-watch-ignored-directories dir))
 
-    (push dir lsp-file-watch-ignored-directories))
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 

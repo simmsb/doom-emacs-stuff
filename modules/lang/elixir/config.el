@@ -11,7 +11,7 @@
   (provide 'smartparens-elixir)
 
   :config
-  (when (featurep! +lsp)
+  (when (modulep! +lsp)
     (add-hook 'elixir-mode-local-vars-hook #'lsp!)
     (after! lsp-mode
       (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]_build\\'")))
@@ -31,7 +31,7 @@
   (add-to-list 'auto-mode-alist '("\\.leex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
 
-  (when (featurep! +lsp)
+  (when (modulep! +lsp)
     (add-hook 'elixir-mode-local-vars-hook #'lsp!))
 
   (after! highlight-numbers

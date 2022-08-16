@@ -114,7 +114,7 @@
    [remap dabbrev-expand] 'cape-dabbrev)
   (add-hook! 'latex-mode-hook (defun +corfu--latex-set-capfs ()
                                 (add-to-list 'completion-at-point-functions #'cape-tex)))
-  (when (featurep! :checkers spell)
+  (when (modulep! :checkers spell)
     ;; (add-to-list 'completion-at-point-functions #'cape-dict)
     (add-to-list 'completion-at-point-functions #'cape-ispell))
   (add-to-list 'completion-at-point-functions #'cape-file)
@@ -129,7 +129,7 @@
                         (savehist-mode 1)
                         (add-to-list 'savehist-additional-variables 'corfu-history))))
 (use-package! evil-collection-corfu
-  :when (featurep! :editor evil +everywhere)
+  :when (modulep! :editor evil +everywhere)
   :defer t
   :init (setq evil-collection-corfu-key-themes '(default magic-return))
   :config
