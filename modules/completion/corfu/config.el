@@ -14,6 +14,7 @@
   (corfu-auto-prefix 2)
   (completion-cycle-threshold 3)
   (corfu-min-width 80)
+  (tab-always-indent 'complete)
   :hook (doom-first-input . global-corfu-mode)
   :config
   (add-hook 'doom-init-modules-hook

@@ -97,24 +97,24 @@
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
         lsp-haskell-max-completions 10)
 
-  ;; patch the result of haskell-language-server to select the first code fragment
-  (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
-    (-let* (((&hash "value") contents)
-            (groups (--partition-by (s-blank? it) (s-lines (s-replace "file://" "http://" value))))
-            (sig (--> groups
-                      (--drop-while (not (s-equals? "```haskell" (car it))) it)
-                      (car it)
-                      (s-join "\n" it))))
-      (lsp--render-element sig)))
+  ;; ;; patch the result of haskell-language-server to select the first code fragment
+  ;; (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
+  ;;   (-let* (((&hash "value") contents)
+  ;;           (groups (--partition-by (s-blank? it) (s-lines (s-replace "file://" "http://" value))))
+  ;;           (sig (--> groups
+  ;;                     (--drop-while (not (s-equals? "```haskell" (car it))) it)
+  ;;                     (car it)
+  ;;                     (s-join "\n" it))))
+  ;;     (lsp--render-element sig)))
 
-  (defun markdown-raw-links (&rest ignore)
-    "Convert link markup [ANCHOR](URL) to raw URL
-     so lsp-ui-doc--make-clickable-link can find it"
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward markdown-regex-link-inline nil t)
-        (replace-match (replace-regexp-in-string "\n" "" (s-concat (match-string 3) ": " (match-string 6)))))))
-  (advice-add 'lsp--render-markdown :before #'markdown-raw-links)
+  ;; (defun markdown-raw-links (&rest ignore)
+  ;;   "Convert link markup [ANCHOR](URL) to raw URL
+  ;;    so lsp-ui-doc--make-clickable-link can find it"
+  ;;   (save-excursion
+  ;;     (goto-char (point-min))
+  ;;     (while (re-search-forward markdown-regex-link-inline nil t)
+  ;;       (replace-match (replace-regexp-in-string "\n" "" (s-concat (match-string 3) ": " (match-string 6)))))))
+  ;; (advice-add 'lsp--render-markdown :before #'markdown-raw-links)
 
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 

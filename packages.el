@@ -7,15 +7,13 @@
 
 (package! outline-minor-faces)
 (package! circadian)
-(package! magit-libgit)
-(package! libgit :recipe (:host github :repo "magit/libegit2"))
 (unpin! lsp-mode)
 (unpin! lsp-haskell)
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces
   :recipe (:host github :repo "tecosaur/engrave-faces")
-  :pin "ccebbdda0c3f8b5c6e5857bdd7f5a49d4739c904")
+  :pin "fe356507efb8c9b051c2a67213ba292f932a88bc")
 
 (package! geros :recipe (:host github :repo "nitros12/geros"))
 
