@@ -115,6 +115,7 @@
    [remap dabbrev-expand] 'cape-dabbrev)
   (add-hook! 'latex-mode-hook (defun +corfu--latex-set-capfs ()
                                 (add-to-list 'completion-at-point-functions #'cape-tex)))
+  (advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
   (when (modulep! :checkers spell)
     ;; (add-to-list 'completion-at-point-functions #'cape-dict)
     (add-to-list 'completion-at-point-functions #'cape-ispell))
