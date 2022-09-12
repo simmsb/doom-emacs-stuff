@@ -30,7 +30,7 @@
          :ui
          workspaces
          hydra
-         vc-gutter
+         (vc-gutter +pretty)
          (popup
           +all
           +defaults)
