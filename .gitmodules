@@ -1,9 +1,6 @@
 [submodule "local/sourcepawn-mode"]
 	path = local/sourcepawn-mode
 	url = https://github.com/agrif/sourcepawn-mode
-[submodule "local/elixir-ls"]
-	path = local/elixir-ls
-	url = git@github.com:nitros12/elixir-ls
 [submodule "local/screenshot"]
 	path = local/screenshot
 	url = git@github.com:tecosaur/screenshot.git
