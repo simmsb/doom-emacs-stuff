@@ -7,8 +7,7 @@
 
 (package! outline-minor-faces)
 (package! circadian)
-(unpin! lsp-mode)
-(unpin! lsp-haskell)
+(unpin! lsp-mode lsp-haskell treemacs rustic)
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces

@@ -3,6 +3,40 @@
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
+(require 'cl-lib)
+
+(defun first-font (&rest fonts)
+  (cl-find-if #'find-font fonts))
+
+(pcase (system-name)
+  ("home"
+   (setq doom-font (first-font
+                    (font-spec :family "MonoLisa" :size 16)
+                    (font-spec :family "Fira Code" :size 16))
+         doom-big-font (first-font
+                        (font-spec :family "MonoLisa" :size 22)
+                        (font-spec :family "Fira Code" :size 22))
+         doom-variable-pitch-font (font-spec :family "Fira Sans")
+         doom-unicode-font (font-spec :family "Twemoji")
+         doom-serif-font (font-spec :family "Fira Code" :size 16))
+   (print "lol"))
+  ("laptop"
+   (toggle-frame-maximized)
+   (setq doom-font (font-spec :family "Fira Mono" :size 14)
+         doom-big-font (font-spec :family "Fira Mono" :size 18)))
+  ("work-desktop"
+   (setq doom-font (first-font
+                    (font-spec :family "MonoLisa" :size 14)
+                    (font-spec :family "Fira Code" :size 14))
+         doom-big-font (first-font
+                        (font-spec :family "MonoLisa" :size 18)
+                        (font-spec :family "Fira Code" :size 18))
+         doom-variable-pitch-font (font-spec :family "Fira Sans")
+         doom-unicode-font (font-spec :family "Twemoji")
+         doom-serif-font (font-spec :family "Fira Code" :size 14))))
+
+(print doom-font)
+
 ;; bindings
 (map!
  (:leader
@@ -39,7 +73,7 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 
-; (use-package! dired)
+(use-package! dired)
 
 (use-package! outline-minor-faces
   :defer t)
