@@ -3,6 +3,10 @@
 
 (setq comp-speed 2)
 
+(defadvice! fixed-doom-module-list (fn &rest args)
+  :around #'doom-module-list
+  (nreverse (apply fn args)))
+
 (setenv "LSP_USE_PLISTS" "1")
 
 (setq ON-DESKTOP (string= (system-name) "home"))
@@ -75,6 +79,7 @@
          pdf
          rgb
          upload
+         terraform
 
          :checkers
          (spell +enchant +flyspell)
@@ -90,8 +95,8 @@
          pest
          yaml
          (json +tree-sitter)
-         p4
-         jade
+         ;p4
+         ;jade
          sourcepawn
          ebnf
          ;; (scheme +racket)
@@ -101,12 +106,14 @@
          (elixir +lsp +tree-sitter)
          emacs-lisp
          (haskell +lsp)
-         (java +lsp)
-         (kotlin +lsp)
+         ;(java +lsp)
+         ;(kotlin +lsp)
          (javascript +lsp +tree-sitter)
          (latex +pdf-tools)
          markdown
-         (csharp +lsp)
+         ;(csharp +lsp)
+         hcl
+         just
 
          (org
           +gnuplot

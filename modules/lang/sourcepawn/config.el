@@ -1,4 +1,4 @@
-;;; private/sourcepawn/config.el -*- lexical-binding: t; -*-
+;;; lang/sourcepawn/config.el -*- lexical-binding: t; -*-
 
 (use-package! sourcepawn-mode
   :config (setq default-tab-width 4)
