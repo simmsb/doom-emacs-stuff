@@ -300,7 +300,7 @@
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil
         lsp-ui-doc-show-with-cursor nil
-        lsp-response-timeout 0.5)
+        lsp-response-timeout 10)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
                  "[/\\\\]\\.venv\\'"
@@ -980,3 +980,5 @@ For non-floats, see `org-latex--wrap-label'."
 ;;    (setq doom-theme 'doom-tomorrow-night))
 ;;   ("work-desktop"
 ;;    (setq doom-theme 'doom-wilmersdorf)))
+
+(zone-when-idle 560)
