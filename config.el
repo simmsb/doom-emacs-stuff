@@ -906,6 +906,15 @@ For non-floats, see `org-latex--wrap-label'."
 (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
+(after! web-mode
+  (setq web-mode-enable-inlays t
+        web-mode-enable-current-element-highlight t
+        web-mode-enable-html-entities-fontification t
+        web-mode-enable-auto-closing t
+        web-mode-enable-auto-opening t
+        web-mode-enable-auto-pairing t
+        web-mode-enable-auto-quoting t))
+
 (setq +treemacs-git-mode 'deferred)
 
 (after! treemacs
@@ -983,3 +992,7 @@ For non-floats, see `org-latex--wrap-label'."
 
 (require 'zone)
 (zone-when-idle 560)
+
+(pixel-scroll-precision-mode 1)
+(setq pixel-scroll-precision-interpolate-page t
+      pixel-scroll-precision-use-momentum t)
