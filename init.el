@@ -3,10 +3,6 @@
 
 (setq comp-speed 2)
 
-(defadvice! fixed-doom-module-list (fn &rest args)
-  :around #'doom-module-list
-  (nreverse (apply fn args)))
-
 (setenv "LSP_USE_PLISTS" "1")
 
 (setq ON-DESKTOP (string= (system-name) "home"))

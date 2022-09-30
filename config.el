@@ -981,4 +981,5 @@ For non-floats, see `org-latex--wrap-label'."
 ;;   ("work-desktop"
 ;;    (setq doom-theme 'doom-wilmersdorf)))
 
+(require 'zone)
 (zone-when-idle 560)
