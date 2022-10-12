@@ -14,6 +14,9 @@
   :recipe (:host github :repo "tecosaur/engrave-faces")
   :pin "fe356507efb8c9b051c2a67213ba292f932a88bc")
 
+(package! zone-matrix-wake-up
+  :recipe (:host github :repo "vreeze/zone-matrix-wake-up"))
+
 (package! geros :recipe (:host github :repo "nitros12/geros"))
 
 (package! mermaid :recipe (:host github :repo "abrochard/mermaid-mode"))
@@ -21,8 +24,8 @@
 (package! names)
 
 (package! el-patch
-          :recipe (:host github :repo "raxod502/el-patch")
-          :pin "4a4e040fcede0c320e860571d5e96100cac05bb5")
+  :recipe (:host github :repo "raxod502/el-patch")
+  :pin "4a4e040fcede0c320e860571d5e96100cac05bb5")
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))

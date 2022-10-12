@@ -73,6 +73,8 @@
 (use-package! github-review)
 (use-package! github-browse-file)
 
+(use-package! zone-matrix-wake-up)
+
 (use-package! dired)
 
 (use-package! outline-minor-faces
@@ -991,6 +993,20 @@ For non-floats, see `org-latex--wrap-label'."
 ;;    (setq doom-theme 'doom-wilmersdorf)))
 
 (require 'zone)
+(require 'zone-matrix-wake-up)
+
+(setq zone-programs [zone-pgm-drip zone-matrix-wake-up zone-pgm-random-life zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
+
+(defun zone-choose (pgm)
+    "Choose a PGM to run for `zone'."
+    (interactive
+     (list
+      (completing-read
+       "Program: "
+       (mapcar 'symbol-name zone-programs))))
+    (let ((zone-programs (list (intern pgm))))
+      (zone)))
+
 (zone-when-idle 560)
 
 (pixel-scroll-precision-mode 1)
