@@ -75,7 +75,7 @@
          pdf
          rgb
          upload
-         terraform
+         (terraform +lsp)
 
          :checkers
          (spell +enchant +flyspell)
