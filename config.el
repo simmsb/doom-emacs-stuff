@@ -976,7 +976,7 @@ For non-floats, see `org-latex--wrap-label'."
   (sp-local-pair 'python-mode "f'" "'"))
 
 (if (string-equal (system-name) "work-desktop")
-    (setq doom-theme 'doom-monokai-ristretto)
+    (setq doom-theme 'doom-miramare)
   (use-package! circadian
     :config
     (setq circadian-themes '(;;("8:00" . doom-flatwhite)

@@ -11,8 +11,8 @@
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces
-  :recipe (:host github :repo "tecosaur/engrave-faces")
-  :pin "fe356507efb8c9b051c2a67213ba292f932a88bc")
+  :recipe (:host github :repo "tecosaur/engrave-faces"))
+ 
 
 (package! zone-matrix-wake-up
   :recipe (:host github :repo "vreeze/zone-matrix-wake-up"))
