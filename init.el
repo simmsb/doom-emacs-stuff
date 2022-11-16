@@ -82,6 +82,7 @@
          (syntax +childframe)
 
          :lang
+         (zig +tree-sitter +lsp)
          (nix +tree-sitter +lsp)
          (ocaml +tree-sitter +lsp)
          (go +lsp +tree-sitter)

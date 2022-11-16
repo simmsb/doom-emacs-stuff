@@ -115,6 +115,10 @@
 (after! gcmh
   (setq gcmh-idle-delay 15))
 
+(after! lsp-elixir
+  (setq lsp-elixir-ls-version "v0.12.0"
+        lsp-elixir-ls-download-url (format "https://github.com/elixir-lsp/elixir-ls/releases/download/%s/elixir-ls.zip" lsp-elixir-ls-version)))
+
 (after! lsp-haskell
   (require 'dash)
   (require 's)
@@ -302,6 +306,7 @@
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil
         lsp-ui-doc-show-with-cursor nil
+        lsp-ui-sideline-show-hover t
         lsp-response-timeout 10)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
@@ -995,7 +1000,7 @@ For non-floats, see `org-latex--wrap-label'."
 (require 'zone)
 (require 'zone-matrix-wake-up)
 
-(setq zone-programs [zone-pgm-drip zone-matrix-wake-up zone-pgm-random-life zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
+(setq zone-programs [zone-pgm-drip zone-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
 
 (defun zone-choose (pgm)
     "Choose a PGM to run for `zone'."
