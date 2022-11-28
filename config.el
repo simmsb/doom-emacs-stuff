@@ -80,10 +80,6 @@
 (use-package! outline-minor-faces
   :defer t)
 
-(use-package! mermaid-mode
-  :defer t
-  :mode "\\.mmd$")
-
 (use-package! geros
   :defer t
   :config
