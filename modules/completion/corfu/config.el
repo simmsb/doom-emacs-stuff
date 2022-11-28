@@ -12,11 +12,13 @@
   (corfu-quit-no-match t)
   (corfu-cycle t)
   (corfu-auto-prefix 2)
+  (corfu-popupinfo-delay 0.0)
   (completion-cycle-threshold 3)
   (corfu-min-width 80)
   (tab-always-indent 'complete)
   :hook (doom-first-input . global-corfu-mode)
   :config
+  (corfu-popupinfo-mode t)
   (add-hook 'doom-init-modules-hook
             (lambda ()
               (after! lsp-mode
@@ -53,11 +55,6 @@
 (after! lsp-mode
   (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (fussy basic))))
   (setq lsp-completion-provider :none))
-
-(use-package! corfu-doc
-  :hook (corfu-mode . corfu-doc-mode)
-  :custom
-  (corfu-doc-delay 0))
 
 (use-package! orderless
   :init
