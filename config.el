@@ -1008,8 +1008,10 @@ For non-floats, see `org-latex--wrap-label'."
     (let ((zone-programs (list (intern pgm))))
       (zone)))
 
-(zone-when-idle 560)
+(when (not IS-MAC)
+  (zone-when-idle 560))
 
-(pixel-scroll-precision-mode 1)
-(setq pixel-scroll-precision-interpolate-page t
-      pixel-scroll-precision-use-momentum t)
+(when (fboundp 'pixel-scroll-precision-mode)
+    (pixel-scroll-precision-mode 1)
+    (setq pixel-scroll-precision-interpolate-page t
+        pixel-scroll-precision-use-momentum t))

@@ -8,6 +8,7 @@
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
+
 (doom! `(:editor
          file-templates
          snippets

@@ -9,7 +9,7 @@
    '((eval lsp!)
      (lsp-elixir-project-dir . "web/")
      (ssh-deploy-async . 1)))
- '(warning-suppress-types '((comp))))
+ '(warning-suppress-types '((emacs) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
