@@ -127,7 +127,6 @@
     :type 'boolean
     :lsp-path "haskell.plugin.rename.globalOn")
 
-  ;; progress spams the minibuffer when we're viewing hovers, etc
   (setq lsp-haskell-server-path "haskell-language-server"
         lsp-haskell-formatting-provider "fourmolu"
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
@@ -166,11 +165,6 @@
   (setq nix-nixfmt-bin "nixpkgs-fmt")
   (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
 
-(after! citar
-  (setq citar-bibliography my/bib
-        citar-library-paths '("~/org/research_stuff")
-        citar-notes-paths "~/org/bibliography/notes.org"))
-
 (use-package! citeproc
   :defer t)
 
@@ -196,11 +190,18 @@
         org-cite-csl-locales-dir "~/org/csl/locales"))
 
 (use-package! citar
+  :defer t
   :config
   (setq org-cite-global-bibliography my/bib
         org-cite-insert-processor 'citar
         org-cite-follow-processor 'citar
         org-cite-activate-processor 'citar))
+
+(after! citar
+  (setq citar-bibliography my/bib
+        citar-library-paths '("~/org/research_stuff")
+        citar-notes-paths "~/org/bibliography/notes.org"))
+
 
 ;; (use-package! oc-citar
 ;;   :after (org oc citar))
@@ -976,13 +977,17 @@ For non-floats, see `org-latex--wrap-label'."
   (sp-local-pair 'python-mode "f\"" "\"" :trigger "f\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
   (sp-local-pair 'python-mode "f'" "'"))
 
-(if (string-equal (system-name) "work-desktop")
-    (setq doom-theme 'doom-miramare)
-  (use-package! circadian
-    :config
-    (setq circadian-themes '(;;("8:00" . doom-flatwhite)
-                             ("15:00" . doom-monokai-ristretto)))
-    (circadian-setup)))
+
+(setq doom-theme 'doom-miramare)
+
+;; (if (string-equal (system-name) "work-desktop")
+;;     (setq doom-theme 'doom-miramare)
+;;   ;; (use-package! circadian
+;;   ;;   :config
+;;   ;;   (setq circadian-themes '(;;("8:00" . doom-flatwhite)
+;;   ;;                            ("15:00" . doom-monokai-ristretto)))
+;;   ;;   (circadian-setup))
+;;   )
 
 ;; (pcase (system-name)
 ;;   ("home"

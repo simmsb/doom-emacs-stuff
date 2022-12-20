@@ -180,6 +180,4 @@
          (expand-file-name "~/.cargo/bin/") path-separator
          (getenv "PATH")))
 
-(setq doom-theme 'doom-flatwhite)
-
 ;; (setq lsp-print-io t)
