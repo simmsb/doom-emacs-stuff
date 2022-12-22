@@ -303,8 +303,8 @@
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil
         lsp-ui-doc-show-with-cursor nil
-        lsp-ui-sideline-show-hover t
-        lsp-response-timeout 10)
+        lsp-ui-sideline-show-hover t)
+        ;; lsp-response-timeout 10)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
                  "[/\\\\]\\.venv\\'"
@@ -1012,6 +1012,9 @@ For non-floats, see `org-latex--wrap-label'."
        (mapcar 'symbol-name zone-programs))))
     (let ((zone-programs (list (intern pgm))))
       (zone)))
+
+(when IS-MAC
+  (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#"))))
 
 (when (not IS-MAC)
   (zone-when-idle 560))
