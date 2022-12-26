@@ -14,3 +14,4 @@
 (package! cape)
 (package! popon
   :recipe (:type git :repo "https://codeberg.org/akib/emacs-popon"))
+(package! company :recipe '(:files ("company.el" "company-yasnippet.el")) :pin "1005540b1cdf176cbcf893b2fa83d2075cbbe3ca")
