@@ -1001,7 +1001,41 @@ For non-floats, see `org-latex--wrap-label'."
 (require 'zone)
 (require 'zone-matrix-wake-up)
 
-(setq zone-programs [zone-pgm-drip zone-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
+(defgroup zone-rise-and-shine nil
+  "Rise and shine, Mr. Freeman."
+  :group 'zone
+  :prefix "zone-rise-and-shine-")
+
+(defface zone-rise-and-shine-face
+  '((t (:bold t :foreground "#c5c5c5")))
+  "bleh."
+  :group 'zone-rise-and-shine)
+
+(defun zone-pgm-rise-and-shine ()
+  "Zone out mr freeman."
+  (delete-other-windows)
+  (let ((msgs `((("Rise and shine, " 500) ("Mr. Freeman. " 500) ("Rise and shine..." 2000))
+                (("Not that I wish to imply you have been sleeping on the job." 500)
+                 ("\nNo one is more deserving of a rest. " 500)
+                 ("\nAnd all the effort in the world would have gone to waste until..." 500)
+                 ("\nwell, let's just say your hour has come again." 3000))
+                (("The right man in the wrong place can make all the difference in the world." 2000))
+                (("So, " 300) ("wake up, " 300) ("Mr. Freeman. " 500)
+                 ("Wake up and smell the ashes." 5000)))))
+
+    (sit-for 2)
+    (cl-loop for msg in msgs do
+             (erase-buffer)
+             (cl-loop for (chunk end-delay) in msg do
+                      (cl-loop for char across chunk do
+                               (let ((s (string char)))
+                                (put-text-property 0 1 'face 'zone-rise-and-shine-face s)
+                                (insert s))
+                               (sit-for (/ 100 1000.0)))
+                      (sit-for (/ end-delay 1000.0)))))
+  (sit-for 60))
+
+(setq zone-programs [zone-pgm-drip zone-pgm-rise-and-shine zone-pgm-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
 
 (defun zone-choose (pgm)
     "Choose a PGM to run for `zone'."
@@ -1014,7 +1048,7 @@ For non-floats, see `org-latex--wrap-label'."
       (zone)))
 
 (when IS-MAC
-  (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#"))))
+  (global-set-key (kbd "M-3") #'(lambda () (interactive) (insert "#"))))
 
 (when (not IS-MAC)
   (zone-when-idle 560))
