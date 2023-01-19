@@ -53,10 +53,10 @@
   "<up>" #'evilem-motion-previous-line)
 
  (:map evil-window-map
-  "<left>"     #'evil-window-left
-  "<right>"    #'evil-window-right
-  "<up>"       #'evil-window-up
-  "<down>"     #'evil-window-down)
+       "<left>"     #'evil-window-left
+       "<right>"    #'evil-window-right
+       "<up>"       #'evil-window-up
+       "<down>"     #'evil-window-down)
 
  ;; in lisp modes use default evil-delete for parinfer magic
  ;; (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
@@ -64,7 +64,8 @@
  ;;  :i "C-d" #'delete-char)
 
  "<home>" #'back-to-indentation-or-beginning
- "<end>" #'end-of-line)
+ "<end>" #'end-of-line
+ "s-q" #'prog-fill-reindent-defun)
 
 (use-package! engrave-faces-latex
   :after ox-latex)
@@ -923,6 +924,8 @@ For non-floats, see `org-latex--wrap-label'."
 
 (after! treemacs
   (treemacs-follow-mode +1)
+  (when IS-MAC
+    (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t))
   (setq treemacs-silent-refresh t
         treemacs-read-string-input 'from-minibuffer
         doom-themes-treemacs-theme "Default"
