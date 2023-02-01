@@ -113,7 +113,7 @@
   (setq gcmh-idle-delay 15))
 
 (after! lsp-elixir
-  (setq lsp-elixir-ls-version "v0.12.0"
+  (setq lsp-elixir-ls-version "v0.13.0"
         lsp-elixir-ls-download-url (format "https://github.com/elixir-lsp/elixir-ls/releases/download/%s/elixir-ls.zip" lsp-elixir-ls-version)))
 
 (after! lsp-haskell
