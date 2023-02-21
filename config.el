@@ -1047,7 +1047,7 @@ For non-floats, see `org-latex--wrap-label'."
       (completing-read
        "Program: "
        (mapcar 'symbol-name zone-programs))))
-    (let ((zone-programs (list (intern pgm))))
+    (let ((zone-programs (vector (intern pgm))))
       (zone)))
 
 (when IS-MAC
