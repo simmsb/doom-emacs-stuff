@@ -924,8 +924,7 @@ For non-floats, see `org-latex--wrap-label'."
 
 (after! treemacs
   (treemacs-follow-mode +1)
-  (when IS-MAC
-    (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t))
+  (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
   (setq treemacs-silent-refresh t
         treemacs-read-string-input 'from-minibuffer
         doom-themes-treemacs-theme "Default"

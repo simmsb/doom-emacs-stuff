@@ -91,8 +91,8 @@
          (clojure +lsp)
          plantuml
          pest
-         yaml
-         (json +tree-sitter)
+         (yaml +lsp +tree-sitter)
+         (json +lsp +tree-sitter)
          ;p4
          ;jade
          sourcepawn
@@ -123,7 +123,7 @@
          (python +lsp +pyright +tree-sitter)
          rest
          (rust +lsp +tree-sitter)
-         (sh +fish +tree-sitter)
+         (sh +fish +tree-sitter +lsp)
          (web +tree-sitter)
 
          ;; ,@(when ON-DESKTOP
