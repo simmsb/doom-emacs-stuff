@@ -318,8 +318,8 @@
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
 (after! magit
-  (magit-wip-mode 1)
-  (magit-todos-mode 1))
+  (magit-wip-mode 1))
+  ;(magit-todos-mode 1))
 
 (after! flycheck
   (add-hook! haskell-mode
