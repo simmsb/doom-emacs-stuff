@@ -73,7 +73,7 @@
          (magit +forge)
          direnv
          gist
-         pass
+         (pass +auth)
          pdf
          rgb
          upload

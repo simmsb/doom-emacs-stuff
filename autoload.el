@@ -8,7 +8,7 @@
 ;;;###autoload
 (defun position-to-kill-ring ()
   "Copy to the kill ring a string in the format \"file-name:line-number\"
-for the current buffer's file name, and the line number at point."
+ for the current buffer's file name, and the line number at point."
   (interactive)
   (kill-new
    (format "%s:%d" (buffer-file-name) (save-restriction (widen) (line-number-at-pos)))))
@@ -16,7 +16,7 @@ for the current buffer's file name, and the line number at point."
 ;;;###autoload
 (defun org-hugo-new-subtree-post-capture-template ()
   "Returns `org-capture' template string for new Hugo post.
-See `org-capture-templates' for more information."
+ See `org-capture-templates' for more information."
   (let* ((title (read-from-minibuffer "Post Title: ")) ;Prompt to enter the post title
          (fname (org-hugo-slug title))
          (date (format-time-string "%Y-%m-%d")))
@@ -36,10 +36,10 @@ See `org-capture-templates' for more information."
     (let ((last-shop
            (save-match-data
              (progn
-                (goto-char (point-max))
-                (if (search-backward-regexp (rx bol "*" (* space) (or "TODO" "DONE") (* space) "Shop" (* space) (group (+ digit))) nil 'noerror)
-                    (string-to-number (match-string 1))
-                  0)))))
+               (goto-char (point-max))
+               (if (search-backward-regexp (rx bol "*" (* space) (or "TODO" "DONE") (* space) "Shop" (* space) (group (+ digit))) nil 'noerror)
+                   (string-to-number (match-string 1))
+                 0)))))
       (save-match-data
         (progn
           (goto-char (point-max))
@@ -56,11 +56,11 @@ See `org-capture-templates' for more information."
   "Execute shell command COMMAND asynchronously in the
   background.
 
-Return the temporary output buffer which command is writing to
-during execution.
+ Return the temporary output buffer which command is writing to
+ during execution.
 
-When the command is finished, call CALLBACK with the resulting
-output as a string."
+ When the command is finished, call CALLBACK with the resulting
+ output as a string."
   (let
       ((output-buffer (generate-new-buffer " *temp*"))
        (callback-fun callback))
@@ -106,3 +106,18 @@ output as a string."
     (_ (if (doom-project-p)
            (treemacs-display-current-project-exclusively)
          (treemacs)))))
+
+
+;;;###autoload
+(defun forge-create-branch-for-issue (issue start-point &optional name)
+  "Create a branch for an ISSUE starting at START-POINT with the branch name NAME."
+  (interactive (list (forge-read-issue "Issue" t)
+                     (magit-read-starting-point "Create issue branch")))
+  (let* ((issue (forge-get-issue issue))
+         (name (or name
+                   (format "%s/%s-%s"
+                           (ghub--username (ghub--host nil))
+                           (oref issue number)
+                           (org-hugo-slug (oref issue title))))))
+    (magit-branch-and-checkout name start-point)
+    (message "Created branch %s starting at %s" name start-point)))

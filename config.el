@@ -967,7 +967,10 @@ For non-floats, see `org-latex--wrap-label'."
 (after! forge
   (if (atom forge-topic-list-limit)
       (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
-    (setcdr forge-topic-list-limit -5)))
+    (setcdr forge-topic-list-limit -5))
+
+  (transient-append-suffix 'magit-branch '(2 1 0)
+    '("i" "new for issue" forge-create-branch-for-issue)))
 
 (defun cc-bytecomp-is-compiling (&rest _))
 
