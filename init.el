@@ -5,6 +5,7 @@
 
 (setenv "LSP_USE_PLISTS" "1")
 
+
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
@@ -63,7 +64,7 @@
          :tools
          tree-sitter
          biblio
-         docker
+         ;; docker
          (eval +overlay)
          (lookup +dictionary)
          lsp
@@ -88,7 +89,7 @@
          (ocaml +tree-sitter +lsp)
          (go +lsp +tree-sitter)
          ;; poly
-         (clojure +lsp)
+         ;; (clojure +lsp)
          plantuml
          pest
          (yaml +lsp +tree-sitter)
