@@ -154,7 +154,6 @@
 
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
-
 ;; no idea mate
 (after! browse-url
   (defun browse-url (url)
@@ -304,7 +303,7 @@
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil
         lsp-ui-doc-show-with-cursor nil
-        lsp-ui-sideline-show-hover t)
+        lsp-ui-sideline-show-hover nil)
         ;; lsp-response-timeout 10)
   (dolist (dir '(
                  "[/\\\\]\\.venv"
@@ -983,7 +982,7 @@ For non-floats, see `org-latex--wrap-label'."
   (sp-local-pair 'python-mode "f'" "'"))
 
 
-(setq doom-theme 'doom-miramare)
+(setq doom-theme 'doom-pine)
 
 ;; (if (string-equal (system-name) "work-desktop")
 ;;     (setq doom-theme 'doom-miramare)

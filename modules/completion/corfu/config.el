@@ -9,7 +9,7 @@
   (corfu-auto t)
   (corfu-auto-delay 0)
   (corfu-on-exact-match nil)
-  (corfu-quit-no-match t)
+  (corfu-quit-no-match 'separator)
   (corfu-cycle t)
   (corfu-auto-prefix 2)
   (corfu-popupinfo-delay 0.0)
@@ -30,9 +30,21 @@
             :depth 1)
   (add-hook 'lsp-completion-mode-hook
             (lambda ()
-              (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults)) '(orderless)))))
-  ;; (add-to-list 'completion-styles 'partial-completion t)
-  ;; (add-to-list 'completion-styles 'initials t))
+              (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults)) '(orderless))))
+  (map!
+   :desc "complete" "C-SPC" #'completion-at-point
+   (:map 'corfu-map
+    :desc "insert separator" "C-SPC" #'corfu-insert-separator
+    :desc "move to minibuffer" "s-<down>" #'corfu-move-to-minibuffer
+    :desc "move to minibuffer" "s-j" #'corfu-move-to-minibuffer)))
+;; (add-to-list 'completion-styles 'partial-completion t)
+;; (add-to-list 'completion-styles 'initials t))
+
+(defun corfu-move-to-minibuffer ()
+  (interactive)
+  (let ((completion-extra-properties corfu--extra)
+        completion-cycle-threshold completion-cycling)
+    (apply #'consult-completion-in-region completion-in-region--data)))
 
 (use-package! fzf-native
   :custom
@@ -77,7 +89,7 @@
 (use-package! orderless
   :after corfu
   :config
-  (setq completion-styles '(substring orderless basic)))
+  (setq completion-styles '( orderless basic)))
 
 (use-package! kind-icon
   :after corfu
