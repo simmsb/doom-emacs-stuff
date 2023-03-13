@@ -982,7 +982,7 @@ For non-floats, see `org-latex--wrap-label'."
   (sp-local-pair 'python-mode "f'" "'"))
 
 
-(setq doom-theme 'doom-pine)
+(setq doom-theme 'doom-lantern)
 
 ;; (if (string-equal (system-name) "work-desktop")
 ;;     (setq doom-theme 'doom-miramare)
