@@ -104,7 +104,7 @@
          data
          (elixir +lsp +tree-sitter)
          emacs-lisp
-         (haskell +lsp)
+         (haskell +lsp +tree-sitter)
          ;(java +lsp)
          ;(kotlin +lsp)
          (javascript +lsp +tree-sitter)
