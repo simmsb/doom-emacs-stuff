@@ -971,8 +971,12 @@ For non-floats, see `org-latex--wrap-label'."
       (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
     (setcdr forge-topic-list-limit -5))
 
+  (add-to-list 'transient-levels '(forge-dispatch (t . 7)))
+
   (transient-append-suffix 'magit-branch '(2 1 0)
-    '("i" "new for issue" forge-create-branch-for-issue)))
+    '("i" "new for issue" forge-create-branch-for-issue))
+  (transient-append-suffix 'forge-dispatch '(0 1 2)
+    '("l a" "assigned issues" forge-list-assigned-issues)))
 
 (defun cc-bytecomp-is-compiling (&rest _))
 

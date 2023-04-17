@@ -1,13 +1,16 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(disable-packages! company-anaconda anaconda-mode ocamlformat)
+(disable-packages! company-anaconda anaconda-mode ocamlformat code-review)
 
 ;; (package! evil-textobj-treesitter)
 
 (package! outline-minor-faces)
 (package! circadian)
+
 (unpin! lsp-mode lsp-haskell rustic)
+(package! closql :pin "0a7226331ff1f96142199915c0ac7940bac4afdd")
+
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces

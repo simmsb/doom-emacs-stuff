@@ -33,8 +33,7 @@
 
          :ui
          workspaces
-         hydra
-         (vc-gutter +pretty)
+         (vc-gutter +pretty +diff-hl)
          (popup
           +all
           +defaults)
@@ -45,7 +44,7 @@
          hl-todo
          nav-flash
          ophints
-         treemacs
+         (treemacs +lsp)
          vi-tilde-fringe
          window-select
          zen
@@ -84,6 +83,7 @@
          (syntax +childframe)
 
          :lang
+         art
          (zig +tree-sitter +lsp)
          (nix +tree-sitter +lsp)
          (ocaml +tree-sitter +lsp)
@@ -104,7 +104,7 @@
          data
          (elixir +lsp +tree-sitter)
          emacs-lisp
-         (haskell +lsp +tree-sitter)
+         (haskell +lsp)
          ;(java +lsp)
          ;(kotlin +lsp)
          (javascript +lsp +tree-sitter)
