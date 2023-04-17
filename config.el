@@ -130,7 +130,9 @@
 
   (setq lsp-haskell-server-path "haskell-language-server"
         lsp-haskell-formatting-provider "fourmolu"
+        lsp-haskell-server-args '("-d" "-l" "/tmp/hls.log" "+RTS" "-N8" "-RTS")
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
+        lsp-haskell-tactics-on nil
         lsp-haskell-max-completions 10)
 
   ;; ;; patch the result of haskell-language-server to select the first code fragment
@@ -339,7 +341,8 @@
         lsp-rust-analyzer-experimental-proc-attr-macros t
         lsp-rust-analyzer-import-granularity "module"
         lsp-rust-analyzer-call-info-full t
-        lsp-rust-analyzer-cargo-run-build-scripts t)
+        lsp-rust-analyzer-cargo-run-build-scripts t
+        lsp-rust-analyzer-check-all-targets nil)
   (lsp-rust-analyzer-inlay-hints-mode t))
 ;; lsp-rust-analyzer-cargo-watch-command "clippy")
 
