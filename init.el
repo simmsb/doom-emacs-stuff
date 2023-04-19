@@ -79,7 +79,7 @@
          (terraform +lsp)
 
          :checkers
-         (spell +enchant +flyspell)
+         (spell +enchant)
          (syntax +childframe)
 
          :lang
