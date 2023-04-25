@@ -11,8 +11,8 @@
 (pcase (system-name)
   ("home"
    (setq doom-font (first-font
-                    (font-spec :family "MonoLisa" :size 16)
-                    (font-spec :family "Fira Code" :size 16))
+                    (font-spec :family "MonoLisa" :size 15)
+                    (font-spec :family "Fira Code" :size 15))
          doom-big-font (first-font
                         (font-spec :family "MonoLisa" :size 22)
                         (font-spec :family "Fira Code" :size 22))
@@ -297,8 +297,8 @@
 
 (after! lsp-mode
   (lsp-ui-mode +1)
-  (setq lsp-flycheck-live-reporting +1
-        lsp-lens-enable nil
+  (setq lsp-lens-enable nil
+        lsp-inlay-hint-enable t
         lsp-modeline-diagnostics-scope :project
         lsp-restart 'auto-restart
         lsp-enable-indentation t
@@ -331,15 +331,17 @@
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer))
 
+(defun lsp-rust-analyzer-inlay-hints-mode (&optional ARG)
+  (lsp-inlay-hints-mode ARG))
+
 (after! lsp-rust
   (setq lsp-rust-analyzer-display-chaining-hints nil
         lsp-rust-analyzer-display-parameter-hints t
-        lsp-rust-analyzer-server-display-inlay-hints t
         lsp-rust-analyzer-max-inlay-hint-length 20
         lsp-rust-analyzer-proc-macro-enable t
         lsp-rust-analyzer-diagnostics-enable-experimental t
         lsp-rust-analyzer-experimental-proc-attr-macros t
-        lsp-rust-analyzer-import-granularity "module"
+        lsp-rust-analyzer-import-granularity "crate"
         lsp-rust-analyzer-call-info-full t
         lsp-rust-analyzer-cargo-run-build-scripts t
         lsp-rust-analyzer-check-all-targets nil)
