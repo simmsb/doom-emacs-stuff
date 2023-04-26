@@ -79,7 +79,7 @@
          (terraform +lsp)
 
          :checkers
-         (spell +enchant)
+         ;jinx
          (syntax +childframe)
 
          :lang
@@ -125,7 +125,7 @@
          rest
          (rust +lsp +tree-sitter)
          (sh +fish +tree-sitter +lsp)
-         (web +tree-sitter)
+         (web +tree-sitter +lsp)
 
          ;; ,@(when ON-DESKTOP
          ;;     '(:email

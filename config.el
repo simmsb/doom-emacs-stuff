@@ -18,12 +18,21 @@
                         (font-spec :family "Fira Code" :size 22))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
          doom-unicode-font (font-spec :family "Twemoji")
-         doom-serif-font (font-spec :family "Fira Code" :size 16))
-   (print "lol"))
+         doom-serif-font (font-spec :family "Fira Code" :size 16)))
   ("laptop"
    (toggle-frame-maximized)
    (setq doom-font (font-spec :family "Fira Mono" :size 14)
          doom-big-font (font-spec :family "Fira Mono" :size 18)))
+  ("worklaptop"
+   (setq doom-font (first-font
+                    (font-spec :family "MonoLisa" :size 14)
+                    (font-spec :family "Fira Code" :size 14))
+         doom-big-font (first-font
+                        (font-spec :family "MonoLisa" :size 28)
+                        (font-spec :family "Fira Code" :size 28))
+         doom-variable-pitch-font (font-spec :family "Fira Sans")
+         doom-unicode-font (font-spec :family "Twemoji")
+         doom-serif-font (font-spec :family "Fira Code" :size 14)))
   ("work-desktop"
    (setq doom-font (first-font
                     (font-spec :family "MonoLisa" :size 14)
@@ -318,8 +327,8 @@
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
   (add-to-list 'lsp-language-id-configuration '(p4lang-mode . "p4")))
 
-(after! magit
-  (magit-wip-mode 1))
+;; (after! magit
+;;   (magit-wip-mode 1))
   ;(magit-todos-mode 1))
 
 (after! flycheck

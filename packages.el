@@ -39,7 +39,6 @@
 ;; (package! org-ref)
 
 ;;(package! elpy)
-(package! typescript-mode)
 (package! github-browse-file)
 (package! github-review)
 (package! disable-mouse)
