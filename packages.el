@@ -28,6 +28,10 @@
   :recipe (:host github :repo "raxod502/el-patch")
   :pin "4a4e040fcede0c320e860571d5e96100cac05bb5")
 
+(package! fzf-native
+  :recipe (:host github :repo "simmsb/fzf-native"
+                 :files (:defaults "bin")))
+
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))
 
