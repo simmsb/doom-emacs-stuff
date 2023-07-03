@@ -126,9 +126,9 @@
         lsp-elixir-ls-download-url (format "https://github.com/elixir-lsp/elixir-ls/releases/download/%s/elixir-ls.zip" lsp-elixir-ls-version)))
 
 (after! lsp-haskell
-  (require 'dash)
-  (require 's)
-  (require 'ht)
+  ;; (require 'dash)
+  ;; (require 's)
+  ;; (require 'ht)
 
   (defcustom-lsp lsp-haskell-plugin-rename-on
     t
@@ -137,13 +137,11 @@
     :type 'boolean
     :lsp-path "haskell.plugin.rename.globalOn")
 
-  (setq lsp-haskell-server-path "haskell-language-server"
-        lsp-haskell-formatting-provider "fourmolu"
+  (setq lsp-haskell-formatting-provider "ormolu"
         lsp-haskell-server-args '("-d" "-l" "/tmp/hls.log" "+RTS" "-N8" "-RTS")
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
         lsp-haskell-tactics-on nil
         lsp-haskell-max-completions 10)
-
   ;; ;; patch the result of haskell-language-server to select the first code fragment
   ;; (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
   ;;   (-let* (((&hash "value") contents)
@@ -321,7 +319,9 @@
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets\\'"
                  "[/\\\\]\\.embuild\\'"
-                 "[/\\\\]result\\'"))
+                 "[/\\\\]result\\'"
+                 "[/\\\\]_build\\'"
+                 ))
     (add-to-list 'lsp-file-watch-ignored-directories dir))
 
   (add-to-list 'lsp-language-id-configuration '(cuda-mode . "ccls"))
@@ -340,9 +340,6 @@
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer))
 
-(defun lsp-rust-analyzer-inlay-hints-mode (&optional ARG)
-  (lsp-inlay-hints-mode ARG))
-
 (after! lsp-rust
   (setq lsp-rust-analyzer-display-chaining-hints nil
         lsp-rust-analyzer-display-parameter-hints t
@@ -353,8 +350,7 @@
         lsp-rust-analyzer-import-granularity "crate"
         lsp-rust-analyzer-call-info-full t
         lsp-rust-analyzer-cargo-run-build-scripts t
-        lsp-rust-analyzer-check-all-targets nil)
-  (lsp-rust-analyzer-inlay-hints-mode t))
+        lsp-rust-analyzer-check-all-targets nil))
 ;; lsp-rust-analyzer-cargo-watch-command "clippy")
 
 
@@ -370,6 +366,10 @@
 ;;       company-ispell
 ;;       company-files
 ;;       company-yasnippet)))
+
+(after! yasnippet
+  (setq yas-wrap-around-region t
+        yas-triggers-in-field t))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
@@ -978,6 +978,8 @@ For non-floats, see `org-latex--wrap-label'."
   (enable-lui-logging-globally))
 
 (after! forge
+  (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
+  (advice-remove 'forge-dispatch '+magit--forge-build-binary-lazily-a)
   (if (atom forge-topic-list-limit)
       (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
     (setcdr forge-topic-list-limit -5))

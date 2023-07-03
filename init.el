@@ -6,6 +6,9 @@
 (setenv "LSP_USE_PLISTS" "1")
 
 
+;; (appendq! doom-env-deny '("^ALACRITTY" "^STARSHIP" "^ATUIN" "^ZELLIJ" "^SHELL"))
+
+
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
@@ -79,7 +82,7 @@
          (terraform +lsp)
 
          :checkers
-         ;jinx
+         jinx
          (syntax +childframe)
 
          :lang
@@ -157,28 +160,3 @@
 ;;       show-paren-delay 0)
 
 (setq default-directory "~/dev/")
-
-(setq +rust-src-dir (concat (replace-regexp-in-string
-                             "\n\\'" ""
-                             (shell-command-to-string "rustc --print sysroot"))
-                            "/lib/rustlib/src"))
-
-(setq explicit-shell-file-name "/bin/bash"
-      shell-file-name "/bin/bash")
-
-(add-to-list 'exec-path "~/.local/bin/")
-(add-to-list 'exec-path "~/.cargo/bin/")
-(add-to-list 'exec-path "~/.npm-packages/bin/")
-
-;; (setenv "GRADLE_HOME" "~/.gradle/wrapper/dists/gradle-5.1.1-bin")
-;; (setenv "GRADLE_USER_HOME" "~/.gradle")
-
-;; Does this work? idk
-(setenv "PATH"
-        (concat
-         (expand-file-name "~/.npm-packages/bin/") path-separator
-         (expand-file-name "~/.local/bin/") path-separator
-         (expand-file-name "~/.cargo/bin/") path-separator
-         (getenv "PATH")))
-
-;; (setq lsp-print-io t)
