@@ -41,6 +41,9 @@
 (package! fzf-native
   :recipe (:host github :repo "simmsb/fzf-native"
                  :files (:defaults "bin")))
+(package! fussy
+  :recipe (:host github :repo "jojojames/fussy"
+           :files (:defaults "bin")))
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))

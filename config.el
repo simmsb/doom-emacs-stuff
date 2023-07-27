@@ -1083,3 +1083,43 @@ For non-floats, see `org-latex--wrap-label'."
     (pixel-scroll-precision-mode 1)
     (setq pixel-scroll-precision-interpolate-page t
         pixel-scroll-precision-use-momentum t))
+
+(after! corfu
+   (add-hook! 'minibuffer-setup-hook #'+corfu--enable-in-minibuffer)
+  )
+
+(use-package! fzf-native
+  :custom
+  (fussy-score-fn 'fussy-fzf-native-score)
+  :config
+  (fzf-native-load-dyn))
+
+(use-package! fussy
+  :custom
+  (fussy-use-cache t)
+  (fussy-score-fn 'fussy-fzf-native-score)
+  (fussy-filter-fn 'fussy-filter-default)
+  :after corfu
+  :config
+  (setq completion-category-defaults '())
+  (add-to-list 'completion-category-overrides
+               '(file (styles +vertico-basic-remote fussy orderless)))
+  (add-to-list 'completion-category-overrides
+               '(project-file (styles fussy orderless)))
+  (add-to-list 'completion-category-overrides
+               '(buffer (styles fussy orderless)))
+  (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
+  (add-hook 'corfu-mode-hook
+            (lambda ()
+              (setq-local fussy-max-candidate-limit 200
+                          fussy-default-regex-fn 'fussy-pattern-default
+                          fussy-prefer-prefix t))))
+
+(use-package! corfu-echo
+  :after corfu
+  :hook (corfu-mode . corfu-echo-mode))
+
+(use-package! orderless
+  :after corfu
+  :config
+  (setq completion-styles '( orderless basic)))

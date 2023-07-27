@@ -30,7 +30,7 @@
          :completion
          ;; (company +tng)
          ;; company
-         corfu
+         (corfu +icons)
          ;(ivy +fuzzy +prescient)
          (vertico)
 
@@ -50,7 +50,6 @@
          (treemacs +lsp)
          vi-tilde-fringe
          window-select
-         zen
          (emoji +unicode)
 
          :emacs
