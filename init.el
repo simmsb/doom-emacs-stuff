@@ -30,7 +30,7 @@
          :completion
          ;; (company +tng)
          ;; company
-         (corfu +icons)
+         (corfu +icons +orderless)
          ;(ivy +fuzzy +prescient)
          (vertico)
 

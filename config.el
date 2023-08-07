@@ -74,7 +74,8 @@
 
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line
- "s-q" #'prog-fill-reindent-defun)
+ "s-q" #'prog-fill-reindent-defun
+ "<f6>" #'evil-switch-to-windows-last-buffer)
 
 (use-package! engrave-faces-latex
   :after ox-latex)
@@ -850,7 +851,8 @@ For non-floats, see `org-latex--wrap-label'."
   (setq evil-normal-state-cursor '(box "light blue")
         evil-insert-state-cursor '(bar "medium sea green")
         evil-visual-state-cursor '(hollow "orange")
-        evil-want-fine-undo t)
+        evil-want-fine-undo t
+        evil-kill-on-visual-paste nil)
   (setq evil-vsplit-window-right t
         evil-split-window-below t)
   ;; stops the evil selection being added to the kill-ring
@@ -1080,8 +1082,31 @@ For non-floats, see `org-latex--wrap-label'."
   (zone-when-idle 560))
 
 (when (fboundp 'pixel-scroll-precision-mode)
-    (pixel-scroll-precision-mode 1)
-    (setq pixel-scroll-precision-interpolate-page t
+  ;; (pixel-scroll-mode t)
+  (pixel-scroll-precision-mode 1)
+  ;; (defun filter-mwheel-always-coalesce (orig &rest args)
+  ;;   "A filter function suitable for :around advices that ensures only
+  ;;  coalesced scroll events reach the advised function."
+  ;;   (if mwheel-coalesce-scroll-events
+  ;;       (apply orig args)
+  ;;     (setq mwheel-coalesce-scroll-events t)))
+
+  ;; (defun filter-mwheel-never-coalesce (orig &rest args)
+  ;;   "A filter function suitable for :around advices that ensures only
+  ;;  non-coalesced scroll events reach the advised function."
+  ;;   (if mwheel-coalesce-scroll-events
+  ;;       (setq mwheel-coalesce-scroll-events nil)
+  ;;     (apply orig args)))
+
+  ;; ;; Don't coalesce for high precision scrolling
+  ;; (advice-add 'pixel-scroll-precision :around #'filter-mwheel-never-coalesce)
+
+  ;; ;; Coalesce for default scrolling (which is still used for horizontal scrolling)
+  ;; ;; and text scaling (bound to ctrl + mouse wheel by default).
+  ;; (advice-add 'mwheel-scroll          :around #'filter-mwheel-always-coalesce)
+  ;; (advice-add 'mouse-wheel-text-scale :around #'filter-mwheel-always-coalesce)
+
+  (setq pixel-scroll-precision-interpolate-page t
         pixel-scroll-precision-use-momentum t))
 
 (after! corfu
@@ -1123,3 +1148,50 @@ For non-floats, see `org-latex--wrap-label'."
   :after corfu
   :config
   (setq completion-styles '( orderless basic)))
+
+(after! marginalia
+  ;; (setq marginalia-censor-variables nil)
+
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
+(use-package! indent-bars
+  :hook (prog-mode . indent-bars-mode)
+  :config
+     (setq
+      indent-bars-color '(highlight :face-bg t :blend 0.2)
+      indent-bars-pattern "."
+      indent-bars-width-frac 0.2
+      indent-bars-pad-frac 0.2
+      indent-bars-zigzag nil
+      indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1)
+      indent-bars-highlight-current-depth nil
+      indent-bars-display-on-blank-lines nil))

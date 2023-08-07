@@ -8,18 +8,18 @@
 (package! outline-minor-faces)
 (package! circadian)
 
-(unpin! lsp-mode lsp-haskell rustic closql git-commit magit orgit-forge emacsql emacsql-sqlite-builtin)
+(unpin! lsp-mode lsp-haskell rustic magit forge emacsql closql git-commit orgit-forge emacsql emacsql-sqlite-builtin)
 
 (package! emacsql-sqlite-builtin
   :recipe (:host github :repo "magit/emacsql"))
 (package! emacsql
   :recipe (:host github :repo "magit/emacsql"))
 
-(package! magit :recipe (:host github :repo "magit/magit")
-  :pin "24f64fd4f8ed4a4a302fd9227febad63507d7287")
+(package! magit :recipe (:host github :repo "simmsb/magit"))
+ 
 
-(package! forge :recipe (:host github :repo "magit/forge")
-  :pin "ec68fcd778f6b3dc6100498aea790457d2fc98f6")
+(package! forge :recipe (:host github :repo "magit/forge"))
+ 
 
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
@@ -44,6 +44,9 @@
 (package! fussy
   :recipe (:host github :repo "jojojames/fussy"
            :files (:defaults "bin")))
+
+(package! indent-bars
+  :recipe (:host github :repo "jdtsmith/indent-bars"))
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))
