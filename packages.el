@@ -1,14 +1,13 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(disable-packages! company-anaconda anaconda-mode ocamlformat code-review)
+(disable-packages! anaconda-mode ocamlformat code-review)
 
 ;; (package! evil-textobj-treesitter)
 
 (package! outline-minor-faces)
-(package! circadian)
 
-(unpin! lsp-mode lsp-haskell rustic magit forge emacsql closql git-commit orgit-forge emacsql emacsql-sqlite-builtin)
+(unpin! lsp-mode lsp-haskell rustic magit forge emacsql closql git-commit orgit-forge emacsql emacsql-sqlite-builtin haskell-mode)
 
 (package! emacsql-sqlite-builtin
   :recipe (:host github :repo "magit/emacsql"))
