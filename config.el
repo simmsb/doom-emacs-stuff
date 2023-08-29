@@ -182,7 +182,8 @@
     (add-to-list 'flycheck-disabled-checkers 'haskell-hlint)))
 
 (after! rustic
-  (setq rustic-lsp-server 'rust-analyzer))
+  (setq rustic-lsp-server 'rust-analyzer
+        rustic-treesitter-derive t))
 
 (after! lsp-rust
   (setq lsp-rust-analyzer-display-chaining-hints nil

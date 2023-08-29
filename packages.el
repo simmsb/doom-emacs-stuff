@@ -47,6 +47,10 @@
 (package! indent-bars
   :recipe (:host github :repo "jdtsmith/indent-bars"))
 
+(package! rustic
+  :recipe (:host github :repo "deftsp/rustic")
+  :pin "c745232b1bf7afc027a0d9c711ad86bbe29ed3bf")
+
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))
 

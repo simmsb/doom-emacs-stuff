@@ -94,8 +94,8 @@
          ;; (clojure +lsp)
          plantuml
          pest
-         (yaml +lsp +tree-sitter)
-         (json +lsp +tree-sitter)
+         (yaml +lsp)
+         (json +lsp)
          ;p4
          ;jade
          sourcepawn
@@ -125,7 +125,7 @@
           +pretty)
          (python +lsp +pyright +tree-sitter)
          rest
-         (rust +lsp +tree-sitter)
+         (rust +lsp)
          (sh +fish +tree-sitter +lsp)
          (web +tree-sitter +lsp)
 
@@ -159,3 +159,9 @@
 ;;       show-paren-delay 0)
 
 (setq default-directory "~/dev/")
+
+(setq major-mode-remap-alist
+      '((yaml-mode . yaml-ts-mode)
+        (typescript-mode . typescript-ts-mode)
+        (typescript-tsx-mode . tsx-ts-mode)
+        (json-mode . json-ts-mode)))
