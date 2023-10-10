@@ -9,6 +9,9 @@
 
 (unpin! lsp-mode lsp-haskell rustic magit forge emacsql closql git-commit orgit-forge emacsql emacsql-sqlite-builtin haskell-mode)
 
+(package! auth-source-1password
+  :recipe (:host github :repo "dlobraico/auth-source-1password"))
+
 (package! emacsql-sqlite-builtin
   :recipe (:host github :repo "magit/emacsql"))
 (package! emacsql

@@ -74,7 +74,7 @@
          (magit +forge)
          direnv
          gist
-         (pass +auth)
+         ;; (pass +auth)
          pdf
          rgb
          upload
@@ -162,6 +162,5 @@
 
 (setq major-mode-remap-alist
       '((yaml-mode . yaml-ts-mode)
-        (typescript-mode . typescript-ts-mode)
-        (typescript-tsx-mode . tsx-ts-mode)
-        (json-mode . json-ts-mode)))
+        (json-mode . json-ts-mode)
+        (tsx-ts-mode . typescript-tsx-mode)))

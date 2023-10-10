@@ -28,7 +28,6 @@
                     (font-spec :family "MonoLisa" :size 14)
                     (font-spec :family "Fira Code" :size 14))
          doom-big-font (first-font
-                        (font-spec :family "MonoLisa" :size 28)
                         (font-spec :family "Fira Code" :size 28))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
          doom-unicode-font (font-spec :family "Twemoji")
@@ -41,7 +40,7 @@
                         (font-spec :family "MonoLisa" :size 18)
                         (font-spec :family "Fira Code" :size 18))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-unicode-font (font-spec :family "Twemoji")
+         ;; doom-unicode-font (font-spec :family "Twemoji")
          doom-serif-font (font-spec :family "Fira Code" :size 14))))
 
 (print doom-font)
@@ -173,7 +172,7 @@
   (remove-hook 'magit-status-sections-hook 'forge-insert-pullreqs)
   (remove-hook 'magit-refs-sections-hook 'magit-insert-tags))
 
-  
+
 
 (after! flycheck
   (add-hook! haskell-mode
@@ -197,6 +196,16 @@
         lsp-rust-analyzer-cargo-run-build-scripts t
         lsp-rust-analyzer-check-all-targets nil))
 
+
+(after! lsp-javascript
+  (defcustom-lsp lsp-typescript-jsx-completion-style "braces"
+    "JSX quoting style"
+    :group 'lsp-typescript
+    :lsp-path "typescript.preferences.jsxAttributeCompletionStyle")
+
+  (setq lsp-javascript-display-enum-member-value-hints t
+        lsp-javascript-display-parameter-name-hints 'literals
+        lsp-javascript-display-variable-type-hints t))
 
 (add-hook! prog-mode #'rainbow-delimiters-mode)
 
@@ -262,6 +271,7 @@
         web-mode-enable-auto-closing t
         web-mode-enable-auto-opening t
         web-mode-enable-auto-pairing t
+        web-mode-auto-quote-style 3
         web-mode-enable-auto-quoting t))
 
 (setq +treemacs-git-mode 'deferred)
@@ -270,9 +280,7 @@
   (treemacs-follow-mode +1)
   (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
   (setq treemacs-silent-refresh t
-        treemacs-read-string-input 'from-minibuffer
-        doom-themes-treemacs-theme "Default"
-        doom-themes-treemacs-bitmap-indicator-width 7))
+        treemacs-read-string-input 'from-minibuffer))
 
 (after! forge
   (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
@@ -330,8 +338,8 @@
              (cl-loop for (chunk end-delay) in msg do
                       (cl-loop for char across chunk do
                                (let ((s (string char)))
-                                (put-text-property 0 1 'face 'zone-rise-and-shine-face s)
-                                (insert s))
+                                 (put-text-property 0 1 'face 'zone-rise-and-shine-face s)
+                                 (insert s))
                                (sit-for (/ 100 1000.0)))
                       (sit-for (/ end-delay 1000.0)))))
   (sit-for 60))
@@ -339,14 +347,14 @@
 (setq zone-programs [zone-pgm-drip zone-pgm-rise-and-shine zone-pgm-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
 
 (defun zone-choose (pgm)
-    "Choose a PGM to run for `zone'."
-    (interactive
-     (list
-      (completing-read
-       "Program: "
-       (mapcar 'symbol-name zone-programs))))
-    (let ((zone-programs (vector (intern pgm))))
-      (zone)))
+  "Choose a PGM to run for `zone'."
+  (interactive
+   (list
+    (completing-read
+     "Program: "
+     (mapcar 'symbol-name zone-programs))))
+  (let ((zone-programs (vector (intern pgm))))
+    (zone)))
 
 (when IS-MAC
   (global-set-key (kbd "M-3") #'(lambda () (interactive) (insert "#"))))
@@ -435,12 +443,29 @@
 (use-package! indent-bars
   :hook (prog-mode . indent-bars-mode)
   :config
-     (setq
-      indent-bars-color '(highlight :face-bg t :blend 0.2)
-      indent-bars-pattern "."
-      indent-bars-width-frac 0.2
-      indent-bars-pad-frac 0.2
-      indent-bars-zigzag nil
-      indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1)
-      indent-bars-highlight-current-depth nil
-      indent-bars-display-on-blank-lines nil))
+  (setq
+   indent-bars-color '(highlight :face-bg t :blend 0.2)
+   indent-bars-pattern "."
+   indent-bars-width-frac 0.2
+   indent-bars-pad-frac 0.2
+   indent-bars-zigzag nil
+   indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1)
+   indent-bars-highlight-current-depth nil
+   indent-bars-display-on-blank-lines nil))
+
+
+(after! doom-modeline
+  (setq doom-modeline-height 30))
+
+(defun auth-source-1password--1password-construct-query-path-escaped (_backend _type host user _port)
+  "Construct the full entry-path for the 1password entry for HOST and USER.
+   Usually starting with the `auth-source-1password-vault', followed
+   by host and user."
+  (mapconcat #'identity (list auth-source-1password-vault host (string-replace "^" "_" user)) "/"))
+
+(use-package! auth-source-1password
+  :custom
+  (auth-source-1password-vault "Auto")
+  (auth-source-1password-construct-secret-reference #'auth-source-1password--1password-construct-query-path-escaped)
+  :config
+  (auth-source-1password-enable))
