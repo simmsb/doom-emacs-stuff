@@ -5,6 +5,8 @@
 
 ;; (package! evil-textobj-treesitter)
 
+(package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode"))
+
 (package! outline-minor-faces)
 
 (unpin! lsp-mode lsp-haskell rustic magit forge emacsql closql git-commit orgit-forge emacsql emacsql-sqlite-builtin haskell-mode)

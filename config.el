@@ -137,9 +137,9 @@
   (defun browse-url (url)
     (browse-url-firefox url)))
 
-(after! nix
-  (setq nix-nixfmt-bin "nixpkgs-fmt")
-  (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
+(after! nix-mode
+  (setq nix-nixfmt-bin "nixpkgs-fmt"))
+;; (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
 
 (when ON-DESKTOP
   (use-package! discord-emacs)
@@ -367,9 +367,6 @@
   (setq pixel-scroll-precision-interpolate-page t
         pixel-scroll-precision-use-momentum t))
 
-(after! corfu
-  (add-hook! 'minibuffer-setup-hook #'+corfu--enable-in-minibuffer))
-
 (use-package! fzf-native
   :custom
   (fussy-score-fn 'fussy-fzf-native-score)
@@ -381,15 +378,8 @@
   (fussy-use-cache t)
   (fussy-score-fn 'fussy-fzf-native-score)
   (fussy-filter-fn 'fussy-filter-default)
-  :after corfu
+  :after '(corfu orderless)
   :config
-  (setq completion-category-defaults '())
-  (add-to-list 'completion-category-overrides
-               '(file (styles +vertico-basic-remote fussy orderless)))
-  (add-to-list 'completion-category-overrides
-               '(project-file (styles fussy orderless)))
-  (add-to-list 'completion-category-overrides
-               '(buffer (styles fussy orderless)))
   (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
   (add-hook 'corfu-mode-hook
             (lambda ()
@@ -397,14 +387,25 @@
                           fussy-default-regex-fn 'fussy-pattern-default
                           fussy-prefer-prefix t))))
 
+(after! vertico
+  (setq completion-category-defaults '())
+  (add-to-list 'completion-category-overrides
+               '(file (styles +vertico-basic-remote fussy orderless)))
+  (add-to-list 'completion-category-overrides
+               '(project-file (styles fussy orderless)))
+  (add-to-list 'completion-category-overrides
+               '(buffer (styles fussy orderless)))
+  (add-to-list 'completion-category-overrides
+               '(lsp-capf (styles basic partial-completion orderless))))
+
 (use-package! corfu-echo
   :after corfu
   :hook (corfu-mode . corfu-echo-mode))
-
-(use-package! orderless
-  :after corfu
-  :config
-  (setq completion-styles '( orderless basic)))
+;;
+;; (use-package! orderless
+;;   :after corfu
+;;   :config
+;;   (setq completion-styles '( orderless basic)))
 
 (after! marginalia
   ;; (setq marginalia-censor-variables nil)
@@ -469,3 +470,12 @@
   (auth-source-1password-construct-secret-reference #'auth-source-1password--1password-construct-query-path-escaped)
   :config
   (auth-source-1password-enable))
+
+(use-package typst-ts-mode
+  :defer t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
+  :custom
+  (typst-ts-mode-watch-options "--open"))
+
+(setq mac-command-modifier 'meta)
