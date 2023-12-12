@@ -362,11 +362,6 @@
 (when (not IS-MAC)
   (zone-when-idle 560))
 
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode 1)
-  (setq pixel-scroll-precision-interpolate-page t
-        pixel-scroll-precision-use-momentum t))
-
 (use-package! fzf-native
   :custom
   (fussy-score-fn 'fussy-fzf-native-score)
@@ -471,7 +466,7 @@
   :config
   (auth-source-1password-enable))
 
-(use-package typst-ts-mode
+(use-package! typst-ts-mode
   :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
@@ -479,3 +474,16 @@
   (typst-ts-mode-watch-options "--open"))
 
 (setq mac-command-modifier 'meta)
+
+(after! cape
+  (setq cape-dabbrev-check-other-buffers nil))
+
+(use-package! ultra-scroll-mac
+  :if (eq window-system 'mac)
+  :init (setq scroll-conservatively 101)
+  :config (ultra-scroll-mac-mode 1))
+
+(when (and (not (eq window-system 'mac)) (fboundp 'pixel-scroll-precision-mode))
+  (pixel-scroll-precision-mode 1)
+  (setq pixel-scroll-precision-interpolate-page t
+        pixel-scroll-precision-use-momentum t))

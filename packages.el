@@ -59,6 +59,9 @@
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))
 
+(package! ultra-scroll-mac
+  :recipe (:host github :repo "jdtsmith/ultra-scroll-mac"))
+
 (if ON-LAPTOP
     (disable-packages! lsp-haskell flycheck-haskell)
   (package! discord-emacs :recipe (:host github :repo "simmsb/discord-emacs.el")))
