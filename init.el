@@ -4,7 +4,7 @@
 (setq comp-speed 2)
 
 (setenv "LSP_USE_PLISTS" "1")
-
+(doom-load-envvars-file "~/.doom.d/myenv")
 
 ;; (appendq! doom-env-deny '("^ALACRITTY" "^STARSHIP" "^ATUIN" "^ZELLIJ" "^SHELL"))
 
@@ -56,7 +56,7 @@
          undo
          (ibuffer +icons)
          vc
-         (dired +icons +dirvish)
+         (dired +icons)
          electric
 
          :term
