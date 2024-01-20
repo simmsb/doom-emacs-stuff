@@ -155,7 +155,8 @@
         lsp-enable-file-watchers t
         lsp-headerline-breadcrumb-enable nil
         lsp-ui-doc-show-with-cursor nil
-        lsp-ui-sideline-show-hover nil)
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-diagnostic-max-lines 10)
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets"
@@ -338,7 +339,7 @@
 
 
 (if (string-equal (system-name) "worklaptop")
-    (setq doom-theme 'doom-pine)
+    (setq doom-theme 'doom-lantern)
   (setq doom-theme 'doom-lantern))
 
 (require 'zone)
