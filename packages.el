@@ -42,9 +42,10 @@
   :recipe (:host github :repo "raxod502/el-patch")
   :pin "4a4e040fcede0c320e860571d5e96100cac05bb5")
 
-(package! fzf-native
-  :recipe (:host github :repo "simmsb/fzf-native"
+(package! flx-rs
+  :recipe (:host github :repo "jcs-elpa/flx-rs"
                  :files (:defaults "bin")))
+
 (package! fussy
   :recipe (:host github :repo "jojojames/fussy"
            :files (:defaults "bin")))

@@ -4,7 +4,6 @@
 (setq comp-speed 2)
 
 (setenv "LSP_USE_PLISTS" "1")
-(doom-load-envvars-file "~/.doom.d/myenv")
 
 ;; (appendq! doom-env-deny '("^ALACRITTY" "^STARSHIP" "^ATUIN" "^ZELLIJ" "^SHELL"))
 
@@ -47,7 +46,7 @@
          hl-todo
          nav-flash
          ophints
-         (treemacs +lsp)
+         treemacs
          vi-tilde-fringe
          window-select
          (emoji +unicode)
@@ -153,6 +152,9 @@
 (setq custom-safe-themes t)
 
 (fringe-mode 4)
+
+(setq gcmh-high-cons-threshold (* 256 1024 1024)
+      read-process-output-max (* 1024 1024))
 
 ;; (show-paren-mode t)
 ;; (setq show-paren-style 'mixed

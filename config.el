@@ -17,7 +17,6 @@
                         (font-spec :family "MonoLisa" :size 22)
                         (font-spec :family "Fira Code" :size 22))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-unicode-font (font-spec :family "Twemoji")
          doom-serif-font (font-spec :family "Fira Code" :size 16)))
   ("laptop"
    (toggle-frame-maximized)
@@ -30,18 +29,8 @@
          doom-big-font (first-font
                         (font-spec :family "Fira Code" :size 28))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-unicode-font (font-spec :family "Twemoji")
-         doom-serif-font (font-spec :family "Fira Code" :size 14)))
-  ("work-desktop"
-   (setq doom-font (first-font
-                    (font-spec :family "MonoLisa" :size 14)
-                    (font-spec :family "Fira Code" :size 14))
-         doom-big-font (first-font
-                        (font-spec :family "MonoLisa" :size 18)
-                        (font-spec :family "Fira Code" :size 18))
-         doom-variable-pitch-font (font-spec :family "Fira Sans")
-         ;; doom-unicode-font (font-spec :family "Twemoji")
          doom-serif-font (font-spec :family "Fira Code" :size 14))))
+  
 
 (print doom-font)
 
@@ -129,7 +118,7 @@
         lsp-haskell-server-args '("+RTS" "-N8" "-RTS")
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
         lsp-haskell-tactics-on nil
-        lsp-haskell-max-completions 10)
+        lsp-haskell-max-completions 20)
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 ;; no idea mate
@@ -144,6 +133,25 @@
 (when ON-DESKTOP
   (use-package! discord-emacs)
   (run-at-time "1 min" nil #'discord-emacs-run "384815451978334208"))
+
+
+;; (defun config-brossa-lsp-server (workspace)
+;;   (with-lsp-workspace workspace
+;;     (lsp--set-configuration
+;;      `(:brossa
+;;        (:languageServer
+;;         (:inlayHints
+;;          (:cutoff 999999)))))))
+
+;; (after! art-mode
+;;   (require 'lsp-mode)
+;;   (add-to-list 'lsp-language-id-configuration '(art-mode . "brossa"))
+;;   (lsp-register-client
+;;    (make-lsp-client
+;;     :new-connection (lsp-stdio-connection "brossa-lsp-server")
+;;     :activation-fn (lsp-activate-on "brossa")
+;;     :initialized-fn 'config-brossa-lsp-server
+;;     :server-id 'brossa-lsp)))
 
 (after! lsp-mode
   (lsp-ui-mode +1)
@@ -166,6 +174,7 @@
                  "[/\\\\]build\\'"
                  "[/\\\\]node_modules\\'"))
     (add-to-list 'lsp-file-watch-ignored-directories dir))
+
 
   (defun lsp-booster--advice-json-parse (old-fn &rest args)
     "Try to parse bytecode instead of json."
@@ -256,13 +265,13 @@
     (global-disable-mouse-mode)))
 
 (after! haskell-mode
-  (setq haskell-auto-insert-module-format-string "-- | \nmodule %s\n    (\n     ) where"))
+  (setq haskell-auto-insert-module-format-string "module %s\n    (\n     ) where"))
 
 
 (after! evil
-  (setq evil-normal-state-cursor '(box "light blue")
-        evil-insert-state-cursor '(bar "medium sea green")
-        evil-visual-state-cursor '(hollow "orange")
+  (setq ;; evil-normal-state-cursor '(box "light blue")
+        ;; evil-insert-state-cursor '(bar "medium sea green")
+        ;; evil-visual-state-cursor '(hollow "orange")
         evil-want-fine-undo t
         evil-kill-on-visual-paste nil)
   (setq evil-vsplit-window-right t
@@ -327,7 +336,7 @@
 
   (add-to-list 'transient-levels '(forge-dispatch (t . 7)))
 
-  (transient-append-suffix 'magit-branch '(2 1 0)
+  (transient-append-suffix 'magit-branch '(3 2 0)
     '("i" "new for issue" forge-create-branch-for-issue)))
 
 
@@ -397,23 +406,22 @@
 (when (not IS-MAC)
   (zone-when-idle 560))
 
-(use-package! fzf-native
-  :custom
-  (fussy-score-fn 'fussy-fzf-native-score)
+(use-package  flx-rs
   :config
-  (fzf-native-load-dyn))
+  (setq fussy-score-fn 'fussy-flx-rs-score)
+  (flx-rs-load-dyn))
 
 (use-package! fussy
   :custom
   (fussy-use-cache t)
-  (fussy-score-fn 'fussy-fzf-native-score)
+  (setq fussy-score-fn 'fussy-flx-rs-score)
   (fussy-filter-fn 'fussy-filter-default)
   :after '(corfu orderless)
   :config
   (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
   (add-hook 'corfu-mode-hook
             (lambda ()
-              (setq-local fussy-max-candidate-limit 200
+              (setq-local fussy-max-candidate-limit 5000
                           fussy-default-regex-fn 'fussy-pattern-default
                           fussy-prefer-prefix t))))
 
@@ -422,11 +430,16 @@
   (add-to-list 'completion-category-overrides
                '(file (styles +vertico-basic-remote fussy orderless)))
   (add-to-list 'completion-category-overrides
-               '(project-file (styles fussy orderless)))
+               '(project-file (styles orderless)))
   (add-to-list 'completion-category-overrides
                '(buffer (styles fussy orderless)))
   (add-to-list 'completion-category-overrides
                '(lsp-capf (styles basic partial-completion orderless))))
+
+(after! corfu
+  (require 'cape))
+
+(setq +corfu-want-minibuffer-completion 'agressive)
 
 (use-package! corfu-echo
   :after corfu

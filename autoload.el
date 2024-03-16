@@ -111,7 +111,7 @@
 ;;;###autoload
 (defun forge-create-branch-for-issue (issue start-point &optional name)
   "Create a branch for an ISSUE starting at START-POINT with the branch name NAME."
-  (interactive (list (forge-read-issue "Issue" t)
+  (interactive (list (forge-read-open-issue "Issue")
                      (magit-read-starting-point "Create issue branch")))
   (let* ((issue (forge-get-issue issue))
          (name (or name
@@ -132,3 +132,40 @@
               (and (modulep! :completion helm)
                    (helm--alive-p))
               (corfu-mode +1))))
+
+
+;;;###autoload
+(defun lsp-rust-analyzer-view-mir ()
+  "View Mir of function at point."
+  (interactive)
+  (-let* ((params (lsp-make-rust-analyzer-expand-macro-params
+                   :text-document (lsp--text-document-identifier)
+                   :position (lsp--cur-position)))
+          (results (lsp-send-request (lsp-make-request
+                                      "rust-analyzer/viewMir"
+                                      params))))
+    (let ((buf (get-buffer-create "*rust-analyzer mir*"))
+          (inhibit-read-only t))
+      (with-current-buffer buf
+        (special-mode)
+        (erase-buffer)
+        (insert results)
+        (pop-to-buffer buf)))))
+
+;;;###autoload
+(defun lsp-rust-analyzer-view-memory-layout ()
+  "View memory layout of function at point."
+  (interactive)
+  (-let* ((params (lsp-make-rust-analyzer-expand-macro-params
+                   :text-document (lsp--text-document-identifier)
+                   :position (lsp--cur-position)))
+          (results (lsp-send-request (lsp-make-request
+                                      "rust-analyzer/viewRecursiveMemoryLayout"
+                                      params))))
+    (let ((buf (get-buffer-create "*rust-analyzer memory layout*"))
+          (inhibit-read-only t))
+      (with-current-buffer buf
+        (special-mode)
+        (erase-buffer)
+        (insert (pp-to-string results))
+        (pop-to-buffer buf)))))
