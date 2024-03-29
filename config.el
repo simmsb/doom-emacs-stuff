@@ -348,7 +348,7 @@
 
 
 (if (string-equal (system-name) "worklaptop")
-    (setq doom-theme 'doom-lantern)
+    (setq doom-theme 'doom-oceanic-next)
   (setq doom-theme 'doom-lantern))
 
 (require 'zone)
