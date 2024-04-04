@@ -18,10 +18,14 @@
                         (font-spec :family "Fira Code" :size 22))
          doom-variable-pitch-font (font-spec :family "Fira Sans")
          doom-serif-font (font-spec :family "Fira Code" :size 16)))
-  ("laptop"
-   (toggle-frame-maximized)
-   (setq doom-font (font-spec :family "Fira Mono" :size 14)
-         doom-big-font (font-spec :family "Fira Mono" :size 18)))
+  ("laptop2"
+   (setq doom-font (first-font
+                    (font-spec :family "MonoLisa" :size 14)
+                    (font-spec :family "Fira Code" :size 14))
+         doom-big-font (first-font
+                        (font-spec :family "Fira Code" :size 28))
+         doom-variable-pitch-font (font-spec :family "Fira Sans")
+         doom-serif-font (font-spec :family "Fira Code" :size 14)))
   ("worklaptop"
    (setq doom-font (first-font
                     (font-spec :family "MonoLisa" :size 14)
@@ -100,10 +104,6 @@
 (use-package! esh-autosuggest
   :defer t
   :hook (eshell-mode . esh-autosuggest-mode))
-
-(after! lsp-elixir
-  (setq lsp-elixir-ls-version "v0.13.0"
-        lsp-elixir-ls-download-url (format "https://github.com/elixir-lsp/elixir-ls/releases/download/%s/elixir-ls.zip" lsp-elixir-ls-version)))
 
 (after! lsp-haskell
 
@@ -514,13 +514,13 @@
   :config
   (auth-source-1password-enable))
 
-(use-package! typst-ts-mode
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
-  :custom
-  (typst-ts-mode-watch-options "--open"))
-
+;; (use-package! typst-ts-mode
+;;   :defer t
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
+;;   :custom
+;;   (typst-ts-mode-watch-options "--open"))
+;;
 (setq mac-command-modifier 'meta)
 
 (after! cape
