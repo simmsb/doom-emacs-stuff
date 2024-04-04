@@ -4,6 +4,7 @@
 (disable-packages! anaconda-mode ocamlformat code-review)
 
 ;; (package! evil-textobj-treesitter)
+(package! pdf-tools :built-in 'prefer)
 
 ;; (package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode"))
 
