@@ -122,9 +122,9 @@
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 ;; no idea mate
-(after! browse-url
-  (defun browse-url (url)
-    (browse-url-firefox url)))
+;; (after! browse-url
+;;   (defun browse-url (url)
+;;     (browse-url-generic url)))
 
 (after! nix-mode
   (setq nix-nixfmt-bin "nixpkgs-fmt"))
@@ -347,9 +347,7 @@
   (sp-local-pair 'python-mode "f'" "'"))
 
 
-(if (string-equal (system-name) "worklaptop")
-    (setq doom-theme 'doom-oceanic-next)
-  (setq doom-theme 'doom-lantern))
+(setq doom-theme 'doom-oceanic-next)
 
 (require 'zone)
 (require 'zone-matrix-wake-up)
@@ -521,7 +519,8 @@
 ;;   :custom
 ;;   (typst-ts-mode-watch-options "--open"))
 ;;
-(setq mac-command-modifier 'meta)
+(setq mac-command-modifier 'meta
+      mac-option-modifier nil)
 
 (after! cape
   (setq cape-dabbrev-check-other-buffers nil))
@@ -535,3 +534,9 @@
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-interpolate-page t
         pixel-scroll-precision-use-momentum t))
+
+
+(add-hook! org-mode #'+word-wrap-mode)
+
+(after! org-mode
+  (defun org-do-latex-and-related (&rest _)))

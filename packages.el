@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(disable-packages! anaconda-mode ocamlformat code-review)
+(disable-packages! anaconda-mode ocamlformat code-review writegood-mode)
 
 ;; (package! evil-textobj-treesitter)
 (package! pdf-tools :built-in 'prefer)

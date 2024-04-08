@@ -21,6 +21,7 @@
          (parinfer +rust)
          rotate-text
          fold
+         word-wrap
 
          :os
          ,@(when IS-MAC
@@ -82,6 +83,7 @@
          :checkers
          jinx
          (syntax +childframe)
+         grammar
 
          :lang
          art
