@@ -41,5 +41,24 @@
              "\\_<-?[[:digit:]]+\\(?:_[[:digit:]]\\{3\\}\\)*\\_>"
              highlight-numbers-modelist)))
 
-(after! web-mode
-  (add-to-list 'web-mode-engines-alist '("elixir" . "\\.leex\\'")))
+;; (after! web-mode
+;;   (add-to-list 'web-mode-engines-alist '("elixir" . "\\.leex\\'")))
+;; (after! lsp-mode
+;;   (lsp-register-client
+;;    (make-lsp-client :new-connection (lsp-stdio-connection '("nextls" "--stdio"))
+;;           :multi-root t
+;;           ;; :initialization-options '(:experimental (:completions (:enable t))) ;; Enable the experimental completion mode
+;;           :activation-fn (lsp-activate-on "elixir")
+;;           :server-id 'next-ls))
+
+;;   (lsp-defcustom lsp-next-ls-completion-enabled t
+;;     "Completions enabled"
+;;     :type 'boolean
+;;     :group 'next-ls
+;;     :lsp-path "next-ls.nextLS.experimental.completions.enable")
+
+;;   (lsp-defcustom lsp-next-ls-spitfire-enabled t
+;;     "Spitfire enabled"
+;;     :type 'boolean
+;;     :group 'next-ls
+;;     :lsp-path "next-ls.nextLS.spitfire"))

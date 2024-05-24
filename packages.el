@@ -4,13 +4,25 @@
 (disable-packages! anaconda-mode ocamlformat code-review writegood-mode)
 
 ;; (package! evil-textobj-treesitter)
-(package! pdf-tools :built-in 'prefer)
-
 ;; (package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode"))
 
 (package! outline-minor-faces)
 
-(unpin! lsp-mode lsp-haskell rustic magit forge emacsql closql git-commit orgit-forge emacsql emacsql-sqlite-builtin haskell-mode)
+(unpin! lsp-mode lsp-haskell rustic magit
+        forge emacsql closql git-commit
+        orgit-forge emacsql emacsql-sqlite-builtin
+        haskell-mode tree-sitter tree-sitter-langs
+        tree-sitter-indent
+        consult
+        vertico
+        corfu
+        pdf-tools
+        parinfer-rust-mode)
+
+(package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
+
+(package! parinfer-rust-mode
+  :recipe (:host github :repo "justinbarclay/parinfer-rust-mode"))
 
 (package! auth-source-1password
   :recipe (:host github :repo "dlobraico/auth-source-1password"))
@@ -55,8 +67,9 @@
   :recipe (:host github :repo "jdtsmith/indent-bars"))
 
 (package! rustic
-  :recipe (:host github :repo "deftsp/rustic")
-  :pin "c745232b1bf7afc027a0d9c711ad86bbe29ed3bf")
+  :recipe (:host github :repo "emacs-rustic/rustic"))
+ 
+(package! boxes)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 (setq ON-DESKTOP (string= (system-name) "home"))

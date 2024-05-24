@@ -24,17 +24,15 @@
                     (font-spec :family "Fira Code" :size 14))
          doom-big-font (first-font
                         (font-spec :family "Fira Code" :size 28))
-         doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-serif-font (font-spec :family "Fira Code" :size 14)))
+         doom-serif-font (font-spec :family "Latin Modern Mono" :size 18)))
   ("worklaptop"
    (setq doom-font (first-font
                     (font-spec :family "MonoLisa" :size 14)
                     (font-spec :family "Fira Code" :size 14))
          doom-big-font (first-font
                         (font-spec :family "Fira Code" :size 28))
-         doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-serif-font (font-spec :family "Fira Code" :size 14))))
-  
+         doom-serif-font (font-spec :family "Latin Modern Mono" :size 18))))
+
 
 (print doom-font)
 
@@ -118,7 +116,7 @@
         lsp-haskell-server-args '("+RTS" "-N8" "-RTS")
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
         lsp-haskell-tactics-on nil
-        lsp-haskell-max-completions 20)
+        lsp-haskell-max-completions 40)
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 ;; no idea mate
@@ -223,7 +221,16 @@
   (add-hook! haskell-mode
     (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc)
     (add-to-list 'flycheck-disabled-checkers 'haskell-ghc)
-    (add-to-list 'flycheck-disabled-checkers 'haskell-hlint)))
+    (add-to-list 'flycheck-disabled-checkers 'haskell-hlint))
+  (setq flycheck-popup-tip-error-prefix "❌ "))
+
+(after! flycheck-posframe
+  (set-face-attribute 'flycheck-posframe-info-face nil :inherit 'font-lock-variable-name-face)
+  (set-face-attribute 'flycheck-posframe-warning-face nil :inherit 'warning)
+  (set-face-attribute 'flycheck-posframe-error-face nil :inherit 'error)
+  (setq flycheck-posframe-warning-prefix "⚠ "
+        flycheck-posframe-error-prefix "❌ "
+        flycheck-posframe-info-prefix "ⓘ "))
 
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer
@@ -535,8 +542,27 @@
   (setq pixel-scroll-precision-interpolate-page t
         pixel-scroll-precision-use-momentum t))
 
-
-(add-hook! org-mode #'+word-wrap-mode)
+(custom-set-faces!
+ '(org-level-1 :inherit (fixed-pitch-serif outline-1))
+ '(org-level-2 :inherit (fixed-pitch-serif outline-2))
+ '(org-level-3 :inherit (fixed-pitch-serif outline-3))
+ '(org-level-4 :inherit (fixed-pitch-serif outline-4))
+ '(org-level-5 :inherit (fixed-pitch-serif outline-5))
+ '(org-level-6 :inherit (fixed-pitch-serif outline-6))
+ '(org-level-7 :inherit (fixed-pitch-serif outline-7))
+ '(org-level-8 :inherit (fixed-pitch-serif outline-8))
+ '(org-verse :inherit (shadow fixed-pitch-serif))
+ '(org-verbatim :inherit (shadow fixed-pitch))
+ '(org-quote :inherit (fixed-pitch-serif)))
 
 (after! org-mode
+  (add-hook! org-mode #'+word-wrap-mode)
   (defun org-do-latex-and-related (&rest _)))
+
+(setq window-combination-resize t
+      mouse-drag-and-drop-region-cross-program t
+      scroll-margin 0)
+
+(setq parinfer-rust-disable-troublesome-modes t)
+
+(setq pdf-tools-installer-os "nixos")

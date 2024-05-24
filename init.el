@@ -35,6 +35,7 @@
          (vertico)
 
          :ui
+         zen
          workspaces
          (vc-gutter +pretty +diff-hl)
          (popup
@@ -61,6 +62,8 @@
 
          :term
          eshell
+         vterm
+         shell
 
          :tools
          tree-sitter
@@ -168,3 +171,4 @@
       '((yaml-mode . yaml-ts-mode)
         (json-mode . json-ts-mode)
         (tsx-ts-mode . typescript-tsx-mode)))
+        
