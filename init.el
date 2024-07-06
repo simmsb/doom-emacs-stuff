@@ -76,7 +76,6 @@
          editorconfig
          (magit +forge)
          direnv
-         gist
          ;; (pass +auth)
          pdf
          rgb
@@ -114,7 +113,7 @@
          ;(java +lsp)
          ;(kotlin +lsp)
          (javascript +lsp +tree-sitter)
-         (latex +pdf-tools)
+         ;(latex +pdf-tools)
          markdown
          ;(csharp +lsp)
          hcl

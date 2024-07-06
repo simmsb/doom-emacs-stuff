@@ -1,15 +1,15 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; private/ben/packages.el
 
-(disable-packages! anaconda-mode ocamlformat code-review writegood-mode)
+(disable-packages! anaconda-mode ocamlformat code-review writegood-mode flyspell)
 
 ;; (package! evil-textobj-treesitter)
-;; (package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode"))
+(package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")))
 
 (package! outline-minor-faces)
 
-(unpin! lsp-mode lsp-haskell rustic magit
-        forge emacsql closql git-commit
+(unpin! lsp-mode lsp-haskell rustic 
+        git-commit
         orgit-forge emacsql emacsql-sqlite-builtin
         haskell-mode tree-sitter tree-sitter-langs
         tree-sitter-indent
@@ -17,7 +17,8 @@
         vertico
         corfu
         pdf-tools
-        parinfer-rust-mode)
+        parinfer-rust-mode
+        magit transient forge)
 
 (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 
@@ -27,14 +28,13 @@
 (package! auth-source-1password
   :recipe (:host github :repo "dlobraico/auth-source-1password"))
 
-(package! emacsql-sqlite-builtin
-  :recipe (:host github :repo "magit/emacsql"))
-(package! emacsql
-  :recipe (:host github :repo "magit/emacsql"))
+;(package! emacsql-sqlite-builtin
+;  :recipe (:host github :repo "magit/emacsql"))
+;(package! emacsql
+;  :recipe (:host github :repo "magit/emacsql"))
 
-(package! magit :recipe (:host github :repo "simmsb/magit"))
- 
-
+(package! magit :recipe (:host github :repo "magit/magit"))
+(package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
  
 
@@ -98,3 +98,5 @@
 ;;   (package! mu4e-alert))
 
 (package! f)
+
+(package! auto-dark)

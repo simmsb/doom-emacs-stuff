@@ -34,8 +34,6 @@
          doom-serif-font (font-spec :family "Latin Modern Mono" :size 18))))
 
 
-(print doom-font)
-
 ;; bindings
 (map!
  (:leader
@@ -114,7 +112,7 @@
 
   (setq lsp-haskell-formatting-provider "ormolu"
         lsp-haskell-server-args '("+RTS" "-N8" "-RTS")
-        lsp-haskell-plugin-ghcide-type-lenses-config-mode "exported"
+        lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
         lsp-haskell-tactics-on nil
         lsp-haskell-max-completions 40)
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
@@ -203,19 +201,29 @@
         orig-result)))
   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
 
-
-
-
-
-
-
 (after! magit
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
-  (remove-hook 'magit-status-sections-hook 'forge-insert-issues)
-  (remove-hook 'magit-status-sections-hook 'forge-insert-pullreqs)
-  (remove-hook 'magit-refs-sections-hook 'magit-insert-tags))
+  (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
+  (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-refs-sections-hook 'magit-insert-tags)
 
 
+  (defvar magit--rev-name-cache (make-hash-table :test 'equal))
+  (defvar magit--rev-name-cache-revision nil)
+
+  (defun magit--rev-name-cached (orig-fun rev &optional pattern not-anchored)
+    (let* ((current-head (magit-rev-parse "HEAD")))
+      (when (not (equal current-head magit--rev-name-cache-revision))
+        (clrhash magit--rev-name-cache)
+        (set-variable 'magit--rev-name-cache-revision current-head)))
+    (let ((e (gethash rev magit--rev-name-cache)))
+      (if e
+          e
+          (let ((e (apply orig-fun rev pattern not-anchored)))
+            (puthash rev e magit--rev-name-cache)
+            e))))
+
+  (advice-add 'magit-rev-name :around #'magit--rev-name-cached))
 
 (after! flycheck
   (add-hook! haskell-mode
@@ -333,18 +341,23 @@
   (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
   (setq treemacs-silent-refresh t
         treemacs-read-string-input 'from-minibuffer))
-
 (after! forge
-  (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
-  (advice-remove 'forge-dispatch '+magit--forge-build-binary-lazily-a)
-  (if (atom forge-topic-list-limit)
-      (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
-    (setcdr forge-topic-list-limit -5))
+  ;; (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
+  ;; (advice-remove 'forge-dispatch '+magit--forge-build-binary-lazily-a)
+  ;; (if (atom forge-topic-list-limit)
+  ;;     (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
+  ;;   (setcdr forge-topic-list-limit -5))
 
   (add-to-list 'transient-levels '(forge-dispatch (t . 7)))
 
   (transient-append-suffix 'magit-branch '(3 2 0)
-    '("i" "new for issue" forge-create-branch-for-issue)))
+    '("i" "new for issue" forge-create-branch-for-issue))
+
+  (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-issues :append t))
+  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-notifications :append t))
+  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues :append t)
+  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-authored-pullreqs :append t)
+  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-requested-reviews :append t))
 
 
 ;; (defun cc-bytecomp-is-compiling (&rest _))
@@ -493,6 +506,7 @@
   :hook (prog-mode . indent-bars-mode)
   :config
   (setq
+   ;indent-bars-prefer-character (eq (window-system) 'ns)
    indent-bars-color '(highlight :face-bg t :blend 0.2)
    indent-bars-pattern "."
    indent-bars-width-frac 0.2
@@ -519,12 +533,12 @@
   :config
   (auth-source-1password-enable))
 
-;; (use-package! typst-ts-mode
-;;   :defer t
-;;   :config
-;;   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
-;;   :custom
-;;   (typst-ts-mode-watch-options "--open"))
+ (use-package! typst-ts-mode
+   :defer t
+   :config
+   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
+   :custom
+   (typst-ts-mode-watch-options "--open"))
 ;;
 (setq mac-command-modifier 'meta
       mac-option-modifier nil)
@@ -566,3 +580,11 @@
 (setq parinfer-rust-disable-troublesome-modes t)
 
 (setq pdf-tools-installer-os "nixos")
+
+(use-package! auto-dark)
+
+(after! doom-ui
+  (setq! auto-dark-allow-osascript t
+         auto-dark-dark-theme 'doom-oceanic-next
+         auto-dark-light-theme 'doom-tomorrow-day)
+  (auto-dark-mode 1))
