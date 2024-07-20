@@ -42,7 +42,9 @@
   (:prefix "o"
    :desc "Open Shopping" "s" #'org-shopping-open
    :desc "Open kill ring" "k" #'+default/yank-pop
-   :desc "Open notes.org" "n" #'org-notes-open))
+   :desc "Open notes.org" "n" #'org-notes-open)
+  (:prefix "s"
+   :desc "Search project (affe)" "P" #'affe-grep))
 
  (:map evilem-map
   :after evil-easymotion
@@ -63,7 +65,27 @@
  "<home>" #'back-to-indentation-or-beginning
  "<end>" #'end-of-line
  "s-q" #'prog-fill-reindent-defun
- "<f6>" #'evil-switch-to-windows-last-buffer)
+ "<f6>" #'evil-switch-to-windows-last-buffer
+ "<wheel-left>" #'do-nothing
+ "<wheel-right>" #'do-nothing
+ "<double-wheel-left>" #'do-nothing
+ "<double-wheel-right>" #'do-nothing
+ "<triple-wheel-left>" #'do-nothing
+ "<triple-wheel-right>" #'do-nothing)
+
+(defun affe-orderless-regexp-compiler (input _type _ignorecase)
+  (setq input (cdr (orderless-compile input)))
+  (cons input (apply-partially #'orderless--highlight input t)))
+
+(use-package! affe
+  :after '(orderless)
+  :custom
+  ((affe-regexp-compiler . #'affe-orderless-regexp-compiler)))
+
+
+(defun do-nothing (&rest _)
+  (interactive)
+  "Does nothing.")
 
 (use-package! disable-mouse)
 (use-package! github-review)
@@ -114,7 +136,8 @@
         lsp-haskell-server-args '("+RTS" "-N8" "-RTS")
         lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
         lsp-haskell-tactics-on nil
-        lsp-haskell-max-completions 40)
+        lsp-haskell-max-completions 40
+        lsp-haskell-session-loading "multipleComponents")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
 
 ;; no idea mate
@@ -150,8 +173,8 @@
 ;;     :server-id 'brossa-lsp)))
 
 (after! lsp-mode
-  (lsp-ui-mode +1)
   (setq lsp-lens-enable nil
+        +lsp-defer-shutdown nil
         lsp-inlay-hint-enable t
         lsp-modeline-diagnostics-scope :project
         lsp-restart 'auto-restart
@@ -455,9 +478,8 @@
                '(lsp-capf (styles basic partial-completion orderless))))
 
 (after! corfu
-  (require 'cape))
-
-(setq +corfu-want-minibuffer-completion 'agressive)
+  (require 'cape)
+  (setq global-corfu-minibuffer nil))
 
 (use-package! corfu-echo
   :after corfu
@@ -533,12 +555,12 @@
   :config
   (auth-source-1password-enable))
 
- (use-package! typst-ts-mode
-   :defer t
-   :config
-   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
-   :custom
-   (typst-ts-mode-watch-options "--open"))
+(use-package! typst-ts-mode
+  :defer t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
+  :custom
+  (typst-ts-mode-watch-options "--open"))
 ;;
 (setq mac-command-modifier 'meta
       mac-option-modifier nil)
@@ -588,3 +610,6 @@
          auto-dark-dark-theme 'doom-oceanic-next
          auto-dark-light-theme 'doom-tomorrow-day)
   (auto-dark-mode 1))
+
+(after! markdown
+  (setq markdown-fontify-code-blocks-natively t))

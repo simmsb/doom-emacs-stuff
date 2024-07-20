@@ -100,3 +100,5 @@
 (package! f)
 
 (package! auto-dark)
+
+(package! affe)
