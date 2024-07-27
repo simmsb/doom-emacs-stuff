@@ -102,3 +102,5 @@
 (package! auto-dark)
 
 (package! affe)
+
+(package! scad-mode)

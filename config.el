@@ -613,3 +613,12 @@
 
 (after! markdown
   (setq markdown-fontify-code-blocks-natively t))
+
+(use-package! scad-mode
+  :defer t
+  :mode "\\.scad\\'")
+
+(after! dtrt-indent
+  (add-to-list 'dtrt-indent-hook-mapping-list '(scad-mode c/c++/java c-basic-offset)))
+
+(dtrt-indent-global-mode +1)

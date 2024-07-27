@@ -168,6 +168,5 @@
 
 (setq major-mode-remap-alist
       '((yaml-mode . yaml-ts-mode)
-        (json-mode . json-ts-mode)
-        (tsx-ts-mode . typescript-tsx-mode)))
-        
+        (json-mode . json-ts-mode)))
+        ;; (tsx-ts-mode . typescript-tsx-mode)))
