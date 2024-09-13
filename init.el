@@ -57,7 +57,7 @@
          undo
          (ibuffer +icons)
          vc
-         (dired +icons)
+         (dired +icons +dirvish)
          electric
 
          :term
