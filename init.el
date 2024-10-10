@@ -7,6 +7,11 @@
 
 ;; (appendq! doom-env-deny '("^ALACRITTY" "^STARSHIP" "^ATUIN" "^ZELLIJ" "^SHELL"))
 
+(defadvice! straight-use-recipes-ignore-nongnu-elpa-a (fn recipe)
+  :around #'straight-use-recipes
+  (unless (eq 'nongnu-elpa (car recipe))
+    (funcall fn recipe)))
+
 
 (setq ON-DESKTOP (string= (system-name) "home"))
 (setq ON-LAPTOP (string= (system-name) "laptop"))
@@ -16,7 +21,7 @@
          file-templates
          snippets
          (evil +everywhere)
-         format
+         (format +lsp)
          multiple-cursors
          (parinfer +rust)
          rotate-text
@@ -51,7 +56,6 @@
          treemacs
          vi-tilde-fringe
          window-select
-         (emoji +unicode)
 
          :emacs
          undo

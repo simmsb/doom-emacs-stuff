@@ -32,8 +32,8 @@
 ;  :recipe (:host github :repo "magit/emacsql"))
 ;(package! emacsql
 ;  :recipe (:host github :repo "magit/emacsql"))
-
-(package! magit :recipe (:host github :repo "magit/magit"))
+;(package! magit :recipe (:host github :repo "CeleritasCelery/magit") :pin nil)
+;(package! magit :recipe (:host github :repo "magit/magit"))
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
  

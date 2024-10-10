@@ -183,7 +183,8 @@
         lsp-headerline-breadcrumb-enable nil
         lsp-ui-doc-show-with-cursor nil
         lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-diagnostic-max-lines 10)
+        lsp-ui-sideline-diagnostic-max-lines 10
+        lsp-auto-execute-action nil)
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets"
