@@ -10,7 +10,7 @@
 
 (unpin! lsp-mode lsp-haskell rustic 
         git-commit
-        orgit-forge emacsql emacsql-sqlite-builtin
+        orgit-forge 
         haskell-mode tree-sitter tree-sitter-langs
         tree-sitter-indent
         consult
@@ -32,8 +32,8 @@
 ;  :recipe (:host github :repo "magit/emacsql"))
 ;(package! emacsql
 ;  :recipe (:host github :repo "magit/emacsql"))
-;(package! magit :recipe (:host github :repo "CeleritasCelery/magit") :pin nil)
-;(package! magit :recipe (:host github :repo "magit/magit"))
+;(package! magit :recipe (:host github :repo "simmsb/magit" :branch "aaa") :pin "282cc8bc2b100c14dfa8350ec0159ec3bbdc7916")
+(package! magit :recipe (:host github :repo "magit/magit") :pin "f2a61334430291d2162a68138c95ab310a8557f1")
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
  

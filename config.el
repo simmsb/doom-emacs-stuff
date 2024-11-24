@@ -138,7 +138,29 @@
         lsp-haskell-tactics-on nil
         lsp-haskell-max-completions 40
         lsp-haskell-session-loading "multipleComponents")
-  (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed))
+  (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed)
+
+  (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
+    "Display the type signature of the function under point."
+    (let* ((groups (--filter (s-equals? "```haskell" (car it))
+                             (-partition-by #'s-blank?
+                                            (->> (lsp-get contents :value)
+                                                 s-trim
+                                                 s-lines))))
+           (type-sig-group
+            (car (--filter (--any? (s-contains? (symbol-name (symbol-at-point))
+                                                it)
+                                   it)
+                           groups))))
+      (lsp--render-string
+       (->> (or type-sig-group (car groups))
+            (-drop 1)                     ; ``` LANG
+            (-drop-last 1)                ; ```
+            (-map #'s-trim)
+            (s-join " "))
+       "haskell"))))
+
+
 
 ;; no idea mate
 ;; (after! browse-url
@@ -243,9 +265,9 @@
     (let ((e (gethash rev magit--rev-name-cache)))
       (if e
           e
-          (let ((e (apply orig-fun rev pattern not-anchored)))
-            (puthash rev e magit--rev-name-cache)
-            e))))
+        (let ((e (apply orig-fun rev pattern not-anchored)))
+          (puthash rev e magit--rev-name-cache)
+          e))))
 
   (advice-add 'magit-rev-name :around #'magit--rev-name-cached))
 
@@ -309,10 +331,10 @@
 
 (after! evil
   (setq ;; evil-normal-state-cursor '(box "light blue")
-        ;; evil-insert-state-cursor '(bar "medium sea green")
-        ;; evil-visual-state-cursor '(hollow "orange")
-        evil-want-fine-undo t
-        evil-kill-on-visual-paste nil)
+   ;; evil-insert-state-cursor '(bar "medium sea green")
+   ;; evil-visual-state-cursor '(hollow "orange")
+   evil-want-fine-undo t
+   evil-kill-on-visual-paste nil)
   (setq evil-vsplit-window-right t
         evil-split-window-below t)
   ;; stops the evil selection being added to the kill-ring
@@ -378,10 +400,10 @@
     '("i" "new for issue" forge-create-branch-for-issue))
 
   (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-issues :append t))
-  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-notifications :append t))
-  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues :append t)
-  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-authored-pullreqs :append t)
-  ;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-requested-reviews :append t))
+;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-notifications :append t))
+;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-assigned-issues :append t)
+;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-authored-pullreqs :append t)
+;; (magit-add-section-hook 'magit-status-sections-hook 'forge-insert-requested-reviews :append t))
 
 
 ;; (defun cc-bytecomp-is-compiling (&rest _))
@@ -529,7 +551,7 @@
   :hook (prog-mode . indent-bars-mode)
   :config
   (setq
-   ;indent-bars-prefer-character (eq (window-system) 'ns)
+                                        ;indent-bars-prefer-character (eq (window-system) 'ns)
    indent-bars-color '(highlight :face-bg t :blend 0.2)
    indent-bars-pattern "."
    indent-bars-width-frac 0.2
@@ -580,17 +602,17 @@
         pixel-scroll-precision-use-momentum t))
 
 (custom-set-faces!
- '(org-level-1 :inherit (fixed-pitch-serif outline-1))
- '(org-level-2 :inherit (fixed-pitch-serif outline-2))
- '(org-level-3 :inherit (fixed-pitch-serif outline-3))
- '(org-level-4 :inherit (fixed-pitch-serif outline-4))
- '(org-level-5 :inherit (fixed-pitch-serif outline-5))
- '(org-level-6 :inherit (fixed-pitch-serif outline-6))
- '(org-level-7 :inherit (fixed-pitch-serif outline-7))
- '(org-level-8 :inherit (fixed-pitch-serif outline-8))
- '(org-verse :inherit (shadow fixed-pitch-serif))
- '(org-verbatim :inherit (shadow fixed-pitch))
- '(org-quote :inherit (fixed-pitch-serif)))
+  '(org-level-1 :inherit (fixed-pitch-serif outline-1))
+  '(org-level-2 :inherit (fixed-pitch-serif outline-2))
+  '(org-level-3 :inherit (fixed-pitch-serif outline-3))
+  '(org-level-4 :inherit (fixed-pitch-serif outline-4))
+  '(org-level-5 :inherit (fixed-pitch-serif outline-5))
+  '(org-level-6 :inherit (fixed-pitch-serif outline-6))
+  '(org-level-7 :inherit (fixed-pitch-serif outline-7))
+  '(org-level-8 :inherit (fixed-pitch-serif outline-8))
+  '(org-verse :inherit (shadow fixed-pitch-serif))
+  '(org-verbatim :inherit (shadow fixed-pitch))
+  '(org-quote :inherit (fixed-pitch-serif)))
 
 (after! org-mode
   (add-hook! org-mode #'+word-wrap-mode)
