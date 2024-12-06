@@ -4,6 +4,7 @@
 (setq ON-LAPTOP (string= (system-name) "laptop"))
 
 (require 'cl-lib)
+(require 'f)
 
 (defun first-font (&rest fonts)
   (cl-find-if #'find-font fonts))
@@ -57,6 +58,8 @@
        "<up>"       #'evil-window-up
        "<down>"     #'evil-window-down)
 
+ ;; (:map evil-normal-state-map
+ ;;       "d" #'evil-delete-without-register-if-whitespace)
  ;; in lisp modes use default evil-delete for parinfer magic
  ;; (:mode (emacs-lisp-mode clojure-mode scheme-mode lisp-mode)
  ;;  :i "<backspace>" #'parinfer-backward-delete-char
@@ -82,7 +85,6 @@
   :custom
   ((affe-regexp-compiler . #'affe-orderless-regexp-compiler)))
 
-
 (defun do-nothing (&rest _)
   (interactive)
   "Does nothing.")
@@ -101,9 +103,7 @@
 (use-package! geros
   :defer t
   :config
-  (setq geros-eval-result-duration nil)
-  :hook
-  (geiser-mode . geros-mode))
+  (setq geros-eval-result-duration nil))
 
 (use-package! evil-lion
   :config
@@ -122,6 +122,34 @@
 (use-package! esh-autosuggest
   :defer t
   :hook (eshell-mode . esh-autosuggest-mode))
+
+;; (use-package! lsp-copilot
+;;   :config
+;;   (setq lsp-copilot-user-languages-config (f-join doom-user-dir "languages.toml"))
+;;   (add-hook! '(
+;;                tsx-ts-mode-hook
+;;                js-ts-mode-hook
+;;                typescript-mode-hook
+;;                typescript-ts-mode-hook
+;;                rjsx-mode-hook
+;;                less-css-mode-hook
+;;                web-mode-hook
+;;                python-ts-mode-hook
+;;                rust-mode-hook
+;;                rustic-mode-hook
+;;                rust-ts-mode-hook
+;;                toml-ts-mode-hook
+;;                conf-toml-mode-hook
+;;                bash-ts-mode-hook)
+;;               #'lsp-copilot-mode))
+
+;; Doom Emacs
+(set-lookup-handlers! 'lsp-copilot-mode
+    :definition '(lsp-copilot-find-definition :async t)
+    :references '(lsp-copilot-find-references :async t)
+    :implementations '(lsp-copilot-find-implementations :async t)
+    :type-definition '(lsp-copilot-find-type-definition :async t)
+    :documentation '(lsp-copilot-describe-thing-at-point :async t))
 
 (after! lsp-haskell
 
@@ -345,7 +373,13 @@
   (advice-add 'evil-ex-search-next :after
               (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos))))
   (advice-add 'evil-ex-search-previous :after
-              (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos)))))
+              (lambda (&rest _x) (evil-scroll-line-to-center (line-number-at-pos))))
+  (evil-define-operator evil-delete-without-register-if-whitespace (beg end type reg yank-handler)
+    (interactive "<R><y>")
+    (let ((text (replace-regexp-in-string "\n" "" (filter-buffer-substring beg end))))
+      (if (string-match-p "^\\s-*$" text)
+          (evil-delete beg end type ?_)
+        (evil-delete beg end type reg yank-handler)))))
 
 (after! consult
   (consult-customize
@@ -645,3 +679,6 @@
   (add-to-list 'dtrt-indent-hook-mapping-list '(scad-mode c/c++/java c-basic-offset)))
 
 (dtrt-indent-global-mode +1)
+
+(setq flyspell-delay-use-timer t)
+(setq rust-ts-mode-fontify-number-suffix-as-type t)

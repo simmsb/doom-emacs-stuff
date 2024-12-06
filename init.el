@@ -143,8 +143,6 @@
          ;; Applications are complex and opinionated modules that transform Emacs
          ;; toward a specific purpose. They may have additional dependencies and
          ;; should be loaded late.
-         :app
-         irc
          :config
          ;; The default module set reasonable defaults for Emacs. It also provides
          ;; a Spacemacs-inspired keybinding scheme, a custom yasnippet library,

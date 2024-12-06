@@ -8,9 +8,9 @@
 
 (package! outline-minor-faces)
 
-(unpin! lsp-mode lsp-haskell rustic 
+(unpin! lsp-mode lsp-haskell rustic
         git-commit
-        orgit-forge 
+        orgit-forge
         haskell-mode tree-sitter tree-sitter-langs
         tree-sitter-indent
         consult
@@ -36,13 +36,13 @@
 (package! magit :recipe (:host github :repo "magit/magit") :pin "f2a61334430291d2162a68138c95ab310a8557f1")
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
- 
+
 
 (package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces
   :recipe (:host github :repo "tecosaur/engrave-faces"))
- 
+
 
 (package! zone-matrix-wake-up
   :recipe (:host github :repo "vreeze/zone-matrix-wake-up"))
@@ -68,7 +68,7 @@
 
 (package! rustic
   :recipe (:host github :repo "emacs-rustic/rustic"))
- 
+
 (package! boxes)
 
 (setq ON-LAPTOP (string= (system-name) "laptop"))
@@ -104,3 +104,7 @@
 (package! affe)
 
 (package! scad-mode)
+
+;; (package! lsp-copilot :recipe (:host github :repo "jadestrong/lsp-copilot"
+;;                                :files ("lsp-copilot.el" "lsp-copilot")
+;;                                :pre-build (("cargo" "build" "--release") ("cp" "./target/release/lsp-copilot" "./"))))
