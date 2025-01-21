@@ -9,7 +9,6 @@
 (package! outline-minor-faces)
 
 (unpin! lsp-mode lsp-haskell rustic
-        git-commit
         orgit-forge
         haskell-mode tree-sitter tree-sitter-langs
         tree-sitter-indent
@@ -37,8 +36,18 @@
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
 
+(package! nushell-mode :recipe (:host github :repo "mrkkrp/nushell-mode"))
 
-(package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
+;; (package! jujutsu :recipe (:host github :repo "bennyandresen/jujutsu.el"))
+
+(package! lsp-haskell :recipe (:host github :repo "magthe/lsp-haskell") :pin "8ab3e7fde0a275284c4ad4c58c0d12bc0a00ebaa")
+;; (package! haskell-ts-mode
+;;   :recipe (
+;;            :host codeberg
+;;            :repo "pranshu/haskell-ts-mode"
+;;            :branch "main"))
+
+;(package! lsp-haskell :recipe (:host github :repo "emacs-lsp/lsp-haskell"))
 
 (package! engrave-faces
   :recipe (:host github :repo "tecosaur/engrave-faces"))
@@ -71,15 +80,8 @@
 
 (package! boxes)
 
-(setq ON-LAPTOP (string= (system-name) "laptop"))
-(setq ON-DESKTOP (string= (system-name) "home"))
-
-(package! ultra-scroll-mac
-  :recipe (:host github :repo "jdtsmith/ultra-scroll-mac"))
-
-(if ON-LAPTOP
-    (disable-packages! lsp-haskell flycheck-haskell)
-  (package! discord-emacs :recipe (:host github :repo "simmsb/discord-emacs.el")))
+(package! ultra-scroll
+  :recipe (:host github :repo "jdtsmith/ultra-scroll"))
 
 (package! citeproc)
 ;; (package! org-ref)
@@ -94,8 +96,6 @@
 (package! org-sticky-header)
 (package! backline)
 (package! esh-autosuggest)
-;; (when ON-DESKTOP
-;;   (package! mu4e-alert))
 
 (package! f)
 
@@ -104,6 +104,9 @@
 (package! affe)
 
 (package! scad-mode)
+
+(package! difftastic
+  :recipe (:host github :repo "pkryger/difftastic.el"))
 
 ;; (package! lsp-copilot :recipe (:host github :repo "jadestrong/lsp-copilot"
 ;;                                :files ("lsp-copilot.el" "lsp-copilot")

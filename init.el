@@ -93,6 +93,7 @@
 
          :lang
          art
+         haskell-ts-mode
          (zig +tree-sitter +lsp)
          (nix +tree-sitter +lsp)
          (ocaml +tree-sitter +lsp)
@@ -172,3 +173,5 @@
       '((yaml-mode . yaml-ts-mode)
         (json-mode . json-ts-mode)))
         ;; (tsx-ts-mode . typescript-tsx-mode)))
+
+(setq shell-file-name (executable-find "bash"))
