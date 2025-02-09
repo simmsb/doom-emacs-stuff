@@ -3,6 +3,14 @@
 
 (setq comp-speed 2)
 
+;; Ensure Emacs loads the most recent byte-compiled files.
+(setq load-prefer-newer t)
+
+;; Ensure JIT compilation is enabled for improved performance by
+;; native-compiling loaded .elc files asynchronously
+(setq native-comp-jit-compilation t)
+(setq native-comp-deferred-compilation t) ; Deprecated in Emacs > 29.1
+
 (setenv "LSP_USE_PLISTS" "1")
 
 ;; (appendq! doom-env-deny '("^ALACRITTY" "^STARSHIP" "^ATUIN" "^ZELLIJ" "^SHELL"))
@@ -37,7 +45,7 @@
          ;; company
          (corfu +icons +orderless +dabbrev +dict)
          ;(ivy +fuzzy +prescient)
-         (vertico)
+         (vertico +icons)
 
          :ui
          zen

@@ -48,7 +48,7 @@
 
 (defvar haskell-ts-font-lock-feature-list
   `((comment str pragma parens)
-    (type definition function args)
+    (type definition function args lambda module import)
     (match keyword)
     (otherwise signature type-sig)))
 
@@ -88,15 +88,26 @@
       "if" "then" "else" "of" "do" "in" "instance" "class"
       "newtype" "family" "deriving" "via" "stock" "anyclass"]
      @font-lock-keyword-face)
+
    :language 'haskell
    :feature 'otherwise
    :override t
    `(((match (guards guard: (boolean (variable) @font-lock-keyword-face)))
       (:match "otherwise" @font-lock-keyword-face)))
+
+   :language 'haskell
+   :feature 'module
+   '((module (module_id) @font-lock-type-face))
+
+   :language 'haskell
+   :feature 'import
+   '((import ["qualified" "as"] @font-lock-keyword-face))
+
    :language 'haskell
    :feature 'type-sig
    "(signature (binding_list (variable) @font-lock-doc-markup-face))
     (signature (variable) @font-lock-doc-markup-face)"
+
    :language 'haskell
    :feature 'args
    :override 'keep
@@ -106,29 +117,37 @@
     "(generator . (_) @haskell-ts--fontify-arg)"
     "(bind (as (variable) . (_) @haskell-ts--fontify-arg))"
     "(patterns) @haskell-ts--fontify-arg")
+
    :language 'haskell
    :feature 'type
    `((type) @font-lock-type-face
-     (constructor) @font-lock-type-face)
+     (constructor) @font-lock-type-face
+     (_ type: (function arrow: _ @font-lock-operator-face)))
+
    :language 'haskell
    :override t
    :feature 'signature
    `((signature (function) @haskell-ts--fontify-type)
-     (context (function) @haskell-ts--fontify-type))
+     (context (function) @haskell-ts--fontify-type)
+     (signature "::" @font-lock-operator-face))
+
    :language 'haskell
    :feature 'match
    `((match ("|" @font-lock-doc-face) ("=" @font-lock-doc-face))
      (list_comprehension ("|" @font-lock-doc-face
                           (qualifiers (generator "<-" @font-lock-doc-face))))
      (match ("->" @font-lock-doc-face)))
+
    :language 'haskell
    :feature 'comment
    `(((comment) @font-lock-comment-face)
      ((haddock) @font-lock-doc-face))
+
    :language 'haskell
    :feature 'pragma
    `((pragma) @font-lock-preprocessor-face
      (cpp) @font-lock-preprocessor-face)
+
    :language 'haskell
    :feature 'str
    :override t
@@ -136,11 +155,13 @@
      (string) @font-lock-string-face
      (quasiquote (quoter) @font-lock-type-face)
      (quasiquote (quasiquote_body) @font-lock-preprocessor-face))
+
    :language 'haskell
    :feature 'parens
    :override t
    `(["(" ")" "[" "]"] @font-lock-operator-face
      (infix operator: (_) @font-lock-operator-face))
+
    :language 'haskell
    :feature 'function
    :override t
@@ -151,10 +172,11 @@
      (bind (infix (variable) @font-lock-function-name-face) "<-")
      (function (infix (infix_id (variable) @font-lock-function-name-face)))
      (bind (as (variable) @font-lock-function-name-face)))
-    :language 'haskell
-    :feature 'lambda
-    :override t
-    `((lambda ("\\" @font-lock-doc-face) ("->" @font-lock-doc-face))))
+
+   :language 'haskell
+   :feature 'lambda
+   :override t
+   `((lambda ("\\" @font-lock-doc-face) ("->" @font-lock-doc-face))))
   "The treesitter font lock settings for haskell.")
 
 (defun haskell-ts--standalone-parent (_ parent bol)
@@ -170,7 +192,7 @@
         (haskell-ts--standalone-parent 1 (funcall
                                           (if bol #'treesit-node-parent #'identity)
                                           (treesit-node-parent parent))
-                                        nil)))))
+                                       nil)))))
 
 (defvar haskell-ts--ignore-types
   (regexp-opt '("comment" "cpp" "haddock"))
@@ -215,7 +237,7 @@
            (type (treesit-node-type node-on-line-above))
            (line-empty (looking-at-p "[[:blank:]]*$")))
       (if (and (not line-empty)
-               (member type '("class" "instance" "type_family")))
+               (member type '("class" "instance" "type_family" "function")))
           2
         0))))
 
@@ -237,17 +259,17 @@
         ;; however if the length is greater than, return the bind variable so that we
         ;; indent to it
         (if (length< children 4)
-          (let* ((rhs (car-safe (last children)))
-                 ;; if the rhs is a match node this was an `a = b' bind
-                 (real-rhs (if (string= (treesit-node-type rhs) "match")
-                               (treesit-node-child rhs -1)
-                             rhs)))
-            (if (equal (treesit-node-start real-rhs)
-                       (treesit-node-end real-rhs))
-                ;; if the expr has zero size, return the bind instead. treesitter likes
-                ;; to give a zero length variable for an unterminated `x <-'
-              parent
-              real-rhs))
+            (let* ((rhs (car-safe (last children)))
+                   ;; if the rhs is a match node this was an `a = b' bind
+                   (real-rhs (if (string= (treesit-node-type rhs) "match")
+                                 (treesit-node-child rhs -1)
+                               rhs)))
+              (if (equal (treesit-node-start real-rhs)
+                         (treesit-node-end real-rhs))
+                  ;; if the expr has zero size, return the bind instead. treesitter likes
+                  ;; to give a zero length variable for an unterminated `x <-'
+                  parent
+                real-rhs))
           (car-safe children))))
      ;; on a let, find the local_binds and return the first
      ((string= node-type "let")
@@ -265,7 +287,7 @@
         (if (equal (treesit-node-start expr)
                    (treesit-node-end expr))
             bind
-            expr)))
+          expr)))
      ;; on a local_binds (can happen on multiline lets)
      ((string= parent-type "local_binds")
       (let* ((bind (car-safe (treesit-node-children parent)))
@@ -320,15 +342,15 @@
 ;; handle within a record, where we want to indent to the opening brackrt if
 ;; it's on a new line
 (defun haskell-ts--handle-record (_ parent _)
-    (save-excursion
-      (pcase (treesit-query-capture parent haskell-ts--record-stuff)
-        (`((ctor . ,ctor) .
-           ((bracket . ,bracket) . ,_))
-         (let* ((ctor-line (line-number-at-pos (treesit-node-start ctor)))
-                (bracket-line (line-number-at-pos (treesit-node-start bracket))))
-           (if (equal ctor-line bracket-line)
-               (treesit-node-start ctor)
-             (treesit-node-start bracket)))))))
+  (save-excursion
+    (pcase (treesit-query-capture parent haskell-ts--record-stuff)
+      (`((ctor . ,ctor) .
+         ((bracket . ,bracket) . ,_))
+       (let* ((ctor-line (line-number-at-pos (treesit-node-start ctor)))
+              (bracket-line (line-number-at-pos (treesit-node-start bracket))))
+         (if (equal ctor-line bracket-line)
+             (treesit-node-start ctor)
+           (treesit-node-start bracket)))))))
 
 (defun haskell-ts--handle-tuple/list (node parent _)
   (let ((paren (treesit-node-child parent 0))
@@ -495,6 +517,22 @@
   "C-c C-c" #'haskell-ts-compile-region-and-go
   "C-c C-r" #'run-haskell)
 
+(defun haskell-ts-mode--comment-forward (n)
+  (while (> n 0)
+    (setq n
+          (if (and (looking-at comment-start-skip)
+                   (goto-char (match-end 0))
+                   (re-search-forward comment-end-skip nil 'move))
+            (1- n)
+            -1)))
+  (= n 0))
+
+(defun +haskell-ts--inhibit-forward-comment (orig-fn &optional n)
+  (setq n (or n 1))
+  (if (eq major-mode 'haskell-ts-mode)
+      (haskell-ts-mode--comment-forward n)
+    (funcall orig-fn n)))
+
 ;;;###autoload
 (define-derived-mode haskell-ts-mode prog-mode "haskell ts mode"
   "Major mode for Haskell files using tree-sitter."
@@ -510,9 +548,18 @@
     (setq-local treesit-simple-indent-rules haskell-ts-indent-rules)
     (setq-local indent-tabs-mode nil))
   ;; Comment
-  (setq-local comment-start "-- ")
+  (setq-local comment-start "--")
   (setq-local comment-use-syntax t)
-  (setq-local comment-start-skip "\\(?: \\|^\\)-+")
+  (setq-local comment-padding " ")
+  (setq-local comment-start-skip "[-{]-[ \t]*")
+  (setq-local comment-end "")
+  (setq-local comment-end-skip "[ \t]*\\(-}\\|\\s>\\)")
+  (setq-local comment-auto-fill-only-comments t)
+
+  (setq-local paragraph-start (concat " *{-\\([^#]\\|$\\)\\| *-- |\\|" page-delimiter))
+  (setq-local paragraph-separate (concat " *$\\| *\\({-\\([^#]\\|$\\)\\|\\([^#]\\|^\\)-}\\) *$\\|" page-delimiter))
+  (setq-local fill-paragraph-function 'haskell-fill-paragraph)
+
   ;; Electric
   (setq-local electric-pair-pairs
               '((?` . ?`) (?\( . ?\)) (?{ . ?}) (?\" . ?\") (?\[ . ?\])))

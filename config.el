@@ -3,6 +3,17 @@
 (require 'cl-lib)
 (require 'f)
 
+(setq warning-minimum-level :error)
+(setq compile-angel-predicate-function
+      (lambda (file)
+        (and (not (and (file-in-directory-p file doom-user-dir)
+                       (not (file-in-directory-p file (expand-file-name "local" doom-user-dir)))))
+             (not (file-in-directory-p file (expand-file-name "lisp" doom-emacs-dir)))
+             (not (file-in-directory-p file (expand-file-name doom-modules-dir))))))
+
+(compile-angel-on-load-mode)
+(add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
+
 (defun first-font (&rest fonts)
   (cl-find-if #'find-font fonts))
 
@@ -42,8 +53,9 @@
    :desc "Open kill ring" "k" #'+default/yank-pop
    :desc "Open notes.org" "n" #'org-notes-open)
   (:prefix "s"
-   :desc "Search project (affe)" "P" #'affe-grep
-   :desc "Vertico repeat select" "\"" #'vertico-repeat-select))
+   :desc "Search project (affe)" "P" #'affe-grep)
+
+  :desc "Vertico repeat select" "\"" #'vertico-repeat-select)
 
  (:map evilem-map
   :after evil-easymotion
@@ -393,11 +405,19 @@
 
 (setq display-line-numbers-type nil)
 
+(tooltip-mode t)
 (global-subword-mode 1)
+
+(setq blink-matching-paren t
+      blink-matching-paren-highlight-offscreen t)
+
 
 (set-popup-rule! "^\\*Man"
   :side 'right
   :size 0.35)
+
+(set-popup-rule! "^\\*Compile-Log"
+  :ignore t)
 
 ;; (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
@@ -444,8 +464,6 @@
   (sp-local-pair 'python-mode "f\"" "\"" :trigger "f\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
   (sp-local-pair 'python-mode "f'" "'"))
 
-
-(setq doom-theme 'doom-oceanic-next)
 
 (require 'zone)
 (require 'zone-matrix-wake-up)
@@ -502,15 +520,16 @@
 (when (not IS-MAC)
   (zone-when-idle 560))
 
-(use-package  flx-rs
-  :config
-  (setq fussy-score-fn 'fussy-flx-rs-score)
-  (flx-rs-load-dyn))
+;; (use-package  flx-rs
+;;   :config
+;;   (setq fussy-score-fn 'fussy-flx-rs-score)
+;;   (flx-rs-load-dyn))
 
 (use-package! fussy
   :custom
   (fussy-use-cache t)
-  (setq fussy-score-fn 'fussy-flx-rs-score)
+  (setq fussy-score-fn 'fussy-fzf-native-score
+        fussy-score-ALL-fn 'fussy-fzf-score)
   (fussy-filter-fn 'fussy-filter-default)
   :after '(corfu orderless)
   :config
@@ -521,12 +540,23 @@
                           fussy-default-regex-fn 'fussy-pattern-default
                           fussy-prefer-prefix t))))
 
+(use-package! fzf-native
+  :config
+  (fzf-native-load-dyn))
+
 (after! vertico
-  (setq completion-category-defaults '())
+  (cl-defun +vertico-file-search--sort-a (orig-fn &key query in all-files (recursive t) prompt args)
+    (let ((fixed-args (append args '("--sort" "path"))))
+      (funcall orig-fn :query query :in in :all-files all-files :recursive recursive :prompt prompt :args fixed-args)))
+
+  (advice-add '+vertico-file-search :around #'+vertico-file-search--sort-a))
+
+(after! consult
+  (setq completion-category-overrides '())
   (add-to-list 'completion-category-overrides
                '(file (styles +vertico-basic-remote fussy orderless)))
   (add-to-list 'completion-category-overrides
-               '(project-file (styles orderless)))
+               '(project-file (styles fussy orderless)))
   (add-to-list 'completion-category-overrides
                '(buffer (styles fussy orderless)))
   (add-to-list 'completion-category-overrides
@@ -554,39 +584,39 @@
 ;;   :config
 ;;   (setq completion-styles '( orderless basic)))
 
-(after! marginalia
+(after! marginalia)
   ;; (setq marginalia-censor-variables nil)
 
-  (defadvice! +marginalia--anotate-local-file-colorful (cand)
-    "Just a more colourful version of `marginalia--anotate-local-file'."
-    :override #'marginalia--annotate-local-file
-    (when-let (attrs (file-attributes (substitute-in-file-name
-                                       (marginalia--full-candidate cand))
-                                      'integer))
-      (marginalia--fields
-       ((marginalia--file-owner attrs)
-        :width 12 :face 'marginalia-file-owner)
-       ((marginalia--file-modes attrs))
-       ((+marginalia-file-size-colorful (file-attribute-size attrs))
-        :width 7)
-       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
-        :width 12))))
+  ;; (defadvice! +marginalia--anotate-local-file-colorful (cand)
+  ;;   "Just a more colourful version of `marginalia--anotate-local-file'."
+  ;;   :override #'marginalia--annotate-local-file
+  ;;   (when-let (attrs (file-attributes (substitute-in-file-name
+  ;;                                      (marginalia--full-candidate cand))
+  ;;                                     'integer))
+  ;;     (marginalia--fields
+  ;;      ((marginalia--file-owner attrs)
+  ;;       :width 12 :face 'marginalia-file-owner)
+  ;;      ((marginalia--file-modes attrs))
+  ;;      ((+marginalia-file-size-colorful (file-attribute-size attrs))
+  ;;       :width 7)
+  ;;      ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+  ;;       :width 12))))
 
-  (defun +marginalia--time-colorful (time)
-    (let* ((seconds (float-time (time-subtract (current-time) time)))
-           (color (doom-blend
-                   (face-attribute 'marginalia-date :foreground nil t)
-                   (face-attribute 'marginalia-documentation :foreground nil t)
-                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
-      ;; 1 - log(3 + 1/(days + 1)) % grey
-      (propertize (marginalia--time time) 'face (list :foreground color))))
+  ;; (defun +marginalia--time-colorful (time)
+  ;;   (let* ((seconds (float-time (time-subtract (current-time) time)))
+  ;;          (color (doom-blend
+  ;;                  (face-attribute 'marginalia-date :foreground nil t)
+  ;;                  (face-attribute 'marginalia-documentation :foreground nil t)
+  ;;                  (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+  ;;     ;; 1 - log(3 + 1/(days + 1)) % grey
+  ;;     (propertize (marginalia--time time) 'face (list :foreground color))))
 
-  (defun +marginalia-file-size-colorful (size)
-    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
-           (color (if (< size-index 10000000) ; 10m
-                      (doom-blend 'orange 'green size-index)
-                    (doom-blend 'red 'orange (- size-index 1)))))
-      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+  ;; (defun +marginalia-file-size-colorful (size)
+  ;;   (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+  ;;          (color (if (< size-index 10000000) ; 10m
+  ;;                     (doom-blend 'orange 'green size-index)
+  ;;                   (doom-blend 'red 'orange (- size-index 1)))))
+  ;;     (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
 (use-package! indent-bars
   :hook (prog-mode . indent-bars-mode)
@@ -667,11 +697,13 @@
 
 (setq pdf-tools-installer-os "nixos")
 
+(setq doom-theme 'doom-lantern)
+
 (use-package! auto-dark)
 
 (after! doom-ui
   (setq! auto-dark-allow-osascript t
-         auto-dark-dark-theme 'doom-oceanic-next
+         auto-dark-dark-theme doom-theme
          auto-dark-light-theme 'doom-tomorrow-day)
   (auto-dark-mode 1))
 
@@ -689,7 +721,7 @@
 (after! dtrt-indent
   (add-to-list 'dtrt-indent-hook-mapping-list '(scad-mode c/c++/java c-basic-offset)))
 
-(dtrt-indent-global-mode +1)
+;; (dtrt-indent-global-mode +1)
 
 (setq flyspell-delay-use-timer t)
 (setq rust-ts-mode-fontify-number-suffix-as-type t)
@@ -704,8 +736,9 @@
   (setq treesit-font-lock-level 4
         indent-bars-treesit-support t)
   (add-hook! haskell-ts-mode
-             (setq +default-want-RET-continue-comments nil
-                   +evil-want-o/O-to-continue-comments nil)))
+    (advice-add #'comment-forward :around #'+haskell-ts--inhibit-forward-comment)
+    (setq +default-want-RET-continue-comments nil
+          +evil-want-o/O-to-continue-comments nil)))
 
 ;(defun th/magit--with-difftastic (buffer command)
 ;  "Run COMMAND with GIT_EXTERNAL_DIFF=difft then show result in BUFFER."

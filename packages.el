@@ -11,7 +11,6 @@
 (unpin! lsp-mode lsp-haskell rustic
         orgit-forge
         haskell-mode tree-sitter tree-sitter-langs
-        tree-sitter-indent
         consult
         vertico
         corfu
@@ -64,9 +63,14 @@
   :recipe (:host github :repo "raxod502/el-patch")
   :pin "4a4e040fcede0c320e860571d5e96100cac05bb5")
 
-(package! flx-rs
-  :recipe (:host github :repo "jcs-elpa/flx-rs"
-                 :files (:defaults "bin")))
+;; (package! flx-rs
+;;   :recipe (:host github :repo "jcs-elpa/flx-rs"
+;;                  :files (:defaults "bin")))
+
+(package! fzf-native
+  :recipe (:repo "dangduc/fzf-native"
+           :host github
+           :files (:defaults "bin")))
 
 (package! fussy
   :recipe (:host github :repo "jojojames/fussy"
@@ -111,3 +115,4 @@
 ;; (package! lsp-copilot :recipe (:host github :repo "jadestrong/lsp-copilot"
 ;;                                :files ("lsp-copilot.el" "lsp-copilot")
 ;;                                :pre-build (("cargo" "build" "--release") ("cp" "./target/release/lsp-copilot" "./"))))
+(package! compile-angel)
