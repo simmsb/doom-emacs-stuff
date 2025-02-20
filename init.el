@@ -102,6 +102,7 @@
          :lang
          art
          haskell-ts-mode
+         numbat
          (zig +tree-sitter +lsp)
          (nix +tree-sitter +lsp)
          (ocaml +tree-sitter +lsp)

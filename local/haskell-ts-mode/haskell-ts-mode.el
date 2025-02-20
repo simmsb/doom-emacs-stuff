@@ -48,7 +48,7 @@
 
 (defvar haskell-ts-font-lock-feature-list
   `((comment str pragma parens)
-    (type definition function args lambda module import)
+    (type definition function args lambda module import operator)
     (match keyword)
     (otherwise signature type-sig)))
 
@@ -95,33 +95,42 @@
    `(((match (guards guard: (boolean (variable) @font-lock-keyword-face)))
       (:match "otherwise" @font-lock-keyword-face)))
 
+   ;; TODO: It is weird that we use operator face for parenthesses and also for operators.
+   ;;   I see two other, possibly better solutions:
+   ;;   1. Use delimiter face for parenthesses, ::, -> and similar, and operator face for operators.
+   ;;   2. Keep using operator face for parenthesses and co, but use function call face for operators (since they are functions at the end).
+   :language 'haskell
+   :feature 'operator
+   '((operator) @font-lock-operator-face)
+
    :language 'haskell
    :feature 'module
    '((module (module_id) @font-lock-type-face))
 
    :language 'haskell
    :feature 'import
-   '((import ["qualified" "as"] @font-lock-keyword-face))
+   '((import ["qualified" "as"] @font-lock-keyword-face)
+     (import names: (import_list name: (import_name) @haskell-ts--fontify-type)))
 
    :language 'haskell
    :feature 'type-sig
-   "(signature (binding_list (variable) @font-lock-doc-markup-face))
-    (signature (variable) @font-lock-doc-markup-face)"
+   '((signature (binding_list (variable) @font-lock-doc-markup-face))
+     (signature (variable) @font-lock-doc-markup-face))
 
    :language 'haskell
    :feature 'args
    :override 'keep
-   (concat
-    "(function (infix left_operand: (_) @haskell-ts--fontify-arg))"
-    "(function (infix right_operand: (_) @haskell-ts--fontify-arg))"
-    "(generator . (_) @haskell-ts--fontify-arg)"
-    "(bind (as (variable) . (_) @haskell-ts--fontify-arg))"
-    "(patterns) @haskell-ts--fontify-arg")
+    '((function (infix left_operand: (_) @haskell-ts--fontify-arg))
+      (function (infix right_operand: (_) @haskell-ts--fontify-arg))
+      (generator :anchor (_) @haskell-ts--fontify-arg)
+      (patterns) @haskell-ts--fontify-arg)
 
    :language 'haskell
    :feature 'type
-   `((type) @font-lock-type-face
+   '((type) @font-lock-type-face
      (constructor) @font-lock-type-face
+     (declarations (type_synomym (name) @font-lock-type-face))
+     (declarations (data_type name: (name) @font-lock-type-face))
      (_ type: (function arrow: _ @font-lock-operator-face)))
 
    :language 'haskell
@@ -167,11 +176,10 @@
    :override t
    `((function name: (variable) @font-lock-function-name-face)
      (function (infix (operator)  @font-lock-function-name-face))
-     (declarations (type_synomym (name) @font-lock-function-name-face))
-     (bind (variable) @font-lock-function-name-face)
-     (bind (infix (variable) @font-lock-function-name-face) "<-")
+     ;(bind (infix (variable) @font-lock-function-name-face) "<-")
      (function (infix (infix_id (variable) @font-lock-function-name-face)))
-     (bind (as (variable) @font-lock-function-name-face)))
+     (bind :anchor (_) @haskell-ts--fontify-params)
+     (function arrow: _ @font-lock-operator-face))
 
    :language 'haskell
    :feature 'lambda
@@ -591,13 +599,20 @@
               haskell-ts-font-lock-feature-list)
   (treesit-major-mode-setup))
 
-(defun haskell-ts--fontify-arg (node &optional _ _ _)
+(defun haskell-ts--fontify-func (node face)
   (if (string= "variable" (treesit-node-type node))
       (put-text-property
        (treesit-node-start node)
        (treesit-node-end node)
-       'face 'font-lock-variable-name-face)
-    (mapc 'haskell-ts--fontify-arg (treesit-node-children node))))
+       'face face)
+    (mapc (lambda (n) (haskell-ts--fontify-func n face))
+      (treesit-node-children node))))
+
+(defun haskell-ts--fontify-arg (node &optional _ _ _)
+  (haskell-ts--fontify-func node 'font-lock-variable-name-face))
+
+(defun haskell-ts--fontify-params (node &optional _ _ _)
+  (haskell-ts--fontify-func node 'font-lock-function-name-face))
 
 (defun haskell-ts--fontify-type (node &optional _ _ _)
   (let ((last-child (treesit-node-child node -1)))
