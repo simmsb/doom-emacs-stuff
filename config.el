@@ -520,19 +520,20 @@
 (when (not IS-MAC)
   (zone-when-idle 560))
 
-;; (use-package  flx-rs
-;;   :config
-;;   (setq fussy-score-fn 'fussy-flx-rs-score)
-;;   (flx-rs-load-dyn))
-
 (use-package! fussy
-  :custom
-  (fussy-use-cache t)
-  (setq fussy-score-fn 'fussy-fzf-native-score
-        fussy-score-ALL-fn 'fussy-fzf-score)
-  (fussy-filter-fn 'fussy-filter-default)
-  :after '(corfu orderless)
   :config
+  (defun nospace-fussy-all-completions (string table pred point)
+    "Get flex-completions of STRING in TABLE, given PRED and POINT."
+    (unless (string-search " " string)
+      (fussy-all-completions string table pred point)))
+
+  (setq fussy-use-cache t
+        fussy-score-fn 'fussy-fzf-native-score
+        fussy-score-ALL-fn 'fussy-fzf-score
+        fussy-filter-fn 'fussy-filter-default)
+  (add-to-list 'completion-styles-alist
+               '(fussy-nospace fussy-try-completions nospace-fussy-all-completions
+                       "Smart Fuzzy completion with scoring."))
   (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
   (add-hook 'corfu-mode-hook
             (lambda ()
@@ -551,16 +552,24 @@
 
   (advice-add '+vertico-file-search :around #'+vertico-file-search--sort-a))
 
-(after! consult
+
+(defun set-completion-desires ()
   (setq completion-category-overrides '())
   (add-to-list 'completion-category-overrides
-               '(file (styles +vertico-basic-remote fussy orderless)))
+         '(file (styles +vertico-basic-remote fussy-nospace orderless)))
   (add-to-list 'completion-category-overrides
-               '(project-file (styles fussy orderless)))
+         '(project-file (styles fussy-nospace orderless)))
   (add-to-list 'completion-category-overrides
-               '(buffer (styles fussy orderless)))
+         '(buffer (styles fussy-nospace orderless)))
   (add-to-list 'completion-category-overrides
-               '(lsp-capf (styles basic partial-completion orderless))))
+         '(lsp-capf (styles fussy-nospace orderless))))
+
+(set-completion-desires)
+
+(after! orderless
+  (set-completion-desires))
+(after! corfu
+  (set-completion-desires))
 
 (after! vertico-repeat
 ;; added as vertico/consult is adding the # from ripgrep back after resuming
