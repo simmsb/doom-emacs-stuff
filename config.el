@@ -556,7 +556,7 @@
 (defun set-completion-desires ()
   (setq completion-category-overrides '())
   (add-to-list 'completion-category-overrides
-         '(file (styles +vertico-basic-remote fussy-nospace orderless)))
+         '(file (styles fussy-nospace orderless)))
   (add-to-list 'completion-category-overrides
          '(project-file (styles fussy-nospace orderless)))
   (add-to-list 'completion-category-overrides
@@ -671,10 +671,10 @@
 (after! cape
   (setq cape-dabbrev-check-other-buffers nil))
 
-(use-package! ultra-scroll
-  :init (setq scroll-conservatively 101
-              scroll-margin 0)
-  :config (ultra-scroll-mode 1))
+;; (use-package! ultra-scroll
+;;   :init (setq scroll-conservatively 101
+;;               scroll-margin 0)
+;;   :config (ultra-scroll-mode 1))
 
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode 1)
@@ -698,6 +698,23 @@
   (add-hook! org-mode #'+word-wrap-mode)
   (defun org-do-latex-and-related (&rest _)))
 
+(setq org-modern-star 'replace)
+
+;; (use-package! org-flyimage
+;;   :defer t
+;;   :hook (org-mode . org-flyimage-mode))
+
+;; (use-package! org-limit-image-size
+;;   :defer t
+;;   :hook (org-mode . org-limit-image-size-activate))
+
+;; (use-package! org-tidy
+;;   :defer t
+;;   :hook (org-mode . org-tidy-mode))
+;; (use-package! org-hide-tags
+;;   :defer t
+;;   :hook (org-mode . org-hide-tags-mode))
+
 (setq window-combination-resize t
       mouse-drag-and-drop-region-cross-program t
       scroll-margin 0)
@@ -707,6 +724,7 @@
 (setq pdf-tools-installer-os "nixos")
 
 (setq doom-theme 'doom-lantern)
+;; (setq doom-theme 'doom-opera-light)
 
 (use-package! auto-dark)
 
@@ -723,7 +741,7 @@
   :defer t
   :mode "\\.scad\\'")
 
-(use-package! nushell-mode
+(use-package! nushell-ts-mode
   :defer t
   :mode "\\.nu\\'")
 
@@ -742,8 +760,8 @@
   :config (difftastic-bindings-mode))
 
 (after! treesit
-  (setq treesit-font-lock-level 4
-        indent-bars-treesit-support t)
+  (setq treesit-font-lock-level 4)
+        ;indent-bars-treesit-support t)
   (add-hook! haskell-ts-mode
     (advice-add #'comment-forward :around #'+haskell-ts--inhibit-forward-comment)
     (setq +default-want-RET-continue-comments nil
@@ -841,3 +859,16 @@
 ;    (th/magit--with-difftastic
 ;     (get-buffer-create name)
 ;     `("git" "--no-pager" "diff" "--ext-diff" ,@(when arg (list arg))))))
+
+(defun treesit-language-at (position)
+  "Return the language at POSITION.
+
+When there are multiple parsers that covers POSITION, determine
+the most relevant parser (hence language) by their embed level.
+If `treesit-language-at-point-function' is non-nil, return
+the return value of that function instead."
+  (if treesit-language-at-point-function
+      (funcall treesit-language-at-point-function position)
+    (let ((parser (car (treesit-parsers-at position))))
+      (if parser
+          (treesit-parser-language parser)))))

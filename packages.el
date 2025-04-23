@@ -18,7 +18,10 @@
         parinfer-rust-mode
         magit transient forge)
 
-(package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
+;; (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
+(package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
+                                   :branch "child-frame-preview"))
+
 
 (package! parinfer-rust-mode
   :recipe (:host github :repo "justinbarclay/parinfer-rust-mode"))
@@ -35,7 +38,7 @@
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
 
-(package! nushell-mode :recipe (:host github :repo "mrkkrp/nushell-mode"))
+(package! nushell-ts-mode :recipe (:host github :repo "herbertjones/nushell-ts-mode"))
 
 ;; (package! jujutsu :recipe (:host github :repo "bennyandresen/jujutsu.el"))
 
@@ -84,8 +87,8 @@
 
 (package! boxes)
 
-(package! ultra-scroll
-  :recipe (:host github :repo "jdtsmith/ultra-scroll"))
+;; (package! ultra-scroll
+;;   :recipe (:host github :repo "jdtsmith/ultra-scroll"))
 
 (package! citeproc)
 ;; (package! org-ref)
@@ -116,3 +119,11 @@
 ;;                                :files ("lsp-copilot.el" "lsp-copilot")
 ;;                                :pre-build (("cargo" "build" "--release") ("cp" "./target/release/lsp-copilot" "./"))))
 (package! compile-angel)
+
+(package! org-flyimage
+  :recipe (:host github :repo "misohena/org-inline-image-fix"))
+(package! org-limit-image-size
+  :recipe (:host github :repo "misohena/org-inline-image-fix"))
+(package! org-tidy)
+;; (package! org-hide-tags
+;;   :recipe (:host github :repo "amno1/org-hide-tags"))

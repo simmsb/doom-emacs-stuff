@@ -1,4 +1,4 @@
-;; -*- no-byte-compile: t; -*-
+;; -*- no-byte-compile: t; lexical-binding: t; -*-
 ;;; init.el -*- lexical-binding: t; -*-
 
 (setq comp-speed 2)
@@ -64,6 +64,7 @@
          treemacs
          vi-tilde-fringe
          window-select
+         smooth-scroll
 
          :emacs
          undo

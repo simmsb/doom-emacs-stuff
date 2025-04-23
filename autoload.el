@@ -170,3 +170,24 @@
         (insert (pp-to-string results))
         (pop-to-buffer buf)))))
 
+;;;###autoload
+(defun +lookup/dictionary-definition (identifier &optional arg)
+  "Look up the definition of the word at point (or selection)."
+  (interactive
+   (list (or (if (equal major-mode 'pdf-view-mode)
+                 (car (pdf-view-active-region-text)))
+             (doom-thing-at-point-or-region 'word)
+             (read-string "Look up in dictionary: "))
+         current-prefix-arg))
+  (message "Looking up dictionary definition for %S" identifier)
+  (cond ((and (featurep :system 'macos) (require 'osx-dictionary nil t))
+         (osx-dictionary--view-result identifier))
+        ((and +lookup-dictionary-prefer-offline
+              (require 'wordnut nil t))
+         (unless (executable-find wordnut-cmd)
+           (user-error "Couldn't find %S installed on your system"
+                       wordnut-cmd))
+         (wordnut-search identifier))
+        ((require 'define-word nil t)
+         (define-word identifier nil arg))
+        ((user-error "No dictionary backend is available"))))
