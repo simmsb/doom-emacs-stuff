@@ -8,8 +8,7 @@
  '(package-selected-packages
    '(affe boxes erefactor hotfuzz jeison jinx parseedn pdf-tools vterm))
  '(safe-local-variable-values
-   '((org-export-with-properties "Beschreibung")
-     (langtool-default-language . "de-DE") (lsp-elixir-project-dir . "web/"))))
+   '((langtool-default-language . "de-DE") (lsp-elixir-project-dir . "web/"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

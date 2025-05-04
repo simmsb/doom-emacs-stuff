@@ -127,3 +127,6 @@
 (package! org-tidy)
 ;; (package! org-hide-tags
 ;;   :recipe (:host github :repo "amno1/org-hide-tags"))
+
+(package! ox-typst
+  :recipe (:host github :repo "jmpunkt/ox-typst"))

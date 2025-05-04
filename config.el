@@ -692,8 +692,8 @@
   '(org-level-6 :inherit (fixed-pitch-serif outline-6))
   '(org-level-7 :inherit (fixed-pitch-serif outline-7))
   '(org-level-8 :inherit (fixed-pitch-serif outline-8))
-  '(org-verse :inherit (shadow fixed-pitch-serif))
-  '(org-verbatim :inherit (shadow fixed-pitch))
+  '(org-verse :inherit (fixed-pitch-serif))
+  '(org-verbatim :inherit (fixed-pitch))
   '(org-quote :inherit (fixed-pitch-serif)))
 
 (after! org-mode
@@ -701,6 +701,9 @@
   (defun org-do-latex-and-related (&rest _)))
 
 (setq org-modern-star 'replace)
+
+(use-package! ox-typst
+  :after org)
 
 ;; (use-package! org-flyimage
 ;;   :defer t
@@ -902,3 +905,13 @@ the return value of that function instead."
 (setq odict-dictionaries (list
                           (f-canonical (f-join "~" "Dropbox" "dictionaries" "dwds.odict")))
       odict-default-dictionary "dwds")
+
+(after! org-typst
+  (defun org-typst-node-property (node-property _contents _info)
+     (format "%s:%s" (org-element-property :key node-property)
+             (let ((value (org-element-property :value node-property)))
+               (if value (concat " " value) ""))))
+
+  (defun org-typst-verse-block (verse-block contents info)
+    contents))
+     ;; (org-typst--raw contents verse-block info nil t))
