@@ -53,7 +53,8 @@
    :desc "Open kill ring" "k" #'+default/yank-pop
    :desc "Open notes.org" "n" #'org-notes-open)
   (:prefix "s"
-   :desc "Search project (affe)" "P" #'affe-grep)
+   :desc "Search project (affe)" "P" #'affe-grep
+   :desc "Search word in dict" "t" #'odict-lookup)
 
   :desc "Vertico repeat select" "\"" #'vertico-repeat-select)
 
@@ -73,6 +74,7 @@
        "S-<tab>" #'doom/dumb-dedent)
 
  (:map evil-normal-state-map
+       "q" nil
        "^" #'doom/backward-to-bol-or-indent
        "$" #'doom/forward-to-last-non-comment-or-eol)
 
@@ -896,3 +898,7 @@ the return value of that function instead."
         ((user-error "No dictionary backend is available"))))
 
 (setq pdf-view-selection-style 'glyph)
+
+(setq odict-dictionaries (list
+                          (f-canonical (f-join "~" "Dropbox" "dictionaries" "dwds.odict")))
+      odict-default-dictionary "dwds")

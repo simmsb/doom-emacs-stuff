@@ -225,28 +225,57 @@
 (defun haskell-ts--parent-first-child (_ parent _)
   (treesit-node-start (treesit-node-child parent 0)))
 
-(defun haskell-ts--indent-for-decl (_ _ bol)
+(defun haskell-ts--indent-for-fallback (_ _ bol)
   (save-excursion
-    (goto-char bol)
-    (forward-line -1)
-    (back-to-indentation)
-    (let* ((node-on-line-above (treesit-node-parent (treesit-node-at (point))))
-           (line-empty (looking-at-p "[[:blank:]]*$")))
-      (if (not line-empty)
-          (treesit-node-start node-on-line-above)
+    (let* ((node-on-line-above (progn
+                                 (goto-char bol)
+                                 (forward-line -1)
+                                 (back-to-indentation)
+                                 (treesit-node-at (point))))
+           ;; (node-on-end-line-above (progn
+           ;;                           (goto-char bol)
+           ;;                           (forward-line -1)
+           ;;                           (end-of-line)
+           ;;                           (treesit-node-at (point))))
+           (line-above-empty (progn
+                               (goto-char bol)
+                               (forward-line -1)
+                               (back-to-indentation)
+                               (looking-at-p "[[:blank:]]*$"))))
+      (if (not line-above-empty)
+          (cond
+           (t (treesit-node-start (treesit-node-parent node-on-line-above))))
         nil))))
 
-(defun haskell-ts--indent-for-decl-indent (_ _ bol)
+(defun haskell-ts--indent-for-fallback-indent (_ _ bol)
   (save-excursion
-    (goto-char bol)
-    (forward-line -1)
-    (back-to-indentation)
-    (let* ((node-on-line-above (treesit-node-parent (treesit-node-at (point))))
-           (type (treesit-node-type node-on-line-above))
-           (line-empty (looking-at-p "[[:blank:]]*$")))
-      (if (and (not line-empty)
-               (member type '("class" "instance" "type_family" "function")))
-          2
+    (let* ((node-on-line-above (progn
+                                 (goto-char bol)
+                                 (forward-line -1)
+                                 (back-to-indentation)
+                                 (treesit-node-at (point))))
+           (node-on-end-line-above (progn
+                                     (goto-char bol)
+                                     (forward-line -1)
+                                     (end-of-line)
+                                     (treesit-node-at (point))))
+           (line-above-empty (progn
+                               (goto-char bol)
+                               (forward-line -1)
+                               (back-to-indentation)
+                               (looking-at-p "[[:blank:]]*$"))))
+      (if (not line-above-empty)
+          (cond
+            ((member (treesit-node-type node-on-end-line-above)
+                     '("do"))
+             2)
+            ((member (treesit-node-type (treesit-node-parent node-on-end-line-above))
+                     '("lambda_case"))
+             2)
+            ((member (treesit-node-type (treesit-node-parent node-on-line-above))
+                     '("class" "instance" "type_family" "function"))
+             2)
+           (t 0))
         0))))
 
 ;; find anchor for a bind/let, expects to start on the rhs of the line above the
@@ -347,6 +376,9 @@
 (defvar haskell-ts--record-stuff
   (treesit-query-compile 'haskell '((record (constructor) @ctor :anchor "{" @bracket))))
 
+(defvar haskell-ts--header-stuff
+  (treesit-query-compile 'haskell '((header exports: (_) @exports) @header)))
+
 ;; handle within a record, where we want to indent to the opening brackrt if
 ;; it's on a new line
 (defun haskell-ts--handle-record (_ parent _)
@@ -359,6 +391,19 @@
          (if (equal ctor-line bracket-line)
              (treesit-node-start ctor)
            (treesit-node-start bracket)))))))
+
+;; handle within an export list, where we want to indent to the opening brackrt if
+;; it's on a new line
+(defun haskell-ts--handle-export (_ parent _)
+  (save-excursion
+    (pcase (treesit-query-capture (treesit-parent-until parent "^header$") haskell-ts--header-stuff)
+      (`((header . ,header) .
+         ((exports . ,exports) . ,_))
+       (let* ((header-line (line-number-at-pos (treesit-node-start header)))
+              (exports-line (line-number-at-pos (treesit-node-start exports))))
+         (if (equal header-line exports-line)
+             (treesit-node-start header)
+           (treesit-node-start exports)))))))
 
 (defun haskell-ts--handle-tuple/list (node parent _)
   (let ((paren (treesit-node-child parent 0))
@@ -402,7 +447,7 @@
      ((parent-is "^quasiquote_body$") (lambda (_ _ c) c) 0)
      ((parent-is "^do$") standalone-parent 2)
 
-     ((parent-is "^alternatives$") haskell-ts--p-prev-sib 0)
+     ;; ((parent-is "^alternatives$") haskell-ts--p-prev-sib 0)
 
      ((parent-is "^data_constructors$") parent 0)
 
@@ -422,7 +467,7 @@
      ((lambda (node _ _)
         (and (string= "match" (treesit-node-type node))
              (string-match (regexp-opt '("patterns" "variable"))
-                           (treesit-node-type (haskell-ts--n-prev node)))))
+                           (treesit-node-type (haskell-ts--p-n-prev node)))))
       standalone-parent 2)
 
      ((node-is "match") haskell-ts--p-prev-sib 0)
@@ -436,15 +481,17 @@
      ((parent-is "^record$") haskell-ts--handle-record 2)
      ((parent-is "^field_update$") parent 2)
 
-     ((parent-is "^exports$")
-      (lambda (_ b _) (treesit-node-start (treesit-node-prev-sibling b)))
-      0)
+     ((parent-is "^exports$") haskell-ts--handle-export 2)
+
+     ;; ((parent-is "^exports$")
+     ;;  (lambda (_ b _) (treesit-node-start (treesit-node-prev-sibling b)))
+     ;;  0)
      ((n-p-gp nil "signature" "foreign_import") grand-parent 3)
      ((parent-is "^case$") standalone-parent 2)
-     ((node-is "^alternatives$")
-      (lambda (_ b _)
-        (treesit-node-start (treesit-node-child b 0)))
-      2)
+     ;; ((node-is "^alternatives$")
+     ;;  (lambda (_ b _)
+     ;;    (treesit-node-start (treesit-node-child b 0)))
+     ;;  2)
      ((node-is "^comment$")
       (lambda (node parent _)
         (pcase node
@@ -464,7 +511,7 @@
 
      ;; prev-adaptive-prefix is broken sometimes
      (no-node
-      haskell-ts--indent-for-decl haskell-ts--indent-for-decl-indent)
+      haskell-ts--indent-for-fallback haskell-ts--indent-for-fallback-indent)
 
 
      ;; Backup
@@ -544,7 +591,7 @@
     (funcall orig-fn n)))
 
 ;;;###autoload
-(define-derived-mode haskell-ts-mode prog-mode "haskell ts mode"
+(define-derived-mode haskell-ts-mode prog-mode "Haskell TS Mode"
   "Major mode for Haskell files using tree-sitter."
   :table haskell-ts-mode-syntax-table
   (unless (treesit-ready-p 'haskell)
@@ -599,7 +646,9 @@
   (setq-local treesit-font-lock-settings haskell-ts-font-lock)
   (setq-local treesit-font-lock-feature-list
               haskell-ts-font-lock-feature-list)
-  (treesit-major-mode-setup))
+  (treesit-major-mode-setup)
+  (when (functionp 'derived-mode-add-parents)
+    (derived-mode-add-parents 'haskell-ts-mode '(haskell-mode))))
 
 (defun haskell-ts--fontify-func (node face)
   (if (string= "variable" (treesit-node-type node))

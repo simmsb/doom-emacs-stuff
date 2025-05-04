@@ -79,6 +79,7 @@
          shell
 
          :tools
+         odict
          tree-sitter
          biblio
          ;; docker
