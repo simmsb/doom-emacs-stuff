@@ -461,7 +461,7 @@
       (lambda (_ b _)
         (+ 1 (treesit-node-start (treesit-node-prev-sibling b))))
       3)
-     ((parent-is "local_binds\\|instance_declarations") haskell-ts--p-prev-sib 0)
+     ((parent-is "local_binds\\|instance_declarations") parent 1)
 
      ;; Match
      ((lambda (node _ _)

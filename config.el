@@ -421,6 +421,11 @@
 (set-popup-rule! "^\\*Compile-Log"
   :ignore t)
 
+(set-popup-rule! "^\\*odict"
+  :side 'bottom
+  :size 0.4
+  :ttl 60)
+
 ;; (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
@@ -903,8 +908,8 @@ the return value of that function instead."
 (setq pdf-view-selection-style 'glyph)
 
 (setq odict-dictionaries (list
-                          (f-canonical (f-join "~" "Dropbox" "dictionaries" "dwds.odict")))
-      odict-default-dictionary "dwds")
+                          (f-canonical (f-join "~" "Dropbox" "dictionaries" "deutsch.odict")))
+      odict-default-dictionary "deutsch")
 
 (after! org-typst
   (defun org-typst-node-property (node-property _contents _info)
