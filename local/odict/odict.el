@@ -242,7 +242,8 @@
           (magit-insert-section (section-ordict-forms)
             (magit-insert-heading "Forms\n")
             (cl-loop for subdef in (oref defn definitions) do
-                (insert (propertize (oref subdef value) 'face 'org-footnote))))))))
+                (insert (propertize (oref subdef value) 'face 'org-footnote))
+                (newline)))))))
     normal))
 
 
@@ -363,9 +364,9 @@
 (defun odict-lookup (word &optional dictionary)
   "Lookup WORD with odict"
   (interactive
-   (list (or (doom-thing-at-point-or-region 'word)
-             (if (equal major-mode 'pdf-view-mode)
+   (list (or (if (equal major-mode 'pdf-view-mode)
                  (car (pdf-view-active-region-text)))
+             (doom-thing-at-point-or-region 'word)
              (read-string "Look up in dictionary: "))
          odict-default-dictionary))
   (let ((dictionary- (or dictionary odict-default-dictionary))
@@ -373,6 +374,24 @@
     (odict-get-process)
     (request (format "http://localhost:5005/%s/lookup" dictionary-)
       :params `(("queries" . ,word-))
+      :success (cl-function
+                (lambda (&key data &allow-other-keys)
+                  (odict--handle-results word data)))))
+  nil)
+
+(defun odict-search (word &optional dictionary)
+  "Lookup WORD with odict"
+  (interactive
+   (list (or (if (equal major-mode 'pdf-view-mode)
+                 (car (pdf-view-active-region-text)))
+             (doom-thing-at-point-or-region 'word)
+             (read-string "Look up in dictionary: "))
+         odict-default-dictionary))
+  (let ((dictionary- (or dictionary odict-default-dictionary))
+        (word- (s-downcase word)))
+    (odict-get-process)
+    (request (format "http://localhost:5005/%s/search" dictionary-)
+      :params `(("query" . ,word-))
       :success (cl-function
                 (lambda (&key data &allow-other-keys)
                   (odict--handle-results word data)))))

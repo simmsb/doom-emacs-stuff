@@ -54,7 +54,8 @@
    :desc "Open notes.org" "n" #'org-notes-open)
   (:prefix "s"
    :desc "Search project (affe)" "P" #'affe-grep
-   :desc "Search word in dict" "t" #'odict-lookup)
+   :desc "Lookup word in dict" "t" #'odict-lookup
+   :desc "Fuzzy search word in dict" "T" #'odict-search)
 
   :desc "Vertico repeat select" "\"" #'vertico-repeat-select)
 
@@ -765,17 +766,17 @@
 
 ;; (use-package! jujutsu)
 
-(use-package! difftastic
-  :defer t
-  :config (difftastic-bindings-mode))
+;; (use-package! difftastic
+;;   :defer t
+;;   :config (difftastic-bindings-mode))
 
 (after! treesit
   (setq treesit-font-lock-level 4)
         ;indent-bars-treesit-support t)
   (add-hook! haskell-ts-mode
-    (advice-add #'comment-forward :around #'+haskell-ts--inhibit-forward-comment)
-    (setq +default-want-RET-continue-comments nil
-          +evil-want-o/O-to-continue-comments nil)))
+    (advice-add #'comment-forward :around #'+haskell-ts--inhibit-forward-comment)))
+    ;; (setq-local +default-want-RET-continue-comments nil
+    ;;             +evil-want-o/O-to-continue-comments nil)))
 
 ;(defun th/magit--with-difftastic (buffer command)
 ;  "Run COMMAND with GIT_EXTERNAL_DIFF=difft then show result in BUFFER."
@@ -884,26 +885,26 @@ the return value of that function instead."
           (treesit-parser-language parser)))))
 
 
-(defun +lookup/dictionary-definition (identifier &optional arg)
-  "Look up the definition of the word at point (or selection)."
-  (interactive
-   (list (or (if (equal major-mode 'pdf-view-mode)
-                 (car (pdf-view-active-region-text)))
-             (doom-thing-at-point-or-region 'word)
-             (read-string "Look up in dictionary: "))
-         current-prefix-arg))
-  (message "Looking up dictionary definition for %S" identifier)
-  (cond ((and (featurep :system 'macos) (require 'osx-dictionary nil t))
-         (osx-dictionary--view-result identifier))
-        ((and +lookup-dictionary-prefer-offline
-              (require 'wordnut nil t))
-         (unless (executable-find wordnut-cmd)
-           (user-error "Couldn't find %S installed on your system"
-                       wordnut-cmd))
-         (wordnut-search identifier))
-        ((require 'define-word nil t)
-         (define-word identifier nil arg))
-        ((user-error "No dictionary backend is available"))))
+;; (defun +lookup/dictionary-definition (identifier &optional arg)
+;;   "Look up the definition of the word at point (or selection)."
+;;   (interactive
+;;    (list (or (if (equal major-mode 'pdf-view-mode)
+;;                  (car (pdf-view-active-region-text)))
+;;              (doom-thing-at-point-or-region 'word)
+;;              (read-string "Look up in dictionary: "))
+;;          current-prefix-arg))
+;;   (message "Looking up dictionary definition for %S" identifier)
+;;   (cond ((and (featurep :system 'macos) (require 'osx-dictionary nil t))
+;;          (osx-dictionary--view-result identifier))
+;;         ((and +lookup-dictionary-prefer-offline
+;;               (require 'wordnut nil t))
+;;          (unless (executable-find wordnut-cmd)
+;;            (user-error "Couldn't find %S installed on your system"
+;;                        wordnut-cmd))
+;;          (wordnut-search identifier))
+;;         ((require 'define-word nil t)
+;;          (define-word identifier nil arg))
+;;         ((user-error "No dictionary backend is available"))))
 
 (setq pdf-view-selection-style 'glyph)
 

@@ -112,8 +112,8 @@
 
 (package! scad-mode)
 
-(package! difftastic
-  :recipe (:host github :repo "pkryger/difftastic.el"))
+;; (package! difftastic
+;;   :recipe (:host github :repo "pkryger/difftastic.el"))
 
 ;; (package! lsp-copilot :recipe (:host github :repo "jadestrong/lsp-copilot"
 ;;                                :files ("lsp-copilot.el" "lsp-copilot")
