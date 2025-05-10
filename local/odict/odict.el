@@ -338,9 +338,15 @@
                                            (odict--handle-sense v))))))))
       (goto-char (point-min)))))
 
-
 (defconst odict-process-name " %odict-mode-process%")
 (defconst odict-process-buffer-name " *odict-mode-process*")
+(defvar odict--process-kill-timer nil)
+
+(defun odict-stop-process ()
+  "Kill the odict server if it is running."
+  (let ((process (get-process odict-process-name)))
+    (when (and process (> (process-id process) 0))
+      (kill-process process))))
 
 (defun odict-get-process ()
   "Get or create the odict process."
@@ -355,6 +361,9 @@
                              odict-program-path
                              `("serve" ,@odict-dictionaries)))
         (set-process-query-on-exit-flag process nil)))
+    (unless (null odict--process-kill-timer)
+      (cancel-timer odict--process-kill-timer))
+    (setq odict--process-kill-timer (run-at-time "5 min" nil #'odict-stop-process))
     process))
 
 (defun odict--handle-failure (process status pfuture-buffer)

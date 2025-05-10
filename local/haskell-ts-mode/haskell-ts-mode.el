@@ -32,6 +32,7 @@
 
 (require 'comint)
 (require 'treesit)
+(require 'haskell-mode)
 
 (declare-function treesit-parser-create "treesit.c")
 (declare-function treesit-node-start "treesit.c")
