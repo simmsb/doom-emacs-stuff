@@ -363,7 +363,7 @@
         (set-process-query-on-exit-flag process nil)))
     (unless (null odict--process-kill-timer)
       (cancel-timer odict--process-kill-timer))
-    (setq odict--process-kill-timer (run-at-time "5 min" nil #'odict-stop-process))
+    (setq odict--process-kill-timer (run-at-time "20 min" nil #'odict-stop-process))
     process))
 
 (defun odict--handle-failure (process status pfuture-buffer)

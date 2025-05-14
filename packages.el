@@ -17,7 +17,8 @@
         pdf-tools
         parinfer-rust-mode
         magit transient forge
-        ultra-scroll)
+        ultra-scroll
+        diff-hl)
 
 ;; (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
