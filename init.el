@@ -141,7 +141,7 @@
           +pandoc
           +present
           +hugo
-          +pretty)
+          pretty)
          (python +lsp +pyright +tree-sitter)
          rest
          (rust +lsp)

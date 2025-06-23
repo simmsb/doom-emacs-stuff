@@ -707,7 +707,11 @@
   (add-hook! org-mode #'+word-wrap-mode)
   (defun org-do-latex-and-related (&rest _)))
 
-(setq! org-modern-star 'replace)
+(setq! org-modern-star nil
+       org-modern-table nil
+       org-modern-timestamp nil
+       org-modern-tag nil
+       org-modern-hide-stars nil)
 
 (use-package! ox-typst
   :after org)
