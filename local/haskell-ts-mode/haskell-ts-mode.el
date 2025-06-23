@@ -96,13 +96,10 @@
    `(((match (guards guard: (boolean (variable) @font-lock-keyword-face)))
       (:match "otherwise" @font-lock-keyword-face)))
 
-   ;; TODO: It is weird that we use operator face for parenthesses and also for operators.
-   ;;   I see two other, possibly better solutions:
-   ;;   1. Use delimiter face for parenthesses, ::, -> and similar, and operator face for operators.
-   ;;   2. Keep using operator face for parenthesses and co, but use function call face for operators (since they are functions at the end).
    :language 'haskell
    :feature 'operator
-   '((operator) @font-lock-operator-face)
+   `((operator) @font-lock-operator-face
+     ["=" "," "=>"] @font-lock-operator-face)
 
    :language 'haskell
    :feature 'module
@@ -110,7 +107,7 @@
 
    :language 'haskell
    :feature 'import
-   '((import ["qualified" "as"] @font-lock-keyword-face)
+   '((import ["qualified" "as" "hiding"] @font-lock-keyword-face)
      (import names: (import_list name: (import_name) @haskell-ts--fontify-type)))
 
    :language 'haskell
@@ -130,8 +127,14 @@
    :feature 'type
    '((type) @font-lock-type-face
      (constructor) @font-lock-type-face
+     (data_constructor
+      (prefix field: (_) @haskell-constructor-face))
+     (newtype_constructor field: (_) @haskell-constructor-face)
      (declarations (type_synomym (name) @font-lock-type-face))
      (declarations (data_type name: (name) @font-lock-type-face))
+     (declarations (newtype name: (name) @font-lock-type-face))
+     (deriving "deriving" @font-lock-keyword-face (name) @font-lock-type-face)
+     (deriving_instance "deriving" @font-lock-keyword-face (name) @font-lock-type-face)
      (_ type: (function arrow: _ @font-lock-operator-face)))
 
    :language 'haskell
@@ -169,7 +172,7 @@
    :language 'haskell
    :feature 'parens
    :override t
-   `(["(" ")" "[" "]"] @font-lock-operator-face
+   `(["(" ")" "[" "]"] @font-lock-bracket-face
      (infix operator: (_) @font-lock-operator-face))
 
    :language 'haskell
@@ -187,21 +190,6 @@
    :override t
    `((lambda ("\\" @font-lock-doc-face) ("->" @font-lock-doc-face))))
   "The treesitter font lock settings for haskell.")
-
-(defun haskell-ts--standalone-parent (_ parent bol)
-  (save-excursion
-    (goto-char (treesit-node-start parent))
-    (let ((type (treesit-node-type parent)))
-      (if (and (not bol)
-               (or (looking-back "^[ \t]*" (line-beginning-position))
-                   (member
-                    type
-                    '("when" "where" "do" "let" "local_binds" "function"))))
-          (treesit-node-start parent)
-        (haskell-ts--standalone-parent 1 (funcall
-                                          (if bol #'treesit-node-parent #'identity)
-                                          (treesit-node-parent parent))
-                                       nil)))))
 
 (defvar haskell-ts--ignore-types
   (regexp-opt '("comment" "cpp" "haddock"))
@@ -377,6 +365,9 @@
 (defvar haskell-ts--record-stuff
   (treesit-query-compile 'haskell '((record (constructor) @ctor :anchor "{" @bracket))))
 
+(defvar haskell-ts--fields-stuff
+  (treesit-query-compile 'haskell '((record (constructor) @ctor :anchor (fields) @fields))))
+
 (defvar haskell-ts--header-stuff
   (treesit-query-compile 'haskell '((header exports: (_) @exports) @header)))
 
@@ -392,6 +383,17 @@
          (if (equal ctor-line bracket-line)
              (treesit-node-start ctor)
            (treesit-node-start bracket)))))))
+
+(defun haskell-ts--handle-fields (_ p _)
+  (save-excursion
+    (pcase (treesit-query-capture (treesit-node-parent p) haskell-ts--fields-stuff)
+      (`((ctor . ,ctor) .
+         ((fields . ,fields) . ,_))
+       (let* ((ctor-line (line-number-at-pos (treesit-node-start ctor)))
+              (fields-line (line-number-at-pos (treesit-node-start fields))))
+         (if (equal ctor-line fields-line)
+             nil
+           (treesit-node-start fields)))))))
 
 ;; handle within an export list, where we want to indent to the opening brackrt if
 ;; it's on a new line
@@ -446,7 +448,7 @@
 
      ((node-is "^quasiquote$") grand-parent 2)
      ((parent-is "^quasiquote_body$") (lambda (_ _ c) c) 0)
-     ((parent-is "^do$") standalone-parent 2)
+     ;; ((parent-is "^do$") standalone-parent 2)
 
      ;; ((parent-is "^alternatives$") haskell-ts--p-prev-sib 0)
 
@@ -509,6 +511,8 @@
 
      ((parent-is "^comment$") prev-adaptive-prefix 0)
      ((parent-is "^haddock$") column-0 0)
+
+     ((parent-is "^fields$") haskell-ts--handle-fields 0)
 
      ;; prev-adaptive-prefix is broken sometimes
      (no-node
@@ -594,7 +598,7 @@
 ;;;###autoload
 (define-derived-mode haskell-ts-mode prog-mode "Haskell TS Mode"
   "Major mode for Haskell files using tree-sitter."
-  :table haskell-ts-mode-syntax-table
+  :table haskell-mode-syntax-table
   (unless (treesit-ready-p 'haskell)
     (error "Tree-sitter for Haskell is not available"))
   (setq treesit-primary-parser (treesit-parser-create 'haskell))
@@ -605,6 +609,7 @@
   (when haskell-ts-use-indent
     (setq-local treesit-simple-indent-rules haskell-ts-indent-rules)
     (setq-local indent-tabs-mode nil))
+  (setq-local electric-indent-functions '(haskell-ts-indent-after-newline))
   ;; Comment
   (setq-local comment-start "--")
   (setq-local comment-use-syntax t)
@@ -650,6 +655,15 @@
   (treesit-major-mode-setup)
   (when (functionp 'derived-mode-add-parents)
     (derived-mode-add-parents 'haskell-ts-mode '(haskell-mode))))
+
+(defun haskell-ts-indent-after-newline (c)
+  (when (eq c ?\n)
+      (let ((previous-line-width
+              (save-excursion
+                (goto-char (line-end-position 0))
+                (current-column))))
+        (insert (make-string previous-line-width ?\s))))
+  nil)
 
 (defun haskell-ts--fontify-func (node face)
   (if (string= "variable" (treesit-node-type node))

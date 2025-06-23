@@ -146,7 +146,7 @@
          rest
          (rust +lsp)
          (sh +fish +tree-sitter +lsp)
-         (web +tree-sitter +lsp)
+         ;; (web +tree-sitter +lsp)
 
          ;; ,@(when ON-DESKTOP
          ;;     '(:email
@@ -182,7 +182,9 @@
 
 (setq major-mode-remap-alist
       '((yaml-mode . yaml-ts-mode)
-        (json-mode . json-ts-mode)))
+        (json-mode . json-ts-mode)
+        (typescript-tsx-mode . tsx-ts-mode)))
+
         ;; (tsx-ts-mode . typescript-tsx-mode)))
 
 (setq shell-file-name (executable-find "bash"))

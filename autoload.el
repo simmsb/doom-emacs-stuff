@@ -86,6 +86,20 @@
   (interactive)
   (find-file +org-default-notes-file))
 
+(defun +file-template-p (rule)
+  "Return t if RULE applies to the current buffer."
+  (let ((pred (car rule))
+        (plist (cdr rule)))
+    (and (or (and (symbolp pred)
+                  (member pred (derived-mode-all-parents major-mode)))
+             (and (stringp pred)
+                  (stringp buffer-file-name)
+                  (string-match-p pred buffer-file-name)))
+         (or (not (plist-member plist :when))
+             (funcall (plist-get plist :when)
+                      buffer-file-name))
+         rule)))
+
 ;;;###autoload
 (defun +file-templates/insert ()
   "Force insert a file template expansion"

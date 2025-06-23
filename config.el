@@ -3,13 +3,13 @@
 (require 'cl-lib)
 (require 'f)
 
-(setq warning-minimum-level :error)
-(setq compile-angel-predicate-function
-      (lambda (file)
-        (and (not (and (file-in-directory-p file doom-user-dir)
-                       (not (file-in-directory-p file (expand-file-name "local" doom-user-dir)))))
-             (not (file-in-directory-p file (expand-file-name "lisp" doom-emacs-dir)))
-             (not (file-in-directory-p file (expand-file-name doom-modules-dir))))))
+(setq! warning-minimum-level :error)
+(setq! compile-angel-predicate-function
+        (lambda (file)
+          (and (not (and (file-in-directory-p file doom-user-dir)
+                         (not (file-in-directory-p file (expand-file-name "local" doom-user-dir)))))
+               (not (file-in-directory-p file (expand-file-name "lisp" doom-emacs-dir)))
+               (not (file-in-directory-p file (expand-file-name doom-modules-dir))))))
 
 (compile-angel-on-load-mode)
 (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
@@ -19,28 +19,28 @@
 
 (pcase (system-name)
   ("home"
-   (setq doom-font (first-font
-                    (font-spec :family "MonoLisa" :size 15)
-                    (font-spec :family "Fira Code" :size 15))
-         doom-big-font (first-font
-                        (font-spec :family "MonoLisa" :size 22)
-                        (font-spec :family "Fira Code" :size 22))
-         doom-variable-pitch-font (font-spec :family "Fira Sans")
-         doom-serif-font (font-spec :family "Fira Code" :size 16)))
+   (setq! doom-font (first-font
+                     (font-spec :family "MonoLisa" :size 15)
+                     (font-spec :family "Fira Code" :size 15))
+           doom-big-font (first-font
+                          (font-spec :family "MonoLisa" :size 22)
+                          (font-spec :family "Fira Code" :size 22))
+           doom-variable-pitch-font (font-spec :family "Fira Sans")
+           doom-serif-font (font-spec :family "Fira Code" :size 16)))
   ("laptop2"
-   (setq doom-font (first-font
-                    (font-spec :family "MonoLisa" :size 14)
-                    (font-spec :family "Fira Code" :size 14))
-         doom-big-font (first-font
-                        (font-spec :family "Fira Code" :size 28))
-         doom-serif-font (font-spec :family "Latin Modern Mono" :size 18)))
+   (setq! doom-font (first-font
+                     (font-spec :family "MonoLisa" :size 14)
+                     (font-spec :family "Fira Code" :size 14))
+           doom-big-font (first-font
+                          (font-spec :family "Fira Code" :size 28))
+           doom-serif-font (font-spec :family "Latin Modern Mono" :size 18)))
   ("worklaptop"
-   (setq doom-font (first-font
-                    (font-spec :family "MonoLisa" :size 14)
-                    (font-spec :family "Fira Code" :size 14))
-         doom-big-font (first-font
-                        (font-spec :family "Fira Code" :size 28))
-         doom-serif-font (font-spec :family "Latin Modern Mono" :size 18))))
+   (setq! doom-font (first-font
+                     (font-spec :family "MonoLisa" :size 14)
+                     (font-spec :family "Fira Code" :size 14))
+           doom-big-font (first-font
+                          (font-spec :family "Fira Code" :size 28))
+           doom-serif-font (font-spec :family "Latin Modern Mono" :size 18))))
 
 
 ;; bindings
@@ -98,7 +98,7 @@
  "<triple-wheel-right>" #'do-nothing)
 
 (defun affe-orderless-regexp-compiler (input _type _ignorecase)
-  (setq input (cdr (orderless-compile input)))
+  (setq! input (cdr (orderless-compile input)))
   (cons input (apply-partially #'orderless--highlight input t)))
 
 (use-package! affe
@@ -124,7 +124,7 @@
 (use-package! geros
   :defer t
   :config
-  (setq geros-eval-result-duration nil))
+  (setq! geros-eval-result-duration nil))
 
 (use-package! evil-lion
   :config
@@ -146,7 +146,7 @@
 
 ;; (use-package! lsp-copilot
 ;;   :config
-;;   (setq lsp-copilot-user-languages-config (f-join doom-user-dir "languages.toml"))
+;;   (setq! lsp-copilot-user-languages-config (f-join doom-user-dir "languages.toml"))
 ;;   (add-hook! '(
 ;;                tsx-ts-mode-hook
 ;;                js-ts-mode-hook
@@ -166,27 +166,21 @@
 
 ;; Doom Emacs
 (set-lookup-handlers! 'lsp-copilot-mode
-    :definition '(lsp-copilot-find-definition :async t)
-    :references '(lsp-copilot-find-references :async t)
-    :implementations '(lsp-copilot-find-implementations :async t)
-    :type-definition '(lsp-copilot-find-type-definition :async t)
-    :documentation '(lsp-copilot-describe-thing-at-point :async t))
+  :definition '(lsp-copilot-find-definition :async t)
+  :references '(lsp-copilot-find-references :async t)
+  :implementations '(lsp-copilot-find-implementations :async t)
+  :type-definition '(lsp-copilot-find-type-definition :async t)
+  :documentation '(lsp-copilot-describe-thing-at-point :async t))
 
 (after! lsp-haskell
-
-  (defcustom-lsp lsp-haskell-plugin-rename-on
-    t
-    "Enables rename plugin"
-    :group 'lsp-haskell-plugins
-    :type 'boolean
-    :lsp-path "haskell.plugin.rename.globalOn")
-
-  (setq lsp-haskell-formatting-provider "ormolu"
-        lsp-haskell-server-args '("+RTS" "-N8" "-RTS")
-        lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
-        lsp-haskell-tactics-on nil
-        lsp-haskell-max-completions 40
-        lsp-haskell-session-loading "multipleComponents")
+  (setq! lsp-haskell-formatting-provider "ormolu"
+          lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-RTS")
+          lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
+          lsp-haskell-tactics-on nil
+          lsp-haskell-plugin-rename-config-cross-module t
+          lsp-haskell-max-completions 100)
+  ;; multicomponent seems to break things :/
+  ;; lsp-haskell-session-loading "multipleComponents")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed)
 
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
@@ -217,7 +211,7 @@
 ;;     (browse-url-generic url)))
 
 (after! nix-mode
-  (setq nix-nixfmt-bin "nixpkgs-fmt"))
+  (setq! nix-nixfmt-bin "nixpkgs-fmt"))
 ;; (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
 
 ;; (defun config-brossa-lsp-server (workspace)
@@ -239,19 +233,19 @@
 ;;     :server-id 'brossa-lsp)))
 
 (after! lsp-mode
-  (setq lsp-lens-enable nil
-        +lsp-defer-shutdown nil
-        lsp-inlay-hint-enable t
-        lsp-modeline-diagnostics-scope :project
-        lsp-restart 'auto-restart
-        lsp-enable-indentation t
-        lsp-enable-relative-indentation t
-        lsp-enable-file-watchers t
-        lsp-headerline-breadcrumb-enable nil
-        lsp-ui-doc-show-with-cursor nil
-        lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-diagnostic-max-lines 10
-        lsp-auto-execute-action nil)
+  (setq! lsp-lens-enable nil
+          +lsp-defer-shutdown nil
+          lsp-inlay-hint-enable t
+          lsp-modeline-diagnostics-scope :project
+          lsp-restart 'auto-restart
+          lsp-enable-indentation t
+          lsp-enable-relative-indentation t
+          lsp-enable-file-watchers t
+          lsp-headerline-breadcrumb-enable nil
+          lsp-ui-doc-show-with-cursor nil
+          lsp-ui-sideline-show-hover nil
+          lsp-ui-sideline-diagnostic-max-lines 10
+          lsp-auto-execute-action nil)
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets"
@@ -321,63 +315,65 @@
     (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc)
     (add-to-list 'flycheck-disabled-checkers 'haskell-ghc)
     (add-to-list 'flycheck-disabled-checkers 'haskell-hlint))
-  (setq flycheck-popup-tip-error-prefix "❌ "))
+  (setq! flycheck-popup-tip-error-prefix "❌ "))
 
 (after! flycheck-posframe
   (set-face-attribute 'flycheck-posframe-info-face nil :inherit 'font-lock-variable-name-face)
   (set-face-attribute 'flycheck-posframe-warning-face nil :inherit 'warning)
   (set-face-attribute 'flycheck-posframe-error-face nil :inherit 'error)
-  (setq flycheck-posframe-warning-prefix "⚠ "
-        flycheck-posframe-error-prefix "❌ "
-        flycheck-posframe-info-prefix "ⓘ "))
+  (setq! flycheck-posframe-warning-prefix "⚠ "
+          flycheck-posframe-error-prefix "❌ "
+          flycheck-posframe-info-prefix "ⓘ "))
 
 (after! rustic
-  (setq rustic-lsp-server 'rust-analyzer
-        rustic-treesitter-derive t))
+  (setq! rustic-lsp-server 'rust-analyzer
+          rustic-treesitter-derive t))
 
 (after! lsp-rust
-  (setq lsp-rust-analyzer-display-chaining-hints nil
-        lsp-rust-analyzer-display-parameter-hints t
-        lsp-rust-analyzer-max-inlay-hint-length 20
-        lsp-rust-analyzer-proc-macro-enable t
-        lsp-rust-analyzer-diagnostics-enable-experimental t
-        lsp-rust-analyzer-experimental-proc-attr-macros t
-        lsp-rust-analyzer-import-granularity "crate"
-        lsp-rust-analyzer-call-info-full t
-        lsp-rust-analyzer-cargo-run-build-scripts t
-        lsp-rust-analyzer-check-all-targets nil))
+  (setq! lsp-rust-analyzer-display-chaining-hints nil
+          lsp-rust-analyzer-display-parameter-hints t
+          lsp-rust-analyzer-max-inlay-hint-length 20
+          lsp-rust-analyzer-proc-macro-enable t
+          lsp-rust-analyzer-diagnostics-enable-experimental t
+          lsp-rust-analyzer-experimental-proc-attr-macros t
+          lsp-rust-analyzer-import-granularity "crate"
+          lsp-rust-analyzer-call-info-full t
+          lsp-rust-analyzer-cargo-run-build-scripts t
+          lsp-rust-analyzer-check-all-targets nil))
 
 
 (after! lsp-javascript
   (defcustom-lsp lsp-typescript-jsx-completion-style "braces"
-    "JSX quoting style"
-    :group 'lsp-typescript
-    :lsp-path "typescript.preferences.jsxAttributeCompletionStyle")
+                 "JSX quoting style"
+                 :group 'lsp-typescript
+                 :lsp-path "typescript.preferences.jsxAttributeCompletionStyle")
 
-  (setq lsp-javascript-display-enum-member-value-hints t
-        lsp-javascript-display-parameter-name-hints 'literals
-        lsp-javascript-display-variable-type-hints t))
+  (setq! lsp-javascript-display-enum-member-value-hints t
+          lsp-javascript-display-parameter-name-hints 'literals
+          lsp-javascript-display-variable-type-hints t))
 
-(add-hook! prog-mode #'rainbow-delimiters-mode)
+(add-hook! prog-mode
+  (unless (member major-mode '("tsx-ts-mode"))
+    (rainbow-delimiters-mode)))
 
 (after! engrave-faces
-  (setq engrave-faces-attributes-of-interest
-        '(:foreground :slant :weight :height :strike-through)))
+  (setq! engrave-faces-attributes-of-interest
+          '(:foreground :slant :weight :height :strike-through)))
 
-(setq frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
+(setq! frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
 (after! haskell-mode
-  (setq haskell-auto-insert-module-format-string "module %s\n    (\n     ) where"))
+  (setq! haskell-auto-insert-module-format-string "module %s\n    (\n     ) where"))
 
 
 (after! evil
-  (setq ;; evil-normal-state-cursor '(box "light blue")
+  (setq! ;; evil-normal-state-cursor '(box "light blue")
    ;; evil-insert-state-cursor '(bar "medium sea green")
    ;; evil-visual-state-cursor '(hollow "orange")
    evil-want-fine-undo t
    evil-kill-on-visual-paste nil)
-  (setq evil-vsplit-window-right t
-        evil-split-window-below t)
+  (setq! evil-vsplit-window-right t
+          evil-split-window-below t)
   ;; stops the evil selection being added to the kill-ring
   (fset 'evil-visual-update-x-selection 'ignore)
   (defadvice! prompt-for-buffer (&rest _)
@@ -397,22 +393,27 @@
 (after! consult
   (consult-customize
    +vertico/project-search consult-ripgrep consult-git-grep consult-grep
-   :preview-key '(:debounce 0.5 any)))
+   +vertico-file-search
+   +default/search-project
+   :preview-key (list :debounce 0.5 'any))
+  (setq! consult-async-refresh-delay 0.1
+          consult-async-input-throttle 0.1
+          consult-async-input-debounce 0.05))
 
-(setq-default x-stretch-cursor t
-              uniquify-buffer-name-style 'forward)
+(setq x-stretch-cursor t
+      uniquify-buffer-name-style 'forward)
 
-(setq projectile-require-project-root t)
+(setq! projectile-require-project-root t)
 
-(setq posframe-mouse-banish nil)
+(setq! posframe-mouse-banish nil)
 
-(setq display-line-numbers-type nil)
+(setq! display-line-numbers-type nil)
 
 (tooltip-mode t)
 (global-subword-mode 1)
 
-(setq blink-matching-paren t
-      blink-matching-paren-highlight-offscreen t)
+(setq! blink-matching-paren t
+        blink-matching-paren-highlight-offscreen t)
 
 
 (set-popup-rule! "^\\*Man"
@@ -431,27 +432,27 @@
 ;; (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
 (after! web-mode
-  (setq web-mode-enable-inlays t
-        web-mode-enable-current-element-highlight t
-        web-mode-enable-html-entities-fontification t
-        web-mode-enable-auto-closing t
-        web-mode-enable-auto-opening t
-        web-mode-enable-auto-pairing t
-        web-mode-auto-quote-style 3
-        web-mode-enable-auto-quoting t))
+  (setq! web-mode-enable-inlays t
+          web-mode-enable-current-element-highlight t
+          web-mode-enable-html-entities-fontification t
+          web-mode-enable-auto-closing t
+          web-mode-enable-auto-opening t
+          web-mode-enable-auto-pairing t
+          web-mode-auto-quote-style 3
+          web-mode-enable-auto-quoting t))
 
-(setq +treemacs-git-mode 'deferred)
+(setq! +treemacs-git-mode 'deferred)
 
 (after! treemacs
   (treemacs-follow-mode +1)
   (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
-  (setq treemacs-silent-refresh t
-        treemacs-read-string-input 'from-minibuffer))
+  (setq! treemacs-silent-refresh t
+          treemacs-read-string-input 'from-minibuffer))
 (after! forge
   ;; (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
   ;; (advice-remove 'forge-dispatch '+magit--forge-build-binary-lazily-a)
   ;; (if (atom forge-topic-list-limit)
-  ;;     (setq forge-topic-list-limit (cons forge-topic-list-limit -5))
+  ;;     (setq! forge-topic-list-limit (cons forge-topic-list-limit -5))
   ;;   (setcdr forge-topic-list-limit -5))
 
   (add-to-list 'transient-levels '(forge-dispatch (t . 7)))
@@ -510,7 +511,7 @@
                       (sit-for (/ end-delay 1000.0)))))
   (sit-for 60))
 
-(setq zone-programs [zone-pgm-drip zone-pgm-rise-and-shine zone-pgm-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
+(setq! zone-programs [zone-pgm-drip zone-pgm-rise-and-shine zone-pgm-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
 
 (defun zone-choose (pgm)
   "Choose a PGM to run for `zone'."
@@ -528,49 +529,49 @@
 (when (not IS-MAC)
   (zone-when-idle 560))
 
-(use-package! fussy
-  :config
-  (defun nospace-fussy-all-completions (string table pred point)
-    "Get flex-completions of STRING in TABLE, given PRED and POINT."
-    (unless (string-search " " string)
-      (fussy-all-completions string table pred point)))
+;; (use-package! fussy
+;;   :config
+;;   (defun nospace-fussy-all-completions (string table pred point)
+;;     "Get flex-completions of STRING in TABLE, given PRED and POINT."
+;;     (unless (string-search " " string)
+;;       (fussy-all-completions string table pred point)))
 
-  (setq fussy-use-cache t
-        fussy-score-fn 'fussy-fzf-native-score
-        fussy-score-ALL-fn 'fussy-fzf-score
-        fussy-filter-fn 'fussy-filter-default)
-  (add-to-list 'completion-styles-alist
-               '(fussy-nospace fussy-try-completions nospace-fussy-all-completions
-                       "Smart Fuzzy completion with scoring."))
-  (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
-  (add-hook 'corfu-mode-hook
-            (lambda ()
-              (setq-local fussy-max-candidate-limit 5000
-                          fussy-default-regex-fn 'fussy-pattern-default
-                          fussy-prefer-prefix t))))
+;;   (setq! fussy-use-cache t
+;;         fussy-score-fn 'fussy-hotfuzz-score
+;;         fussy-score-ALL-fn 'fussy-score
+;;         fussy-filter-fn 'fussy-filter-default)
+;;   (add-to-list 'completion-styles-alist
+;;                '(fussy-nospace fussy-try-completions nospace-fussy-all-completions
+;;                        "Smart Fuzzy completion with scoring."))
+;;   (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
+;;   (add-hook 'corfu-mode-hook
+;;             (lambda ()
+;;               (setq!-local fussy-max-candidate-limit 5000
+;;                           fussy-default-regex-fn 'fussy-pattern-default
+;;                           fussy-prefer-prefix t))))
 
-(use-package! fzf-native
-  :config
-  (fzf-native-load-dyn))
+(use-package! hotfuzz)
+
+(setq! completion-ignore-case t)
 
 (after! vertico
   (cl-defun +vertico-file-search--sort-a (orig-fn &key query in all-files (recursive t) prompt args)
-    (let ((fixed-args (append args '("--sort" "path"))))
+    (let ((fixed-args (append args '("--sort" "path" "--max-filesize" "1000000"))))
       (funcall orig-fn :query query :in in :all-files all-files :recursive recursive :prompt prompt :args fixed-args)))
 
   (advice-add '+vertico-file-search :around #'+vertico-file-search--sort-a))
 
 
 (defun set-completion-desires ()
-  (setq completion-category-overrides '())
+  (setq! completion-category-overrides '())
   (add-to-list 'completion-category-overrides
-         '(file (styles fussy-nospace orderless)))
+               '(file (styles hotfuzz orderless)))
   (add-to-list 'completion-category-overrides
-         '(project-file (styles fussy-nospace orderless)))
+               '(project-file (styles hotfuzz orderless)))
   (add-to-list 'completion-category-overrides
-         '(buffer (styles fussy-nospace orderless)))
+               '(buffer (styles hotfuzz orderless)))
   (add-to-list 'completion-category-overrides
-         '(lsp-capf (styles fussy-nospace orderless))))
+               '(lsp-capf (styles hotfuzz orderless))))
 
 (set-completion-desires)
 
@@ -580,17 +581,17 @@
   (set-completion-desires))
 
 (after! vertico-repeat
-;; added as vertico/consult is adding the # from ripgrep back after resuming
- (defun vertico--trim-hash-prefix (session)
-   (when (cadr session)
-     (setf (cadr session) (string-remove-prefix "#" (cadr session))))
-   session)
+  ;; added as vertico/consult is adding the # from ripgrep back after resuming
+  (defun vertico--trim-hash-prefix (session)
+    (when (cadr session)
+      (setf (cadr session) (string-remove-prefix "#" (cadr session))))
+    session)
 
- (add-to-list 'vertico-repeat-transformers #'vertico--trim-hash-prefix))
+  (add-to-list 'vertico-repeat-transformers #'vertico--trim-hash-prefix))
 
 (after! corfu
   (require 'cape)
-  (setq global-corfu-minibuffer nil))
+  (setq! global-corfu-minibuffer nil))
 
 (use-package! corfu-echo
   :after corfu
@@ -599,46 +600,46 @@
 ;; (use-package! orderless
 ;;   :after corfu
 ;;   :config
-;;   (setq completion-styles '( orderless basic)))
+;;   (setq! completion-styles '( orderless basic)))
 
 (after! marginalia)
-  ;; (setq marginalia-censor-variables nil)
+;; (setq! marginalia-censor-variables nil)
 
-  ;; (defadvice! +marginalia--anotate-local-file-colorful (cand)
-  ;;   "Just a more colourful version of `marginalia--anotate-local-file'."
-  ;;   :override #'marginalia--annotate-local-file
-  ;;   (when-let (attrs (file-attributes (substitute-in-file-name
-  ;;                                      (marginalia--full-candidate cand))
-  ;;                                     'integer))
-  ;;     (marginalia--fields
-  ;;      ((marginalia--file-owner attrs)
-  ;;       :width 12 :face 'marginalia-file-owner)
-  ;;      ((marginalia--file-modes attrs))
-  ;;      ((+marginalia-file-size-colorful (file-attribute-size attrs))
-  ;;       :width 7)
-  ;;      ((+marginalia--time-colorful (file-attribute-modification-time attrs))
-  ;;       :width 12))))
+;; (defadvice! +marginalia--anotate-local-file-colorful (cand)
+;;   "Just a more colourful version of `marginalia--anotate-local-file'."
+;;   :override #'marginalia--annotate-local-file
+;;   (when-let (attrs (file-attributes (substitute-in-file-name
+;;                                      (marginalia--full-candidate cand))
+;;                                     'integer))
+;;     (marginalia--fields
+;;      ((marginalia--file-owner attrs)
+;;       :width 12 :face 'marginalia-file-owner)
+;;      ((marginalia--file-modes attrs))
+;;      ((+marginalia-file-size-colorful (file-attribute-size attrs))
+;;       :width 7)
+;;      ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+;;       :width 12))))
 
-  ;; (defun +marginalia--time-colorful (time)
-  ;;   (let* ((seconds (float-time (time-subtract (current-time) time)))
-  ;;          (color (doom-blend
-  ;;                  (face-attribute 'marginalia-date :foreground nil t)
-  ;;                  (face-attribute 'marginalia-documentation :foreground nil t)
-  ;;                  (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
-  ;;     ;; 1 - log(3 + 1/(days + 1)) % grey
-  ;;     (propertize (marginalia--time time) 'face (list :foreground color))))
+;; (defun +marginalia--time-colorful (time)
+;;   (let* ((seconds (float-time (time-subtract (current-time) time)))
+;;          (color (doom-blend
+;;                  (face-attribute 'marginalia-date :foreground nil t)
+;;                  (face-attribute 'marginalia-documentation :foreground nil t)
+;;                  (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+;;     ;; 1 - log(3 + 1/(days + 1)) % grey
+;;     (propertize (marginalia--time time) 'face (list :foreground color))))
 
-  ;; (defun +marginalia-file-size-colorful (size)
-  ;;   (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
-  ;;          (color (if (< size-index 10000000) ; 10m
-  ;;                     (doom-blend 'orange 'green size-index)
-  ;;                   (doom-blend 'red 'orange (- size-index 1)))))
-  ;;     (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+;; (defun +marginalia-file-size-colorful (size)
+;;   (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+;;          (color (if (< size-index 10000000) ; 10m
+;;                     (doom-blend 'orange 'green size-index)
+;;                   (doom-blend 'red 'orange (- size-index 1)))))
+;;     (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
 (use-package! indent-bars
   :hook (prog-mode . indent-bars-mode)
   :config
-  (setq
+  (setq!
                                         ;indent-bars-prefer-character (eq (window-system) 'ns)
    indent-bars-color '(highlight :face-bg t :blend 0.2)
    indent-bars-pattern "."
@@ -651,7 +652,7 @@
 
 
 (after! doom-modeline
-  (setq doom-modeline-height 30))
+  (setq! doom-modeline-height 30))
 
 (defun auth-source-1password--1password-construct-query-path-escaped (_backend _type host user _port)
   "Construct the full entry-path for the 1password entry for HOST and USER.
@@ -673,21 +674,21 @@
   :custom
   (typst-ts-mode-watch-options "--open"))
 ;;
-(setq mac-command-modifier 'meta
-      mac-option-modifier nil)
+(setq! mac-command-modifier 'meta
+        mac-option-modifier nil)
 
 (after! cape
-  (setq cape-dabbrev-check-other-buffers nil))
+  (setq! cape-dabbrev-check-other-buffers nil))
 
-;; (use-package! ultra-scroll
-;;   :init (setq scroll-conservatively 101
-;;               scroll-margin 0)
-;;   :config (ultra-scroll-mode 1))
+(setq! mac-mouse-wheel-smooth-scroll t)
 
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode 1)
-  (setq pixel-scroll-precision-interpolate-page t
-        pixel-scroll-precision-use-momentum t))
+(use-package! ultra-scroll
+  :config (ultra-scroll-mode 1))
+
+;; (when (fboundp 'pixel-scroll-precision-mode)
+;;   (pixel-scroll-precision-mode 1)
+;;   (setq! pixel-scroll-precision-interpolate-page t
+;;           pixel-scroll-precision-use-momentum t))
 
 (custom-set-faces!
   '(org-level-1 :inherit (fixed-pitch-serif outline-1))
@@ -706,7 +707,7 @@
   (add-hook! org-mode #'+word-wrap-mode)
   (defun org-do-latex-and-related (&rest _)))
 
-(setq org-modern-star 'replace)
+(setq! org-modern-star 'replace)
 
 (use-package! ox-typst
   :after org)
@@ -726,16 +727,17 @@
 ;;   :defer t
 ;;   :hook (org-mode . org-hide-tags-mode))
 
-(setq window-combination-resize t
-      mouse-drag-and-drop-region-cross-program t
-      scroll-margin 0)
+(setq! window-combination-resize t
+        mouse-drag-and-drop-region-cross-program t
+        scroll-margin 0)
 
-(setq parinfer-rust-disable-troublesome-modes t)
+(setq! parinfer-rust-disable-troublesome-modes t)
 
-(setq pdf-tools-installer-os "nixos")
+(setq! pdf-tools-installer-os "nixos")
 
-(setq doom-theme 'doom-lantern)
-;; (setq doom-theme 'doom-opera-light)
+;; (setq! doom-theme 'doom-lantern)
+(setq! doom-theme 'doom-opera-light)
+;; (setq! doom-theme 'doom-opera-light)
 
 (use-package! auto-dark)
 
@@ -746,7 +748,7 @@
   (auto-dark-mode 1))
 
 (after! markdown
-  (setq markdown-fontify-code-blocks-natively t))
+  (setq! markdown-fontify-code-blocks-natively t))
 
 (use-package! scad-mode
   :defer t
@@ -761,8 +763,8 @@
 
 ;; (dtrt-indent-global-mode +1)
 
-(setq flyspell-delay-use-timer t)
-(setq rust-ts-mode-fontify-number-suffix-as-type t)
+(setq! flyspell-delay-use-timer t)
+(setq! rust-ts-mode-fontify-number-suffix-as-type t)
 
 ;; (use-package! jujutsu)
 
@@ -771,105 +773,105 @@
 ;;   :config (difftastic-bindings-mode))
 
 (after! treesit
-  (setq treesit-font-lock-level 4)
-        ;indent-bars-treesit-support t)
+  (setq! treesit-font-lock-level 4)
+                                        ;indent-bars-treesit-support t)
   (add-hook! haskell-ts-mode
     (advice-add #'comment-forward :around #'+haskell-ts--inhibit-forward-comment)))
-    ;; (setq-local +default-want-RET-continue-comments nil
-    ;;             +evil-want-o/O-to-continue-comments nil)))
+;; (setq-local +default-want-RET-continue-comments nil
+;;             +evil-want-o/O-to-continue-comments nil)))
 
-;(defun th/magit--with-difftastic (buffer command)
-;  "Run COMMAND with GIT_EXTERNAL_DIFF=difft then show result in BUFFER."
-;  (let ((process-environment
-;         (cons (concat "GIT_EXTERNAL_DIFF=difft --width="
-;                       (number-to-string (frame-width)))
-;               process-environment)))
-;    ;; Clear the result buffer (we might regenerate a diff, e.g., for
-;    ;; the current changes in our working directory).
-;    (with-current-buffer buffer
-;      (setq buffer-read-only nil)
-;      (erase-buffer))
-;    ;; Now spawn a process calling the git COMMAND.
-;    (make-process
-;     :name (buffer-name buffer)
-;     :buffer buffer
-;     :command command
-;     ;; Don't query for running processes when emacs is quit.
-;     :noquery t
-;     ;; Show the result buffer once the process has finished.
-;     :sentinel (lambda (proc event)
-;                 (when (eq (process-status proc) 'exit)
-;                   (with-current-buffer (process-buffer proc)
-;                     (goto-char (point-min))
-;                     (ansi-color-apply-on-region (point-min) (point-max))
-;                     (setq buffer-read-only t)
-;                     (view-mode)
-;                     (end-of-line)
-;                     ;; difftastic diffs are usually 2-column side-by-side,
-;                     ;; so ensure our window is wide enough.
-;                     (let ((width (current-column)))
-;                       (while (zerop (forward-line 1))
-;                         (end-of-line)
-;                         (setq width (max (current-column) width)))
-;                       ;; Add column size of fringes
-;                       (setq width (+ width
-;                                      (fringe-columns 'left)
-;                                      (fringe-columns 'right)))
-;                       (goto-char (point-min))
-;                       (pop-to-buffer
-;                        (current-buffer)
-;                        `(;; If the buffer is that wide that splitting the frame in
-;                          ;; two side-by-side windows would result in less than
-;                          ;; 80 columns left, ensure it's shown at the bottom.
-;                          ,(when (> 80 (- (frame-width) width))
-;                             #'display-buffer-at-bottom)
-;                          (window-width
-;                           . ,(min width (frame-width))))))))))))
-;
-;(defun th/magit-show-with-difftastic (rev)
-;  "Show the result of \"git show REV\" with GIT_EXTERNAL_DIFF=difft."
-;  (interactive
-;   (list (or
-;          ;; If REV is given, just use it.
-;          (when (boundp 'rev) rev)
-;          ;; If not invoked with prefix arg, try to guess the REV from
-;          ;; point's position.
-;          (and (not current-prefix-arg)
-;               (or (magit-thing-at-point 'git-revision t)
-;                   (magit-branch-or-commit-at-point)))
-;          ;; Otherwise, query the user.
-;          (magit-read-branch-or-commit "Revision"))))
-;  (if (not rev)
-;      (error "No revision specified")
-;    (th/magit--with-difftastic
-;     (get-buffer-create (concat "*git show difftastic " rev "*"))
-;     (list "git" "--no-pager" "show" "--ext-diff" rev))))
-;
-;(defun th/magit-diff-with-difftastic (arg)
-;  "Show the result of \"git diff ARG\" with GIT_EXTERNAL_DIFF=difft."
-;  (interactive
-;   (list (or
-;          ;; If RANGE is given, just use it.
-;          (when (boundp 'range) range)
-;          ;; If prefix arg is given, query the user.
-;          (and current-prefix-arg
-;               (magit-diff-read-range-or-commit "Range"))
-;          ;; Otherwise, auto-guess based on position of point, e.g., based on
-;          ;; if we are in the Staged or Unstaged section.
-;          (pcase (magit-diff--dwim)
-;            ('unmerged (error "unmerged is not yet implemented"))
-;            ('unstaged nil)
-;            ('staged "--cached")
-;            (`(stash . ,value) (error "stash is not yet implemented"))
-;            (`(commit . ,value) (format "%s^..%s" value value))
-;            ((and range (pred stringp)) range)
-;            (_ (magit-diff-read-range-or-commit "Range/Commit"))))))
-;  (let ((name (concat "*git diff difftastic"
-;                      (if arg (concat " " arg) "")
-;                      "*")))
-;    (th/magit--with-difftastic
-;     (get-buffer-create name)
-;     `("git" "--no-pager" "diff" "--ext-diff" ,@(when arg (list arg))))))
+                                        ;(defun th/magit--with-difftastic (buffer command)
+                                        ;  "Run COMMAND with GIT_EXTERNAL_DIFF=difft then show result in BUFFER."
+                                        ;  (let ((process-environment
+                                        ;         (cons (concat "GIT_EXTERNAL_DIFF=difft --width="
+                                        ;                       (number-to-string (frame-width)))
+                                        ;               process-environment)))
+                                        ;    ;; Clear the result buffer (we might regenerate a diff, e.g., for
+                                        ;    ;; the current changes in our working directory).
+                                        ;    (with-current-buffer buffer
+                                        ;      (setq! buffer-read-only nil)
+                                        ;      (erase-buffer))
+                                        ;    ;; Now spawn a process calling the git COMMAND.
+                                        ;    (make-process
+                                        ;     :name (buffer-name buffer)
+                                        ;     :buffer buffer
+                                        ;     :command command
+                                        ;     ;; Don't query for running processes when emacs is quit.
+                                        ;     :noquery t
+                                        ;     ;; Show the result buffer once the process has finished.
+                                        ;     :sentinel (lambda (proc event)
+                                        ;                 (when (eq (process-status proc) 'exit)
+                                        ;                   (with-current-buffer (process-buffer proc)
+                                        ;                     (goto-char (point-min))
+                                        ;                     (ansi-color-apply-on-region (point-min) (point-max))
+                                        ;                     (setq! buffer-read-only t)
+                                        ;                     (view-mode)
+                                        ;                     (end-of-line)
+                                        ;                     ;; difftastic diffs are usually 2-column side-by-side,
+                                        ;                     ;; so ensure our window is wide enough.
+                                        ;                     (let ((width (current-column)))
+                                        ;                       (while (zerop (forward-line 1))
+                                        ;                         (end-of-line)
+                                        ;                         (setq! width (max (current-column) width)))
+                                        ;                       ;; Add column size of fringes
+                                        ;                       (setq! width (+ width
+                                        ;                                      (fringe-columns 'left)
+                                        ;                                      (fringe-columns 'right)))
+                                        ;                       (goto-char (point-min))
+                                        ;                       (pop-to-buffer
+                                        ;                        (current-buffer)
+                                        ;                        `(;; If the buffer is that wide that splitting the frame in
+                                        ;                          ;; two side-by-side windows would result in less than
+                                        ;                          ;; 80 columns left, ensure it's shown at the bottom.
+                                        ;                          ,(when (> 80 (- (frame-width) width))
+                                        ;                             #'display-buffer-at-bottom)
+                                        ;                          (window-width
+                                        ;                           . ,(min width (frame-width))))))))))))
+                                        ;
+                                        ;(defun th/magit-show-with-difftastic (rev)
+                                        ;  "Show the result of \"git show REV\" with GIT_EXTERNAL_DIFF=difft."
+                                        ;  (interactive
+                                        ;   (list (or
+                                        ;          ;; If REV is given, just use it.
+                                        ;          (when (boundp 'rev) rev)
+                                        ;          ;; If not invoked with prefix arg, try to guess the REV from
+                                        ;          ;; point's position.
+                                        ;          (and (not current-prefix-arg)
+                                        ;               (or (magit-thing-at-point 'git-revision t)
+                                        ;                   (magit-branch-or-commit-at-point)))
+                                        ;          ;; Otherwise, query the user.
+                                        ;          (magit-read-branch-or-commit "Revision"))))
+                                        ;  (if (not rev)
+                                        ;      (error "No revision specified")
+                                        ;    (th/magit--with-difftastic
+                                        ;     (get-buffer-create (concat "*git show difftastic " rev "*"))
+                                        ;     (list "git" "--no-pager" "show" "--ext-diff" rev))))
+                                        ;
+                                        ;(defun th/magit-diff-with-difftastic (arg)
+                                        ;  "Show the result of \"git diff ARG\" with GIT_EXTERNAL_DIFF=difft."
+                                        ;  (interactive
+                                        ;   (list (or
+                                        ;          ;; If RANGE is given, just use it.
+                                        ;          (when (boundp 'range) range)
+                                        ;          ;; If prefix arg is given, query the user.
+                                        ;          (and current-prefix-arg
+                                        ;               (magit-diff-read-range-or-commit "Range"))
+                                        ;          ;; Otherwise, auto-guess based on position of point, e.g., based on
+                                        ;          ;; if we are in the Staged or Unstaged section.
+                                        ;          (pcase (magit-diff--dwim)
+                                        ;            ('unmerged (error "unmerged is not yet implemented"))
+                                        ;            ('unstaged nil)
+                                        ;            ('staged "--cached")
+                                        ;            (`(stash . ,value) (error "stash is not yet implemented"))
+                                        ;            (`(commit . ,value) (format "%s^..%s" value value))
+                                        ;            ((and range (pred stringp)) range)
+                                        ;            (_ (magit-diff-read-range-or-commit "Range/Commit"))))))
+                                        ;  (let ((name (concat "*git diff difftastic"
+                                        ;                      (if arg (concat " " arg) "")
+                                        ;                      "*")))
+                                        ;    (th/magit--with-difftastic
+                                        ;     (get-buffer-create name)
+                                        ;     `("git" "--no-pager" "diff" "--ext-diff" ,@(when arg (list arg))))))
 
 (defun treesit-language-at (position)
   "Return the language at POSITION.
@@ -906,18 +908,20 @@ the return value of that function instead."
 ;;          (define-word identifier nil arg))
 ;;         ((user-error "No dictionary backend is available"))))
 
-(setq pdf-view-selection-style 'glyph)
+(setq! pdf-view-selection-style 'glyph)
 
-(setq odict-dictionaries (list
-                          (f-canonical (f-join "~" "Dropbox" "dictionaries" "deutsch.odict")))
-      odict-default-dictionary "deutsch")
+(setq! odict-dictionaries (list
+                           (f-canonical (f-join "~" "Dropbox" "dictionaries" "deutsch.odict")))
+        odict-default-dictionary "deutsch")
 
-(after! org-typst
+(add-hook! org-mode-hook
   (defun org-typst-node-property (node-property _contents _info)
-     (format "%s:%s" (org-element-property :key node-property)
-             (let ((value (org-element-property :value node-property)))
-               (if value (concat " " value) ""))))
+    (format "%s:%s" (org-element-property :key node-property)
+            (let ((value (org-element-property :value node-property)))
+              (if value (concat " " value) ""))))
 
   (defun org-typst-verse-block (verse-block contents info)
     contents))
-     ;; (org-typst--raw contents verse-block info nil t))
+;; (org-typst--raw contents verse-block info nil t))
+
+(add-hook! tsx-ts-mode (lsp!))

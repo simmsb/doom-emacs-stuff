@@ -25,7 +25,7 @@
 (defvar odict-program-path (executable-find "odict"))
 
 (jeison-odict-defclass odict-pronunciation nil
-  ((kind :type string) (value :type string)))
+  ((kind :initform nil) (value :type string)))
 
 (jeison-odict-defclass odict-translation nil
   ((lang :type string) (value :type string)))

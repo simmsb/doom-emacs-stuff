@@ -16,7 +16,8 @@
         corfu
         pdf-tools
         parinfer-rust-mode
-        magit transient forge)
+        magit transient forge
+        ultra-scroll)
 
 ;; (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
@@ -34,7 +35,7 @@
 ;(package! emacsql
 ;  :recipe (:host github :repo "magit/emacsql"))
 ;(package! magit :recipe (:host github :repo "simmsb/magit" :branch "aaa") :pin "282cc8bc2b100c14dfa8350ec0159ec3bbdc7916")
-(package! magit :recipe (:host github :repo "magit/magit") :pin "f2a61334430291d2162a68138c95ab310a8557f1")
+(package! magit :recipe (:host github :repo "magit/magit"))
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
 
@@ -42,7 +43,7 @@
 
 ;; (package! jujutsu :recipe (:host github :repo "bennyandresen/jujutsu.el"))
 
-(package! lsp-haskell :recipe (:host github :repo "magthe/lsp-haskell") :pin "8ab3e7fde0a275284c4ad4c58c0d12bc0a00ebaa")
+(package! lsp-haskell :recipe (:host github :repo "magthe/lsp-haskell"))
 ;; (package! haskell-ts-mode
 ;;   :recipe (
 ;;            :host codeberg
@@ -70,14 +71,19 @@
 ;;   :recipe (:host github :repo "jcs-elpa/flx-rs"
 ;;                  :files (:defaults "bin")))
 
-(package! fzf-native
-  :recipe (:repo "dangduc/fzf-native"
-           :host github
-           :files (:defaults "bin")))
+;; (package! fzf-native
+;;   :recipe (:repo "dangduc/fzf-native"
+;;            :host github
+;;            :files (:defaults "bin")))
 
-(package! fussy
-  :recipe (:host github :repo "jojojames/fussy"
-           :files (:defaults "bin")))
+(package! hotfuzz :type 'built-in :built-in t)
+(package! jinx :type 'built-in :built-in t)
+(package! vterm :type 'built-in :built-in t)
+
+
+;; (package! fussy
+;;   :recipe (:host github :repo "jojojames/fussy"
+;;            :files (:defaults "bin")))
 
 (package! indent-bars
   :recipe (:host github :repo "jdtsmith/indent-bars"))
