@@ -136,3 +136,5 @@
 
 (package! ox-typst
   :recipe (:host github :repo "jmpunkt/ox-typst"))
+
+(package! rainbow-delimiters)

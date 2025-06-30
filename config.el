@@ -353,8 +353,10 @@
           lsp-javascript-display-variable-type-hints t))
 
 (add-hook! prog-mode
-  (unless (member major-mode '("tsx-ts-mode"))
-    (rainbow-delimiters-mode)))
+  (rainbow-delimiters-mode))
+
+(add-hook! tsx-ts-mode
+  (rainbow-delimiters-mode -1))
 
 (after! engrave-faces
   (setq! engrave-faces-attributes-of-interest
@@ -739,8 +741,9 @@
 
 (setq! pdf-tools-installer-os "nixos")
 
-;; (setq! doom-theme 'doom-lantern)
-(setq! doom-theme 'doom-opera-light)
+(setq! doom-theme 'doom-lantern)
+;; (setq! doom-theme 'doom-opera-light
+;;        frame-background-mode 'light)
 ;; (setq! doom-theme 'doom-opera-light)
 
 (use-package! auto-dark)
@@ -748,7 +751,7 @@
 (after! doom-ui
   (setq! auto-dark-allow-osascript t
          auto-dark-dark-theme doom-theme
-         auto-dark-light-theme 'doom-tomorrow-day)
+         auto-dark-light-theme 'doom-opera-light)
   (auto-dark-mode 1))
 
 (after! markdown
@@ -928,4 +931,8 @@ the return value of that function instead."
     contents))
 ;; (org-typst--raw contents verse-block info nil t))
 
-(add-hook! tsx-ts-mode (lsp!))
+(add-hook! (tsx-ts-mode typescript-ts-mode) (lsp!))
+
+(setq! jinx-languages "en_GB")
+
+(add-hook! yaml-mode (lsp!))

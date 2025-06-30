@@ -113,7 +113,7 @@
          ;; (clojure +lsp)
          plantuml
          pest
-         (yaml +lsp)
+         (yaml +lsp +tree-sitter)
          (json +lsp)
          ;p4
          ;jade
@@ -183,8 +183,11 @@
 (setq major-mode-remap-alist
       '((yaml-mode . yaml-ts-mode)
         (json-mode . json-ts-mode)
+        (typescript-mode . typscript-ts-mode)
         (typescript-tsx-mode . tsx-ts-mode)))
 
         ;; (tsx-ts-mode . typescript-tsx-mode)))
 
 (setq shell-file-name (executable-find "bash"))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
