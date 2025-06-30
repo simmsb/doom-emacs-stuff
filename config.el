@@ -287,6 +287,8 @@
   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
 
 (after! magit
+  (setq! git-commit-summary-max-length 72)
+
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
   (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
   (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
@@ -643,18 +645,17 @@
   :config
   (setq!
                                         ;indent-bars-prefer-character (eq (window-system) 'ns)
-   indent-bars-color '(highlight :face-bg t :blend 0.2)
    indent-bars-pattern "."
-   indent-bars-width-frac 0.2
-   indent-bars-pad-frac 0.2
+   indent-bars-width-frac 0.20
+   indent-bars-pad-frac 0.1
    indent-bars-zigzag nil
    indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1)
-   indent-bars-highlight-current-depth nil
-   indent-bars-display-on-blank-lines nil))
+   indent-bars-highlight-current-depth '(:blend 0.5)
+   indent-bars-display-on-blank-lines t))
 
 
 (after! doom-modeline
-  (setq! doom-modeline-height 30))
+  (setq! doom-modeline-height 23))
 
 (defun auth-source-1password--1password-construct-query-path-escaped (_backend _type host user _port)
   "Construct the full entry-path for the 1password entry for HOST and USER.
@@ -751,7 +752,7 @@
 (after! doom-ui
   (setq! auto-dark-allow-osascript t
          auto-dark-dark-theme doom-theme
-         auto-dark-light-theme 'doom-opera-light)
+         auto-dark-light-theme 'doom-one-light)
   (auto-dark-mode 1))
 
 (after! markdown
@@ -931,8 +932,15 @@ the return value of that function instead."
     contents))
 ;; (org-typst--raw contents verse-block info nil t))
 
-(add-hook! (tsx-ts-mode typescript-ts-mode) (lsp!))
-
 (setq! jinx-languages "en_GB")
 
 (add-hook! yaml-mode (lsp!))
+
+(use-package! typescript-ts-mode
+  :mode (("\\.ts\\'" . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode))
+  :config
+  (add-hook! '(typescript-ts-mode-hook tsx-ts-mode-hook) #'lsp!))
+
+;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))

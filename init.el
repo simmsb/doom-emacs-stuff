@@ -128,7 +128,7 @@
          (haskell +lsp)
          ;(java +lsp)
          ;(kotlin +lsp)
-         (javascript +lsp +tree-sitter)
+         ;; (javascript +lsp +tree-sitter)
          ;(latex +pdf-tools)
          markdown
          ;(csharp +lsp)
@@ -141,7 +141,7 @@
           +pandoc
           +present
           +hugo
-          pretty)
+          +pretty)
          (python +lsp +pyright +tree-sitter)
          rest
          (rust +lsp)
@@ -182,12 +182,10 @@
 
 (setq major-mode-remap-alist
       '((yaml-mode . yaml-ts-mode)
-        (json-mode . json-ts-mode)
-        (typescript-mode . typscript-ts-mode)
-        (typescript-tsx-mode . tsx-ts-mode)))
+        (json-mode . json-ts-mode)))
+        ;; (typescript-mode . typscript-ts-mode)
+        ;; (typescript-tsx-mode . tsx-ts-mode)))
 
         ;; (tsx-ts-mode . typescript-tsx-mode)))
 
 (setq shell-file-name (executable-find "bash"))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
