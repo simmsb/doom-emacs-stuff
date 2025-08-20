@@ -174,13 +174,14 @@
 
 (after! lsp-haskell
   (setq! lsp-haskell-formatting-provider "ormolu"
-          lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-RTS")
+          ;; lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-xn" "-RTS")
+          lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-c" "-H" "-RTS")
           lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
           lsp-haskell-tactics-on nil
           lsp-haskell-plugin-rename-config-cross-module t
-          lsp-haskell-max-completions 100)
-  ;; multicomponent seems to break things :/
-  ;; lsp-haskell-session-loading "multipleComponents")
+          lsp-haskell-max-completions 100
+          lsp--show-message nil
+          lsp-haskell-session-loading "multipleComponents")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed)
 
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
@@ -312,6 +313,10 @@
 
   (advice-add 'magit-rev-name :around #'magit--rev-name-cached))
 
+(use-package! magit-prime
+  :config
+  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
+
 (after! flycheck
   (add-hook! haskell-mode
     (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc)
@@ -368,7 +373,6 @@
 
 (after! haskell-mode
   (setq! haskell-auto-insert-module-format-string "module %s\n    (\n     ) where"))
-
 
 (after! evil
   (setq! ;; evil-normal-state-cursor '(box "light blue")
@@ -688,10 +692,9 @@
 (use-package! ultra-scroll
   :config (ultra-scroll-mode 1))
 
-;; (when (fboundp 'pixel-scroll-precision-mode)
-;;   (pixel-scroll-precision-mode 1)
-;;   (setq! pixel-scroll-precision-interpolate-page t
-;;           pixel-scroll-precision-use-momentum t))
+(when (fboundp 'pixel-scroll-precision-mode)
+
+  (setq! pixel-scroll-precision-interpolate-page t))
 
 (custom-set-faces!
   '(org-level-1 :inherit (fixed-pitch-serif outline-1))
@@ -751,8 +754,7 @@
 
 (after! doom-ui
   (setq! auto-dark-allow-osascript t
-         auto-dark-dark-theme doom-theme
-         auto-dark-light-theme 'doom-one-light)
+         auto-dark-themes `((,doom-theme) (doom-one-light)))
   (auto-dark-mode 1))
 
 (after! markdown
@@ -944,3 +946,8 @@ the return value of that function instead."
 
 ;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+
+(use-package! ast-grep)
+
+(after! (nerd-icons haskell-ts-mode)
+  (add-to-list 'nerd-icons-mode-icon-alist '(haskell-ts-mode nerd-icons-devicon "nf-dev-haskell" :face nerd-icons-red)))

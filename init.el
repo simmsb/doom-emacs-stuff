@@ -169,7 +169,7 @@
 
 (setq custom-safe-themes t)
 
-(fringe-mode 4)
+(setq! fringe-mode 4)
 
 (setq gcmh-high-cons-threshold (* 256 1024 1024)
       read-process-output-max (* 1024 1024))

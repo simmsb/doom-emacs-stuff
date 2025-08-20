@@ -523,32 +523,6 @@
      (catch-all haskell-ts--indent-for-maybe-expr 2)))
   "\"Simple\" treesit indentation rules for haskell.")
 
-
-(defvar haskell-ts-mode-syntax-table
-  (eval-when-compile
-    (let ((table (make-syntax-table))
-          (imenu-syntax-list
-           `((" " " \t\n\r\f\v")
-             ("_" "!#$%&*+./<=>?\\^|-~:")
-             ("w" ?_ ?\')
-             ("." ",:@")
-             ("\"" ?\")
-             ("()" ?\()
-             (")(" ?\))
-             ("(]" ?\[)
-             (")[" ?\])
-             ("$`" ?\`)
-             ("(}1nb" ?\{)
-             ("){4nb" ?\})
-             ("_ 123" ?-)
-             (">" "\r\n\f\v"))))
-      (dolist (ls imenu-syntax-list table)
-        (dolist (char (if (stringp (cadr ls))
-                          (string-to-list (cadr ls))
-                        (cdr ls)))
-          (modify-syntax-entry char (car ls) table)))))
-  "The syntax table for haskell.")
-
 (defun haskell-ts-sexp (node)
   "Returns non-nil on a sexp node."
   (let ((node-text (treesit-node-text node 1)))
@@ -582,7 +556,8 @@
 (defun haskell-ts-mode--comment-forward (n)
   (while (> n 0)
     (setq n
-          (if (and (looking-at comment-start-skip)
+          (if (and (skip-syntax-forward "\s")
+                   (looking-at comment-start-skip)
                    (goto-char (match-end 0))
                    (re-search-forward comment-end-skip nil 'move))
             (1- n)
@@ -595,10 +570,16 @@
       (haskell-ts-mode--comment-forward n)
     (funcall orig-fn n)))
 
+(defvar haskell-ts-mode-syntax-table
+  (let ((table (copy-syntax-table haskell-mode-syntax-table)))
+    ;; This seems to be borked
+    (modify-syntax-entry ?- ". 123" table)
+    table))
+
 ;;;###autoload
 (define-derived-mode haskell-ts-mode prog-mode "Haskell TS Mode"
   "Major mode for Haskell files using tree-sitter."
-  :table haskell-mode-syntax-table
+  :syntax-table haskell-ts-mode-syntax-table
   (unless (treesit-ready-p 'haskell)
     (error "Tree-sitter for Haskell is not available"))
   (setq treesit-primary-parser (treesit-parser-create 'haskell))
@@ -606,22 +587,29 @@
         (lambda (&rest _) 'haskell))
   (setq-local treesit-defun-type-regexp "\\(?:\\(?:function\\|struct\\)_definition\\)")
   ;; Indent
+  ;;
   (when haskell-ts-use-indent
     (setq-local treesit-simple-indent-rules haskell-ts-indent-rules)
     (setq-local indent-tabs-mode nil))
   (setq-local electric-indent-functions '(haskell-ts-indent-after-newline))
-  ;; Comment
-  (setq-local comment-start "--")
-  (setq-local comment-use-syntax t)
-  (setq-local comment-padding " ")
-  (setq-local comment-start-skip "[-{]-[ \t]*")
-  (setq-local comment-end "")
-  (setq-local comment-end-skip "[ \t]*\\(-}\\|\\s>\\)")
-  (setq-local comment-auto-fill-only-comments t)
+  ;; (haskell-indentation-mode +1)
 
   (setq-local paragraph-start (concat " *{-\\([^#]\\|$\\)\\| *-- |\\|" page-delimiter))
   (setq-local paragraph-separate (concat " *$\\| *\\({-\\([^#]\\|$\\)\\|\\([^#]\\|^\\)-}\\) *$\\|" page-delimiter))
   (setq-local fill-paragraph-function 'haskell-fill-paragraph)
+  ;; (setq-local adaptive-fill-function 'haskell-adaptive-fill)
+  (setq-local comment-start "--")
+  (setq-local comment-padding 1)
+  (setq-local comment-start-skip "[-{]-[ \t]*")
+  (setq-local comment-end "")
+  (setq-local comment-end-skip "[ \t]*\\(-}\\|\\s>\\)")
+  (setq-local forward-sexp-function #'haskell-forward-sexp)
+  (setq-local parse-sexp-ignore-comments nil)
+  (setq-local comment-auto-fill-only-comments t)
+  (setq-local comment-use-syntax t
+              comment-use-syntax-ppss t)
+  (when (boundp 'electric-indent-inhibit)
+    (setq electric-indent-inhibit t))
 
   ;; Electric
   (setq-local electric-pair-pairs
@@ -648,6 +636,7 @@
                  (lambda (node)
                    (treesit-node-text (treesit-node-child node 1))))))
   ;; font-lock
+  (setq-local font-lock-multiline t)
   (setq-local treesit-font-lock-level haskell-ts-font-lock-level)
   (setq-local treesit-font-lock-settings haskell-ts-font-lock)
   (setq-local treesit-font-lock-feature-list

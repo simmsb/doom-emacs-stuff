@@ -38,6 +38,8 @@
 (package! magit :recipe (:host github :repo "magit/magit"))
 (package! transient :recipe (:host github :repo "magit/transient"))
 (package! forge :recipe (:host github :repo "magit/forge"))
+(package! magit-prime
+  :recipe (:host github :repo "Azkae/magit-prime"))
 
 (package! nushell-ts-mode :recipe (:host github :repo "herbertjones/nushell-ts-mode"))
 
@@ -138,3 +140,4 @@
   :recipe (:host github :repo "jmpunkt/ox-typst"))
 
 (package! rainbow-delimiters)
+(package! ast-grep :recipe (:host github :repo "SunskyXH/ast-grep.el"))
