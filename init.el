@@ -26,6 +26,7 @@
 
 
 (doom! `(:editor
+         (whitespace +guess +trim)
          file-templates
          snippets
          (evil +everywhere)

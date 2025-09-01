@@ -183,3 +183,16 @@
         (erase-buffer)
         (insert (pp-to-string results))
         (pop-to-buffer buf)))))
+
+
+;;;###autoload
+(defun jj-or-magit-log ()
+  "Open jj-log if a jj repo, or magit-log otherwise"
+  (interactive)
+  (let ((exit-code
+          (with-temp-buffer
+            (apply #'process-file jj-executable nil t nil '("root")))))
+    (if (= 0 exit-code)
+        (let ((default-directory (magit-toplevel)))
+          (call-interactively #'jj-log))
+      (call-interactively #'magit))))

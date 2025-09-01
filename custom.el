@@ -6,7 +6,8 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(affe boxes erefactor hotfuzz jeison jinx parseedn pdf-tools vterm))
+   '(affe boxes erefactor hotfuzz jeison jinx parseedn pdf-tools treesit-auto vc-jj
+     vterm))
  '(safe-local-variable-values
    '((add-log-current-defun-header-regexp . "^\\([-_.[:alnum:]]+\\)[ \11]*:")
      (langtool-default-language . "de-DE") (lsp-elixir-project-dir . "web/"))))

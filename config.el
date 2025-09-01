@@ -57,6 +57,9 @@
    :desc "Lookup word in dict" "t" #'odict-lookup
    :desc "Fuzzy search word in dict" "T" #'odict-search)
 
+  (:prefix "g"
+   :desc "JJ or Magit log" "g" #'jj-or-magit-log)
+
   :desc "Vertico repeat select" "\"" #'vertico-repeat-select)
 
  (:map evilem-map
@@ -109,6 +112,45 @@
 (defun do-nothing (&rest _)
   (interactive)
   "Does nothing.")
+
+(use-package! vc-jj)
+(use-package! jj-mode
+  :load-path "~/.doom.d/local/jj-mode.el"
+  :config
+  (setq! jj-log-display-function #'switch-to-buffer)
+  (defconst evil-collection-jj-mode-maps '(jj-mode-map))
+  (evil-set-initial-state 'jj-mode 'normal)
+  (evil-collection-define-key 'normal 'jj-mode-map
+    "n" 'magit-section-forward
+    "p" 'magit-section-backward
+    "." 'jj-goto-current
+    "TAB" 'magit-section-toggle
+    "q" 'quit-window
+
+    ;; Basic operations
+    "g" 'jj-log-refresh
+    "c" 'jj-commit
+    "e" 'jj-edit-changeset
+    "u" 'jj-undo
+    "N" 'jj-new-transient
+    "s" 'jj-squash-transient
+    "c" 'jj-commit
+    "d" 'jj-describe
+    "a" 'jj-abandon
+
+    ;; Advanced Operations
+    "RET" 'jj-enter-dwim
+    "b" 'jj-bookmark-transient
+    "r" 'jj-rebase-transient
+    "G" 'jj-git-transient
+
+    ;; Experimental
+    "D" 'jj-diff
+    "E" 'jj-diffedit-emacs
+    "M" 'jj-diffedit-smerge
+
+    "?" 'jj-mode-transient))
+
 
 (use-package! disable-mouse)
 (use-package! github-review)
@@ -174,14 +216,16 @@
 
 (after! lsp-haskell
   (setq! lsp-haskell-formatting-provider "ormolu"
-          ;; lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-xn" "-RTS")
-          lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-c" "-H" "-RTS")
-          lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
-          lsp-haskell-tactics-on nil
-          lsp-haskell-plugin-rename-config-cross-module t
-          lsp-haskell-max-completions 100
-          lsp--show-message nil
-          lsp-haskell-session-loading "multipleComponents")
+         lsp-haskell--original-server-args lsp-haskell-server-args
+         ;; lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-xn" "-RTS")
+         lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N8" "-xn" "-RTS")
+         ;; lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N8" "-c" "-H" "-RTS")
+         lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
+         lsp-haskell-tactics-on nil
+         lsp-haskell-plugin-rename-config-cross-module t
+         lsp-haskell-max-completions 100
+         lsp--show-message nil
+         lsp-haskell-session-loading "multipleComponents")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed)
 
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
@@ -286,6 +330,18 @@
             (cons "emacs-lsp-booster" orig-result))
         orig-result)))
   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+
+(defvar known-parser-results (make-hash-table :test 'equal))
+
+(defun my-treesit-language-available-p (orig &rest args)
+  "Keep track of failures"
+  (if (hash-table-contains-p args known-parser-results)
+      (gethash args known-parser-results)
+    (let* ((r (apply orig args)))
+      (puthash args r known-parser-results)
+      r)))
+
+(advice-add 'treesit-language-available-p :around #'my-treesit-language-available-p)
 
 (after! magit
   (setq! git-commit-summary-max-length 72)
@@ -451,6 +507,9 @@
 
 (setq! +treemacs-git-mode 'deferred)
 
+(after! transient
+  (setq transient-default-level 7))
+
 (after! treemacs
   (treemacs-follow-mode +1)
   (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
@@ -558,7 +617,22 @@
 ;;                           fussy-default-regex-fn 'fussy-pattern-default
 ;;                           fussy-prefer-prefix t))))
 
-(use-package! hotfuzz)
+(use-package! hotfuzz
+  :config
+  (defun nospace-hotfuzz-all-completions (string table &optional pred point)
+    "Get hotfuzz-completions of STRING in TABLE.
+        See `completion-all-completions' for the semantics of PRED and POINT.
+        This function prematurely sorts the completions; mutating the result
+        before passing it to `display-sort-function' or `cycle-sort-function'
+        will lead to inaccuracies."
+    (unless (string-search " " string)
+      (hotfuzz-all-completions string table pred point)))
+  (add-to-list 'completion-styles-alist
+               '(hotfuzz-nospace completion-flex-try-completion nospace-hotfuzz-all-completions
+                         "Fuzzy completion."))
+  (put 'hotfuzz-nospace 'completion--adjust-metadata #'hotfuzz--adjust-metadata))
+
+(use-package! nucleo)
 
 (setq! completion-ignore-case t)
 
@@ -573,13 +647,13 @@
 (defun set-completion-desires ()
   (setq! completion-category-overrides '())
   (add-to-list 'completion-category-overrides
-               '(file (styles hotfuzz orderless)))
+               '(file (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
-               '(project-file (styles hotfuzz orderless)))
+               '(project-file (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
-               '(buffer (styles hotfuzz orderless)))
+               '(buffer (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
-               '(lsp-capf (styles hotfuzz orderless))))
+               '(lsp-capf (styles nucleo orderless))))
 
 (set-completion-desires)
 
