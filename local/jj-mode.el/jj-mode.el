@@ -132,7 +132,7 @@ if(self.root(),
       separate('\x1e',
         format_short_change_id_with_hidden_and_divergent_info(self),
         format_short_signature(self.author()),
-        coalesce(concat(self.bookmarks(), self.tags(), self.working_copies()), ' '),
+        coalesce(separate(' ', self.bookmarks().join(' '), self.tags().join(' '), self.working_copies().join(' ')), ' '),
         if(self.git_head(), label('git_head', 'git_head()'), ' '),
         if(self.conflict(), label('conflict', 'conflict'), ' '),
         if(config('ui.show-cryptographic-signatures').as_boolean(),
@@ -476,17 +476,17 @@ The results of this fn are fed into `jj--parse-log-entries'."
                "\n"))) ; Join lines with newline, prefixed by indentation
 
 (defun jj--right-align-string (s)
-  (let ((w (string-pixel-width (concat s " "))))
+  (let ((w (string-pixel-width (concat s "  "))))
     (concat
-     (propertize " " 'display `(space :align-to (- right (,w))))
-     s)))
+     (propertize " " 'display `(space :align-to (- right (,w))) 'invisible t)
+     s
+     " ")))
 
 (defun jj-log-insert-logs ()
   "Insert jj log graph into current buffer."
   (magit-insert-section (jj-log-graph-section)
     (magit-insert-heading "Log Graph")
     (dolist (entry (jj-parse-log-entries))
-      (message "%s" entry)
       (magit-insert-section section (jj-log-entry-section entry t)
                             (oset section commit-id (plist-get entry :id))
                             (oset section description (plist-get entry :description))
