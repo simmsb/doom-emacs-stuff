@@ -2,6 +2,7 @@
 
 (require 'cl-lib)
 (require 'f)
+;; (require 'strie)
 
 (setq! warning-minimum-level :error)
 (setq! compile-angel-predicate-function
@@ -113,7 +114,19 @@
   (interactive)
   "Does nothing.")
 
-(use-package! vc-jj)
+;; (defvar vc-jj--cache-root (strie-new))
+
+;; (defun vc-jj--cache-root (orig-fn file)
+;;   (if-let* ((r (strie-get vc-jj--cache-root file)))
+;;       r
+;;     (let* ((root (funcall orig-fn file)))
+;;       (strie-add vc-jj--cache-root root root)
+;;       root)))
+
+;; (use-package! vc-jj
+;;   :config
+;;   (advice-add #'vc-jj-root :around #'vc-jj--cache-root))
+
 (use-package! jj-mode
   :load-path "~/.doom.d/local/jj-mode.el"
   :config
@@ -473,6 +486,8 @@
 
 (setq! display-line-numbers-type nil)
 
+(setq! line-move-ignore-invisible nil)
+
 (tooltip-mode t)
 (global-subword-mode 1)
 
@@ -644,16 +659,27 @@
   (advice-add '+vertico-file-search :around #'+vertico-file-search--sort-a))
 
 
+'(
+  (defun completion--category-override (category tag)
+    (message "category: %s tag: %s" category tag)
+    (or (assq tag (cdr (assq category completion-category-overrides)))
+        (assq tag (cdr (assq category completion-category-defaults)))))
+  '())
+
 (defun set-completion-desires ()
   (setq! completion-category-overrides '())
   (add-to-list 'completion-category-overrides
-               '(file (styles nucleo orderless)))
+               '(file (styles orderless)))
   (add-to-list 'completion-category-overrides
                '(project-file (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
+               '(command (styles nucleo orderless)))
+  (add-to-list 'completion-category-overrides
                '(buffer (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
-               '(lsp-capf (styles nucleo orderless))))
+               '(lsp-capf (styles nucleo orderless)))
+  (add-to-list 'completion-category-overrides
+               '(nil (styles nucleo orderless))))
 
 (set-completion-desires)
 

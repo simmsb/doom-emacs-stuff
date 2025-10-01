@@ -175,7 +175,7 @@ if(self.root(),
 (defun jj--run-command (&rest args)
   "Run jj command with ARGS and return output."
   (let ((start-time (current-time))
-        (safe-args (seq-remove #'null args))
+        (safe-args (seq-remove #'null (append args '("--quiet"))))
         result exit-code)
     (jj--debug "Running command: %s %s" jj-executable (string-join safe-args " "))
     (with-temp-buffer
@@ -192,9 +192,10 @@ if(self.root(),
   "Run jj command with ARGS and return colorized output."
   (jj--debug "Running color command: %s --color=always %s" jj-executable (string-join args " "))
   (let ((start-time (current-time))
+        (current-width (window-width))
         result exit-code)
     (with-temp-buffer
-      (let ((process-environment (cons "FORCE_COLOR=1" (cons "CLICOLOR_FORCE=1" process-environment))))
+      (let ((process-environment (append `("FORCE_COLOR=1" "CLICOLOR_FORCE=1" ,(format "DFT_WIDTH=%d" current-width)) process-environment)))
         (setq exit-code (apply #'process-file jj-executable nil t nil "--color=always" args))
         (setq result (ansi-color-apply (buffer-string)))
         (jj--debug "Color command completed in %.3f seconds, exit code: %d"
@@ -330,7 +331,7 @@ When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
          (args (append '("bookmark" "list")
                        (and all-remotes '("--all"))
                        (list "-T" template))))
-    (split-string (apply #'jj--run-command args) "\n" t)))
+    (delete-dups (split-string (apply #'jj--run-command args) "\n" t))))
 
 (defun jj--handle-push-result (cmd-args result success-msg)
   "Enhanced push result handler with bookmark analysis."
@@ -385,26 +386,6 @@ When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
         (message "%s" success-msg))
       t))))
 
-(defun jj--analyze-status-for-hints (status-output)
-  "Analyze jj status output and provide helpful hints."
-  (when (and status-output (not (string-empty-p status-output)))
-    (cond
-     ;; No changes
-     ((string-match-p "The working copy is clean" status-output)
-      (message "Working copy is clean - no changes to commit"))
-
-     ;; Conflicts present
-     ((string-match-p "There are unresolved conflicts" status-output)
-      (message "💡 Resolve conflicts with 'jj resolve' or use diffedit (E/M)"))
-
-     ;; Untracked files
-     ((string-match-p "Untracked paths:" status-output)
-      (message "💡 Add files with 'jj file track' or create .gitignore"))
-
-     ;; Working copy changes
-     ((string-match-p "Working copy changes:" status-output)
-      (message "💡 Commit changes with 'jj commit' or describe with 'jj describe'")))))
-
 (defclass jj-commit-section (magit-section)
   ((commit-id :initarg :commit-id)
    (author :initarg :author)
@@ -428,12 +409,6 @@ When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
    (start :initarg :hunk-start)
    (header :initarg :header)))
 
-
-(defun jj--strip-graph-prefix (s)
-  "Drop leading ASCII-graph glyphs and spaces from line S."
-  (when s
-    (let* ((rx "^[[:space:]│├┤┬┴┼─╭╮╰╯╱╲×╳•○●◆@~]+"))
-      (string-trim-left s rx))))
 
 (defun jj-parse-log-entries (&optional buf)
   "Get log line pairs from BUF (defaults to `current-buffer').
@@ -507,9 +482,7 @@ The results of this fn are fed into `jj--parse-log-entries'."
       (magit-insert-section (jj-status-section)
         (magit-insert-heading "Working Copy Status")
         (insert status-output)
-        (insert "\n")
-        ;; Analyze status and provide hints in the minibuffer
-        (jj--analyze-status-for-hints status-output)))))
+        (insert "\n")))))
 
 (defun jj-log-insert-diff ()
   "Insert jj diff with hunks into current buffer."
@@ -1081,68 +1054,108 @@ The results of this fn are fed into `jj--parse-log-entries'."
       (jj--run-command "bookmark" "create" name "-r" commit-id)
       (jj-log-refresh))))
 
-(defun jj-bookmark-abandon ()
-  "Abandon a bookmark."
+(defun jj-bookmark-delete ()
+  "Delete a bookmark (propagates on push)."
   (interactive)
-  (let* ((bookmarks-output (jj--run-command "bookmark" "list"))
-         (bookmarks (seq-filter
-                     (lambda (line) (not (string-empty-p line)))
-                     (split-string bookmarks-output "\n")))
-         (bookmark-names (mapcar
-                          (lambda (line)
-                            (when (string-match "^\\([^:]+\\)" line)
-                              (match-string 1 line)))
-                          bookmarks))
-         (bookmark-names (seq-filter 'identity bookmark-names)))
-    (if bookmark-names
-        (let ((choice (completing-read "Abandon bookmark (deletes on remote): " bookmark-names)))
-          (when choice
-            (jj--run-command "bookmark" "delete" choice)
-            (jj-log-refresh)
-            (message "Abandoned bookmark '%s'" choice)))
-      (message "No bookmarks found"))))
+  (let* ((names (jj--get-bookmark-names))
+         (choice (and names (completing-read "Delete bookmark (propagates on push): " names nil t))))
+    (if (not choice)
+        (message "No bookmarks found")
+      (jj--run-command "bookmark" "delete" choice)
+      (jj-log-refresh)
+      (message "Deleted bookmark '%s'" choice))))
 
 (defun jj-bookmark-forget ()
-  "Forget a bookmark."
+  "Forget a bookmark (no propagation)."
   (interactive)
-  (let* ((bookmarks-output (jj--run-command "bookmark" "list"))
-         (bookmarks (seq-filter
-                     (lambda (line) (not (string-empty-p line)))
-                     (split-string bookmarks-output "\n")))
-         (bookmark-names (mapcar
-                          (lambda (line)
-                            (when (string-match "^\\([^:]+\\)" line)
-                              (match-string 1 line)))
-                          bookmarks))
-         (bookmark-names (seq-filter 'identity bookmark-names)))
-    (if bookmark-names
-        (let ((choice (completing-read "Forget bookmark: " bookmark-names)))
-          (when choice
-            (jj--run-command "bookmark" "forget" choice)
-            (jj-log-refresh)
-            (message "Forgot bookmark '%s'" choice)))
-      (message "No bookmarks found"))))
+  (let* ((names (jj--get-bookmark-names))
+         (choice (and names (completing-read "Forget bookmark: " names nil t))))
+    (if (not choice)
+        (message "No bookmarks found")
+      (jj--run-command "bookmark" "forget" choice)
+      (jj-log-refresh)
+      (message "Forgot bookmark '%s'" choice))))
 
 (defun jj-bookmark-track ()
-  "Track a remote bookmark."
+  "Track remote bookmark(s)."
   (interactive)
-  (let* ((remotes-output (jj--run-command "bookmark" "list" "--all"))
-         (remote-lines (seq-filter
-                        (lambda (line) (string-match "@" line))
-                        (split-string remotes-output "\n")))
-         (remote-bookmarks (mapcar
-                            (lambda (line)
-                              (when (string-match "^\\([^:]+\\)" line)
-                                (match-string 1 line)))
-                            remote-lines))
-         (remote-bookmarks (seq-filter 'identity remote-bookmarks)))
-    (if remote-bookmarks
-        (let ((choice (completing-read "Track remote bookmark: " remote-bookmarks)))
-          (when choice
-            (jj--run-command "bookmark" "track" choice)
-            (jj-log-refresh)
-            (message "Tracking bookmark '%s'" choice)))
-      (message "No remote bookmarks found"))))
+  (let* ((remote-bookmarks (jj--get-bookmark-names t))
+         (choice (and remote-bookmarks (completing-read "Track remote bookmark: " remote-bookmarks nil t))))
+    (if (not choice)
+        (message "No remote bookmarks found")
+      (jj--run-command "bookmark" "track" choice)
+      (jj-log-refresh)
+      (message "Tracking bookmark '%s'" choice))))
+
+;;;###autoload
+(defun jj-bookmark-list (&optional all)
+  "List bookmarks in a temporary buffer.
+With prefix ALL, include remote bookmarks."
+  (interactive "P")
+  (let* ((args (append '("bookmark" "list") (and all '("--all"))))
+         (output (apply #'jj--run-command-color args))
+         (buf (get-buffer-create "*JJ Bookmarks*")))
+    (with-current-buffer buf
+      (setq buffer-read-only nil)
+      (erase-buffer)
+      (insert output)
+      (goto-char (point-min))
+      (view-mode 1))
+    (funcall jj-log-display-function buf)))
+
+;;;###autoload
+(defun jj-bookmark-move (commit names)
+  "Move existing bookmark(s) NAMES to COMMIT."
+  (interactive
+   (let* ((existing (jj--get-bookmark-names))
+          (crm-separator (or (bound-and-true-p crm-separator) ", *"))
+          (names (completing-read-multiple "Move bookmark(s): " existing nil t))
+          (at (or (jj-get-changeset-at-point) "@"))
+          (rev (read-string (format "Target revision (default %s): " at) nil nil at)))
+     (list rev names)))
+  (when names
+    (apply #'jj--run-command (append '("bookmark" "move" "-t" ) (list commit) names))
+    (jj-log-refresh)
+    (message "Moved bookmark(s) to %s: %s" commit (string-join names ", "))))
+
+;;;###autoload
+(defun jj-bookmark-rename (old new)
+  "Rename bookmark OLD to NEW."
+  (interactive
+   (let* ((existing (jj--get-bookmark-names))
+          (old (completing-read "Rename bookmark: " existing nil t))
+          (new (read-string (format "New name for %s: " old))))
+     (list old new)))
+  (when (and (not (string-empty-p old)) (not (string-empty-p new)))
+    (jj--run-command "bookmark" "rename" old new)
+    (jj-log-refresh)
+    (message "Renamed bookmark '%s' -> '%s'" old new)))
+
+;;;###autoload
+(defun jj-bookmark-set (name commit)
+  "Create or update bookmark NAME to point to COMMIT."
+  (interactive
+   (let* ((existing (jj--get-bookmark-names))
+          (name (completing-read "Set bookmark: " existing nil nil))
+          (at (or (jj-get-changeset-at-point) "@"))
+          (rev (read-string (format "Target revision (default %s): " at) nil nil at)))
+     (list name rev)))
+  (jj--run-command "bookmark" "set" name "-r" commit)
+  (jj-log-refresh)
+  (message "Set bookmark '%s' to %s" name commit))
+
+;;;###autoload
+(defun jj-bookmark-untrack (names)
+  "Stop tracking remote bookmark(s) NAMES (e.g., name@remote)."
+  (interactive
+   (let* ((remote-names (jj--get-bookmark-names t))
+          (crm-separator (or (bound-and-true-p crm-separator) ", *"))
+          (names (completing-read-multiple "Untrack remote bookmark(s): " remote-names nil t)))
+     (list names)))
+  (when names
+    (apply #'jj--run-command (append '("bookmark" "untrack") names))
+    (jj-log-refresh)
+    (message "Untracked: %s" (string-join names ", "))))
 
 (defun jj-tug ()
   "Run jj tug command."
@@ -1160,18 +1173,34 @@ The results of this fn are fed into `jj--parse-log-entries'."
 
 (transient-define-prefix jj-bookmark-transient--internal ()
   "Internal transient for jj bookmark operations."
+  :transient-suffix 'transient--do-exit
   :transient-non-suffix t
   ["Bookmark Operations"
-   [("t" "Tug" jj-tug
-     :description "Run jj tug command")
+   [
+    ("l" "List bookmarks" jj-bookmark-list
+     :description "Show bookmark list" :transient nil)
     ("c" "Create bookmark" jj-bookmark-create
-     :description "Create new bookmark")
-    ("T" "Track remote" jj-bookmark-track
-     :description "Track remote bookmark")]
-   [("a" "Abandon bookmark" jj-bookmark-abandon
-     :description "Delete local bookmark")
+     :description "Create new bookmark" :transient nil)
+    ("T" "Tug bookmark" jj-tug
+     :description "Tug bookmark to recent commit"
+     :transient nil)]
+   [
+    ("s" "Set bookmark" jj-bookmark-set
+     :description "Create/update to commit" :transient nil)
+    ("m" "Move bookmark(s)" jj-bookmark-move
+     :description "Move existing to commit" :transient nil)
+    ("r" "Rename bookmark" jj-bookmark-rename
+     :description "Rename existing bookmark" :transient nil)]
+   [
+    ("t" "Track remote" jj-bookmark-track
+     :description "Track remote bookmark" :transient nil)
+    ("u" "Untrack remote" jj-bookmark-untrack
+     :description "Stop tracking remote" :transient nil)]
+   [
+    ("d" "Delete bookmark" jj-bookmark-delete
+     :description "Delete (propagate)" :transient nil)
     ("f" "Forget bookmark" jj-bookmark-forget
-     :description "Forget bookmark")]
+     :description "Forget (local)" :transient nil)]
    [("q" "Quit" transient-quit-one)]])
 
 (defun jj-undo ()
@@ -1405,25 +1434,79 @@ The results of this fn are fed into `jj--parse-log-entries'."
       (goto-char start-pos)
       (message "Commit %s not found" commit-id))))
 
+(defun jj--get-git-remotes ()
+  "Return a list of Git remote names for the current repository.
+Tries `jj git remote list' first, then falls back to `git remote'."
+  (let* ((out (condition-case _
+                  (jj--run-command "git" "remote" "list")
+                (error "")))
+         (names (if (and out (not (string-empty-p out)))
+                    (let* ((lines (split-string out "\n" t))
+                           (names (mapcar (lambda (l)
+                                            (car (split-string l "[ :\t]" t)))
+                                          lines)))
+                      (delete-dups (copy-sequence names)))
+                  ;; Fallback to plain `git remote`
+                  (with-temp-buffer
+                    (let* ((default-directory (jj--root))
+                           (exit (process-file "git" nil t nil "remote")))
+                      (when (eq exit 0)
+                        (split-string (buffer-string) "\n" t)))))))
+    names))
+
 (defun jj-git-push (args)
   "Push to git remote with ARGS."
-  (interactive (list (transient-args 'jj-git-transient)))
+  (interactive (list (transient-args 'jj-git-push-transient)))
   (let* ((allow-new? (member "--allow-new" args))
          (all? (member "--all" args))
-         (bookmark-arg (seq-find (lambda (arg) (string-prefix-p "--bookmark=" arg)) args))
-         (bookmark (when bookmark-arg (substring bookmark-arg 11)))
+         (tracked? (member "--tracked" args))
+         (deleted? (member "--deleted" args))
+         (allow-empty? (member "--allow-empty-description" args))
+         (allow-private? (member "--allow-private" args))
+         (dry-run? (member "--dry-run" args))
+
+         (remote-arg (seq-find (lambda (arg) (string-prefix-p "--remote=" arg)) args))
+         (remote (when remote-arg (substring remote-arg (length "--remote="))))
+
+         ;; Collect potential multi-value options supplied via --opt=value
+         (bookmark-args (seq-filter (lambda (arg) (string-prefix-p "--bookmark=" arg)) args))
+         (revision-args (seq-filter (lambda (arg) (string-prefix-p "--revisions=" arg)) args))
+         (change-args   (seq-filter (lambda (arg) (string-prefix-p "--change=" arg)) args))
+         (named-args    (seq-filter (lambda (arg) (string-prefix-p "--named=" arg)) args))
 
          (cmd-args (append '("git" "push")
+                           (when remote (list "--remote" remote))
                            (when allow-new? '("--allow-new"))
                            (when all? '("--all"))
-                           (when bookmark (list "--bookmark" bookmark))))
+                           (when tracked? '("--tracked"))
+                           (when deleted? '("--deleted"))
+                           (when allow-empty? '("--allow-empty-description"))
+                           (when allow-private? '("--allow-private"))
+                           (when dry-run? '("--dry-run"))
 
-         (success-msg (if bookmark
-                          (format "Successfully pushed bookmark %s" bookmark)
-                        "Successfully pushed to remote")))
+                           ;; Expand = style into separate args as jj accepts space-separated
+                           (apply #'append (mapcar (lambda (s)
+                                                     (list "--bookmark" (substring s (length "--bookmark="))))
+                                                   bookmark-args))
+                           (apply #'append (mapcar (lambda (s)
+                                                     (list "--revisions" (substring s (length "--revisions="))))
+                                                   revision-args))
+                           (apply #'append (mapcar (lambda (s)
+                                                     (list "--change" (substring s (length "--change="))))
+                                                   change-args))
+                           (apply #'append (mapcar (lambda (s)
+                                                     (list "--named" (substring s (length "--named="))))
+                                                   named-args))))
+
+         (success-msg (cond
+                       ((and bookmark-args (= (length bookmark-args) 1))
+                        (format "Successfully pushed bookmark %s"
+                                (substring (car bookmark-args) (length "--bookmark="))))
+                       (bookmark-args "Successfully pushed selected bookmarks")
+                       (t "Successfully pushed to remote"))))
     (let ((result (apply #'jj--run-command cmd-args)))
-      (if (jj--handle-push-result cmd-args result success-msg)
-          (jj-log-refresh)))))
+      (when (jj--handle-push-result cmd-args result success-msg)
+        (jj-log-refresh)))))
 
 (defun jj-commit ()
   "Open commit message buffer."
@@ -1513,12 +1596,27 @@ The results of this fn are fed into `jj--parse-log-entries'."
               (jj-log-refresh))))
     (jj--message-with-log "No commit ID available for description update")))
 
-(defun jj-git-fetch ()
-  "Fetch from git remote."
-  (interactive)
+(defun jj-git-fetch (args)
+  "Fetch from git remote with ARGS from transient."
+  (interactive (list (transient-args 'jj-git-fetch-transient)))
   (jj--message-with-log "Fetching from remote...")
-  (let ((result (jj--run-command "git" "fetch")))
-    (if (jj--handle-command-result (list "git" "fetch") result
+  (let* ((tracked? (member "--tracked" args))
+         (all-remotes? (member "--all-remotes" args))
+
+         (branch-args (seq-filter (lambda (arg) (string-prefix-p "--branch=" arg)) args))
+         (remote-args (seq-filter (lambda (arg) (string-prefix-p "--remote=" arg)) args))
+
+         (cmd-args (append '("git" "fetch")
+                           (when tracked? '("--tracked"))
+                           (when all-remotes? '("--all-remotes"))
+                           (apply #'append (mapcar (lambda (s)
+                                                     (list "--branch" (substring s (length "--branch="))))
+                                                   branch-args))
+                           (apply #'append (mapcar (lambda (s)
+                                                     (list "--remote" (substring s (length "--remote="))))
+                                                   remote-args))))
+         (result (apply #'jj--run-command cmd-args)))
+    (if (jj--handle-command-result cmd-args result
                                    "Fetched from remote" "Fetch failed")
         (jj-log-refresh))))
 
@@ -1815,21 +1913,48 @@ The results of this fn are fed into `jj--parse-log-entries'."
 
     ("q" "Quit" transient-quit-one)]])
 
+;; Git transients
 (transient-define-prefix jj-git-transient ()
-  "Transient for jj git operations."
+  "Top-level transient for jj git operations."
   :transient-suffix 'transient--do-exit
   :transient-non-suffix t
-  ["Arguments"
-   ("-n" "Allow new bookmarks" "--allow-new")
-   ("-b" "Bookmark" "--bookmark="
-    :choices jj--get-bookmark-names)
-   ("-a" "All" "--all")]
-  [:description "JJ Git Operations"
+  [:description "JJ Git"
    :class transient-columns
-   [("p" "Push" jj-git-push
-     :transient nil)
-    ("f" "Fetch" jj-git-fetch
-     :transient nil)]
+   ["Sync"
+    ("p" "Push" jj-git-push-transient)
+    ("f" "Fetch" jj-git-fetch-transient)]
    [("q" "Quit" transient-quit-one)]])
+
+;; Push transient and command
+(transient-define-prefix jj-git-push-transient ()
+  "Transient for jj git push."
+  [:class transient-columns
+          ["Arguments"
+           ("-R" "Remote" "--remote=" :choices jj--get-git-remotes)
+           ("-b" "Bookmark" "--bookmark=" :choices jj--get-bookmark-names)
+           ("-a" "All bookmarks" "--all")
+           ("-t" "Tracked only" "--tracked")
+           ("-D" "Deleted" "--deleted")
+           ("-n" "Allow new" "--allow-new")
+           ("-E" "Allow empty desc" "--allow-empty-description")
+           ("-P" "Allow private" "--allow-private")
+           ("-r" "Revisions" "--revisions=")
+           ("-c" "Change" "--change=")
+           ("-N" "Named X=REV" "--named=")
+           ("-y" "Dry run" "--dry-run")]
+          [("p" "Push" jj-git-push :transient nil)
+           ("q" "Quit" transient-quit-one)]])
+
+;; Fetch transient and command
+(transient-define-prefix jj-git-fetch-transient ()
+  "Transient for jj git fetch."
+  [:class transient-columns
+          ["Arguments"
+           ("-R" "Remote" "--remote=" :choices jj--get-git-remotes)
+           ("-B" "Branch" "--branch=")
+           ("-t" "Tracked only" "--tracked")
+           ("-A" "All remotes" "--all-remotes")]
+          [("f" "Fetch" jj-git-fetch :transient nil)
+           ("q" "Quit" transient-quit-one)]])
 
 (provide 'jj-mode)
