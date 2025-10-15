@@ -435,9 +435,9 @@ The results of this fn are fed into `jj--parse-log-entries'."
                            :author author
                            :commit_id commit-id
                            :short-desc short-desc
-                           :long-desc  (if long-desc (json-parse-string long-desc) nil)
+                           :long-desc (if long-desc (json-parse-string long-desc) nil)
                            :timestamp  timestamp
-                           :bookmarks bookmarks))
+                           :bookmarks (string-split bookmarks)))
                    else collect
                    (list :elems-pre (list line)
                          :elems-post nil)))))))
@@ -1700,6 +1700,9 @@ Tries `jj git remote list' first, then falls back to `git remote'."
 (defvar-local jj-rebase-destinations nil
   "List of currently selected destination commits for rebase.")
 
+(defvar-local jj-rebase-revisions nil
+  "List of currently selected revision commits for rebase.")
+
 (defvar-local jj-rebase-after nil
   "Currently selected after commit for rebase.")
 
@@ -1711,6 +1714,9 @@ Tries `jj git remote list' first, then falls back to `git remote'."
 
 (defvar-local jj-rebase-destination-overlays nil
   "List of overlays for highlighting selected destination commits.")
+
+(defvar-local jj-rebase-revision-overlays nil
+  "List of overlays for highlighting selected revisions.")
 
 (defvar-local jj-rebase-after-overlay nil
   "Overlay for highlighting the selected after commit.")
@@ -1737,7 +1743,10 @@ Tries `jj git remote list' first, then falls back to `git remote'."
     (setq jj-rebase-before-overlay nil))
   (dolist (overlay jj-rebase-destination-overlays)
     (delete-overlay overlay))
+  (dolist (overlay jj-rebase-revision-overlays)
+    (delete-overlay overlay))
   (setq jj-rebase-destination-overlays nil)
+  (setq jj-rebase-revision-overlays nil)
   (message "Cleared all rebase selections"))
 
 ;;;###autoload
@@ -1821,14 +1830,43 @@ Tries `jj git remote list' first, then falls back to `git remote'."
         (message "Added destination: %s" commit-id)))))
 
 ;;;###autoload
+(defun jj-rebase-toggle-revision ()
+  "Toggle the commit at point as a rebase revision."
+  (interactive)
+  (when-let* ((commit-id (jj-get-changeset-at-point))
+              (section (magit-current-section)))
+    (if (member commit-id jj-rebase-revisions)
+        ;; Remove from revisions
+        (progn
+          (setq jj-rebase-revisions (remove commit-id jj-rebase-revisions))
+          ;; Remove overlay
+          (dolist (overlay jj-rebase-revision-overlays)
+            (when (and (>= (overlay-start overlay) (oref section start))
+                       (<= (overlay-end overlay) (oref section end)))
+              (delete-overlay overlay)
+              (setq jj-rebase-revision-overlays (remove overlay jj-rebase-revision-overlays))))
+          (message "Removed revision: %s" commit-id))
+      ;; Add to revisions
+      (push commit-id jj-rebase-revisions)
+      ;; Create overlay for visual indication
+      (let ((overlay (make-overlay (oref section start) (oref section end))))
+        (overlay-put overlay 'face '(:background "light blue" :foreground "brown"))
+        (overlay-put overlay 'before-string "[REV] ")
+        (push overlay jj-rebase-revision-overlays)
+        (message "Added revision: %s" commit-id)))))
+
+;;;###autoload
 (defun jj-rebase-execute ()
   "Execute rebase with selected source and destinations."
   (interactive)
-  (if (and jj-rebase-source (or jj-rebase-destinations jj-rebase-after jj-rebase-before))
+  (if (and (or jj-rebase-source jj-rebase-revisions)
+           (or jj-rebase-destinations jj-rebase-after jj-rebase-before))
       (when (yes-or-no-p (format "Rebase %s -> %s? "
                                  jj-rebase-source
                                  (string-join jj-rebase-destinations ", ")))
         (let* ((dest-args (append (apply 'append (mapcar (lambda (dest) (list "-d" dest)) jj-rebase-destinations))
+                                  (when jj-rebase-revisions
+                                    (apply 'append (mapcar (lambda (r) (list "--revisions" r)) jj-rebase-revisions)))
                                   (when jj-rebase-after
                                     (list "--after" jj-rebase-after))
                                   (when jj-rebase-before
@@ -1882,6 +1920,11 @@ Tries `jj git remote list' first, then falls back to `git remote'."
                         (format "Set source (current: %s)" jj-rebase-source)
                       "Set source"))
      :transient t)
+    ("R" "Toggle revision" jj-rebase-toggle-revision
+     :description (lambda ()
+                    (format "Toggle revision (%d selected)"
+                            (length jj-rebase-revisions)))
+     :transient t)
     ("d" "Toggle destination" jj-rebase-toggle-destination
      :description (lambda ()
                     (format "Toggle destination (%d selected)"
@@ -1925,13 +1968,18 @@ Tries `jj git remote list' first, then falls back to `git remote'."
     ("f" "Fetch" jj-git-fetch-transient)]
    [("q" "Quit" transient-quit-one)]])
 
+(defun jj--init-bookmarks-at-point (obj)
+  (when-let* ((at (magit-current-section))
+              (bookmarks (oref at bookmarks)))
+    (oset obj value (string-join (mapcar (lambda (s) (string-remove-suffix "*" s)) bookmarks) ","))))
+
 ;; Push transient and command
 (transient-define-prefix jj-git-push-transient ()
   "Transient for jj git push."
   [:class transient-columns
           ["Arguments"
            ("-R" "Remote" "--remote=" :choices jj--get-git-remotes)
-           ("-b" "Bookmark" "--bookmark=" :choices jj--get-bookmark-names)
+           ("-b" "Bookmark" "--bookmark=" :choices jj--get-bookmark-names :init-value jj--init-bookmarks-at-point)
            ("-a" "All bookmarks" "--all")
            ("-t" "Tracked only" "--tracked")
            ("-D" "Deleted" "--deleted")

@@ -303,7 +303,8 @@
           lsp-ui-doc-show-with-cursor nil
           lsp-ui-sideline-show-hover nil
           lsp-ui-sideline-diagnostic-max-lines 10
-          lsp-auto-execute-action nil)
+          lsp-auto-execute-action nil
+          lsp-python-ty-clients-server-command '("uvx" "ty" "server"))
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets"
@@ -385,6 +386,12 @@
 (use-package! magit-prime
   :config
   (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
+
+;; (after! smerge-mode
+;;   (setq! smerge-begin-re "^<+ \\(.*\\)\n"
+;;          smerge-end-re "^>+ \\(.*\\)\n"
+;;          smerge-base-re "^|+ \\(.*\\)\n"
+;;          smerge-lower-re "^=+n"))
 
 (after! flycheck
   (add-hook! haskell-mode
@@ -554,7 +561,6 @@
 (after! smartparens
   (sp-local-pair 'python-mode "f\"" "\"" :trigger "f\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
   (sp-local-pair 'python-mode "f'" "'"))
-
 
 (require 'zone)
 (require 'zone-matrix-wake-up)

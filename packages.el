@@ -18,7 +18,8 @@
         parinfer-rust-mode
         magit transient forge
         ultra-scroll
-        diff-hl)
+        diff-hl
+        nerd-icons-completion)
 
 ;; (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"

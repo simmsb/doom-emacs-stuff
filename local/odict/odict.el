@@ -139,7 +139,6 @@
                           ('un "unknown")
                           ('v "verb")))
 
-
 (defun odict--insert-definition (defn &optional idx)
   (magit-insert-section (section-ordict-defn)
     (magit-insert-heading (concat
