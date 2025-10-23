@@ -18,7 +18,6 @@
 (defun first-font (&rest fonts)
   (cl-find-if #'find-font fonts))
 
-
 (pcase-let* ((`(,normal ,big ,serif)
               (pcase (system-name)
                 ("home" '(15 22 16))
