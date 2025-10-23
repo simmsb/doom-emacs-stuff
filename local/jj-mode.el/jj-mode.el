@@ -322,6 +322,19 @@ if(self.root(),
     (nreverse names)))
 
 
+(defun jj--get-closest-parent-bookmark-names (&optional all-remotes)
+  "Return bookmark names.
+When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
+  (let* ((current (or (jj-get-changeset-at-point) "@"))
+         (template (if all-remotes
+                       "if(remote, name ++ '@' ++ remote ++ '\n', '')"
+                     "name ++ '\n'"))
+         (args (append '("bookmark" "list")
+                       (list "-r" (format "heads(::%s & bookmarks() & mine())" current))
+                       (and all-remotes '("--all"))
+                       (list "-T" template))))
+    (delete-dups (split-string (apply #'jj--run-command args) "\n" t))))
+
 (defun jj--get-bookmark-names (&optional all-remotes)
   "Return bookmark names.
 When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
@@ -332,6 +345,7 @@ When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
                        (and all-remotes '("--all"))
                        (list "-T" template))))
     (delete-dups (split-string (apply #'jj--run-command args) "\n" t))))
+
 
 (defun jj--handle-push-result (cmd-args result success-msg)
   "Enhanced push result handler with bookmark analysis."
@@ -388,6 +402,8 @@ When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
 
 (defclass jj-commit-section (magit-section)
   ((commit-id :initarg :commit-id)
+   (divergent :initarg :divergent)
+   (git-commit-id :initarg :git-commit-id)
    (author :initarg :author)
    (date :initarg :date)
    (description :initarg :description)
@@ -399,6 +415,8 @@ When ALL-REMOTES is non-nil, include remote bookmarks formatted as NAME@REMOTE."
 (defclass jj-log-graph-section (magit-section) ())
 (defclass jj-log-entry-section (magit-section)
   ((commit-id :initarg :commit-id)
+   (divergent :initarg :divergent)
+   (git-commit-id :initarg :git-commit-id)
    (description :initarg :description)
    (bookmarks :initarg :bookmarks)))
 (defclass jj-diff-section (magit-section) ())
@@ -428,6 +446,7 @@ The results of this fn are fed into `jj--parse-log-entries'."
                    when (> (length elems) 1) collect
                    (seq-let (prefix change-id author bookmarks git-head conflict signature empty short-desc commit-id timestamp long-desc) elems
                      (list :id (seq-take change-id 8)
+                           :divergent (string-suffix-p "??" change-id)
                            :prefix prefix
                            :line line
                            :elems-pre (seq-remove #'string-blank-p (list prefix change-id author bookmarks git-head conflict signature empty short-desc))
@@ -464,6 +483,8 @@ The results of this fn are fed into `jj--parse-log-entries'."
     (dolist (entry (jj-parse-log-entries))
       (magit-insert-section section (jj-log-entry-section entry t)
                             (oset section commit-id (plist-get entry :id))
+                            (oset section git-commit-id (plist-get entry :commit_id))
+                            (oset section divergent (plist-get entry :divergent))
                             (oset section description (plist-get entry :description))
                             (oset section bookmarks (plist-get entry :bookmarks))
                             (magit-insert-heading
@@ -1109,7 +1130,8 @@ With prefix ALL, include remote bookmarks."
   (interactive
    (let* ((existing (jj--get-bookmark-names))
           (crm-separator (or (bound-and-true-p crm-separator) ", *"))
-          (names (completing-read-multiple "Move bookmark(s): " existing nil t))
+          (closest (jj--get-closest-parent-bookmark-names))
+          (names (completing-read-multiple "Move bookmark(s): " existing nil t (string-join closest ",")))
           (at (or (jj-get-changeset-at-point) "@"))
           (rev (read-string (format "Target revision (default %s): " at) nil nil at)))
      (list rev names)))
@@ -1123,7 +1145,8 @@ With prefix ALL, include remote bookmarks."
   "Rename bookmark OLD to NEW."
   (interactive
    (let* ((existing (jj--get-bookmark-names))
-          (old (completing-read "Rename bookmark: " existing nil t))
+          (closest (car (jj--get-closest-parent-bookmark-names)))
+          (old (completing-read "Rename bookmark: " existing nil t closest))
           (new (read-string (format "New name for %s: " old))))
      (list old new)))
   (when (and (not (string-empty-p old)) (not (string-empty-p new)))
@@ -1136,7 +1159,8 @@ With prefix ALL, include remote bookmarks."
   "Create or update bookmark NAME to point to COMMIT."
   (interactive
    (let* ((existing (jj--get-bookmark-names))
-          (name (completing-read "Set bookmark: " existing nil nil))
+          (closest (car (jj--get-closest-parent-bookmark-names)))
+          (name (completing-read "Set bookmark: " existing nil nil closest))
           (at (or (jj-get-changeset-at-point) "@"))
           (rev (read-string (format "Target revision (default %s): " at) nil nil at)))
      (list name rev)))
@@ -1215,9 +1239,9 @@ With prefix ALL, include remote bookmarks."
 (defun jj-abandon ()
   "Abandon a changeset."
   (interactive)
-  (if-let ((commit-id (jj-get-changeset-at-point)))
+  (if-let* ((info (jj-get-info-at-point)))
       (progn
-        (jj--run-command "abandon" "-r" commit-id)
+        (jj--run-command "abandon" "-r" (if (oref info divergent) (oref info git-commit-id) (oref info commit-id)))
         (jj-log-refresh))
     (message "Can only run new on a change")))
 
@@ -1693,6 +1717,14 @@ Tries `jj git remote list' first, then falls back to `git remote'."
       (oref section commit-id))
      (t nil))))
 
+(defun jj-get-info-at-point ()
+  "Get the commit ID at point."
+  (when-let* ((section (magit-current-section)))
+    (cond
+     ((and (memq (oref section type) '(jj-log-entry-section jj-commit-section)))
+      section)
+     (t nil))))
+
 ;; Rebase state management
 (defvar-local jj-rebase-source nil
   "Currently selected source commit for rebase.")
@@ -1970,7 +2002,8 @@ Tries `jj git remote list' first, then falls back to `git remote'."
 
 (defun jj--init-bookmarks-at-point (obj)
   (when-let* ((at (magit-current-section))
-              (bookmarks (oref at bookmarks)))
+              (bookmarks (and (slot-boundp at 'bookmarks)
+                              (oref at bookmarks))))
     (oset obj value (string-join (mapcar (lambda (s) (string-remove-suffix "*" s)) bookmarks) ","))))
 
 ;; Push transient and command

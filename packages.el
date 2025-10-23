@@ -19,6 +19,7 @@
         magit transient forge
         ultra-scroll
         diff-hl
+        nerd-icons
         nerd-icons-completion)
 
 ;; (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))

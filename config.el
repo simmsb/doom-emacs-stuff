@@ -18,31 +18,22 @@
 (defun first-font (&rest fonts)
   (cl-find-if #'find-font fonts))
 
-(pcase (system-name)
-  ("home"
-   (setq! doom-font (first-font
-                     (font-spec :family "MonoLisa" :size 15)
-                     (font-spec :family "Fira Code" :size 15))
-           doom-big-font (first-font
-                          (font-spec :family "MonoLisa" :size 22)
-                          (font-spec :family "Fira Code" :size 22))
-           doom-variable-pitch-font (font-spec :family "Fira Sans")
-           doom-serif-font (font-spec :family "Fira Code" :size 16)))
-  ("laptop2"
-   (setq! doom-font (first-font
-                     (font-spec :family "MonoLisa" :size 14)
-                     (font-spec :family "Fira Code" :size 14))
-           doom-big-font (first-font
-                          (font-spec :family "Fira Code" :size 28))
-           doom-serif-font (font-spec :family "Latin Modern Mono" :size 18)))
-  ("worklaptop"
-   (setq! doom-font (first-font
-                     (font-spec :family "MonoLisa" :size 14)
-                     (font-spec :family "Fira Code" :size 14))
-           doom-big-font (first-font
-                          (font-spec :family "Fira Code" :size 28))
-           doom-serif-font (font-spec :family "Latin Modern Mono" :size 18))))
 
+(pcase-let* ((`(,normal ,big ,serif)
+              (pcase (system-name)
+                ("home" '(15 22 16))
+                (_ '(15 28 18)))))
+ (setq! doom-font (doom-normalize-font
+                   (first-font
+                    (font-spec :family "PragmataPro Liga" :size normal)
+                    (font-spec :family "MonoLisa" :size normal)
+                    (font-spec :family "Fira Code" :size normal)))
+        doom-variable-pitch-font (first-font
+                                  (font-spec :family "PragmataPro VF Liga"))
+        doom-big-font (first-font
+                       (font-spec :family "PragmataPro Liga" :size big)
+                       (font-spec :family "Fira Code" :size big))
+        doom-serif-font (font-spec :family "Latin Modern Mono" :size serif)))
 
 ;; bindings
 (map!
@@ -347,6 +338,11 @@
 
 (defvar known-parser-results (make-hash-table :test 'equal))
 
+(defun clear-treesit-parser-cache ()
+  "Clear the parser cache for treesitter"
+  (interactive)
+  (clrhash known-parser-results))
+
 (defun my-treesit-language-available-p (orig &rest args)
   "Keep track of failures"
   (if (hash-table-contains-p args known-parser-results)
@@ -387,11 +383,13 @@
   :config
   (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
 
-;; (after! smerge-mode
-;;   (setq! smerge-begin-re "^<+ \\(.*\\)\n"
-;;          smerge-end-re "^>+ \\(.*\\)\n"
-;;          smerge-base-re "^|+ \\(.*\\)\n"
-;;          smerge-lower-re "^=+n"))
+(after! smerge-mode
+  (setq! smerge-begin-re "^<+ \\(.*\\)\n"
+         smerge-end-re "^>+ \\(.*\\)\n"
+         smerge-base-re "^|+ \\(.*\\)\n"
+         smerge-lower-re "^=+\n"
+         smerge-parsep-re (concat smerge-begin-re "\\|" smerge-end-re "\\|"
+                                  smerge-base-re "\\|" smerge-lower-re "\\|")))
 
 (after! flycheck
   (add-hook! haskell-mode
