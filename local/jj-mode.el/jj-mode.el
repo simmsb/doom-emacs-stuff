@@ -1014,9 +1014,21 @@ The results of this fn are fed into `jj--parse-log-entries'."
 
 ;; Squash transient menu
 ;;;###autoload
-(defun jj-squash-transient ()
+(defun jj-squash-transient (&optional arg)
   "Transient for jj squash operations."
   (interactive)
+  (let* ((base (if arg
+                   (let ((s (completing-read "Squash changeseet (id/bookmark): "
+                                             (jj--get-bookmark-names t) nil nil)))
+                     (when (not (string-empty-p s)) s))
+                 (jj-get-changeset-at-point))))
+    (when base
+      (setq jj-squash-from base)
+      (when-let* ((section (magit-current-section)))
+        (let ((overlay (make-overlay (oref section start) (oref section end))))
+          (overlay-put overlay 'face '(:background "dark blue" :foreground "white"))
+          (overlay-put overlay 'before-string "[NEW] ")
+          (setq jj-squash-from-overlay overlay)))))
   ;; Add cleanup hook for when transient exits
   (add-hook 'transient-exit-hook 'jj-squash-cleanup-on-exit nil t)
   (jj-squash-transient--internal))

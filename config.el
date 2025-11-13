@@ -524,16 +524,14 @@
           web-mode-auto-quote-style 3
           web-mode-enable-auto-quoting t))
 
-(setq! +treemacs-git-mode 'deferred)
 
 (after! transient
   (setq transient-default-level 7))
 
 (after! treemacs
-  (treemacs-follow-mode +1)
   (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
   (setq! treemacs-silent-refresh t
-          treemacs-read-string-input 'from-minibuffer))
+         treemacs-read-string-input 'from-minibuffer))
 (after! forge
   ;; (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
   ;; (advice-remove 'forge-dispatch '+magit--forge-build-binary-lazily-a)
@@ -777,12 +775,12 @@
   :config
   (auth-source-1password-enable))
 
-(use-package! typst-ts-mode
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
-  :custom
-  (typst-ts-mode-watch-options "--open"))
+;; (use-package! typst-ts-mode
+;;   :defer t
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
+;;   :custom
+;;   (typst-ts-mode-watch-options "--open"))
 ;;
 (setq! mac-command-modifier 'meta
         mac-option-modifier nil)

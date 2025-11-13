@@ -4,7 +4,7 @@
 (disable-packages! anaconda-mode ocamlformat code-review writegood-mode flyspell)
 
 ;; (package! evil-textobj-treesitter)
-(package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")))
+;; (package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")))
 
 (package! outline-minor-faces)
 
