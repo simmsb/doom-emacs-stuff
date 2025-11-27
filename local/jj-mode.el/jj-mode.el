@@ -132,7 +132,9 @@ if(self.root(),
       separate('\x1e',
         format_short_change_id_with_hidden_and_divergent_info(self),
         format_short_signature(self.author()),
-        coalesce(separate(' ', self.bookmarks().join(' '), self.tags().join(' '), self.working_copies().join(' ')), ' '),
+        coalesce(self.bookmarks().join(' '), ' '),
+        coalesce(self.tags().join(' '), ' '),
+        coalesce(self.working_copies().join(' '), ' '),
         if(self.git_head(), label('git_head', 'git_head()'), ' '),
         if(self.conflict(), label('conflict', 'conflict'), ' '),
         if(config('ui.show-cryptographic-signatures').as_boolean(),
@@ -444,19 +446,21 @@ The results of this fn are fed into `jj--parse-log-entries'."
           (cl-loop for line in lines
                    for elems = (split-string line "\x1e")
                    when (> (length elems) 1) collect
-                   (seq-let (prefix change-id author bookmarks git-head conflict signature empty short-desc commit-id timestamp long-desc) elems
+                   (seq-let (prefix change-id author bookmarks tags working-copies git-head conflict signature empty short-desc commit-id timestamp long-desc) elems
                      (list :id (seq-take change-id 8)
                            :divergent (string-suffix-p "??" change-id)
                            :prefix prefix
                            :line line
-                           :elems-pre (seq-remove #'string-blank-p (list prefix change-id author bookmarks git-head conflict signature empty short-desc))
+                           :elems-pre (seq-remove #'string-blank-p (list prefix change-id author bookmarks tags working-copies git-head conflict signature empty short-desc))
                            :elems-post (seq-remove #'string-blank-p (list commit-id timestamp))
                            :author author
                            :commit_id commit-id
                            :short-desc short-desc
                            :long-desc (if long-desc (json-parse-string long-desc) nil)
                            :timestamp  timestamp
-                           :bookmarks (string-split bookmarks)))
+                           :bookmarks (string-split bookmarks)
+                           :tags (string-split tags)
+                           :working-copies (string-split working-copies)))
                    else collect
                    (list :elems-pre (list line)
                          :elems-post nil)))))))

@@ -66,7 +66,10 @@
 
  (:map evil-insert-state-map
        "C-<tab>" #'doom/dumb-indent
-       "S-<tab>" #'doom/dumb-dedent)
+       "S-<tab>" #'doom/dumb-dedent
+       "C-(" #'sp-wrap-round
+       "C-[" #'sp-wrap-square
+       "C-{" #'sp-wrap-curly)
 
  (:map evil-normal-state-map
        "q" nil
@@ -119,7 +122,8 @@
 
 (use-package! majutsu
   :config
-  (setq! majutsu-log-display-function #'switch-to-buffer))
+  (setq! majutsu-default-display-function #'switch-to-buffer
+         majutsu-display-functions '()))
   ;; (defconst evil-collection-jj-mode-maps '(jj-mode-map))
   ;; (evil-set-initial-state 'jj-mode 'normal)
   ;; (evil-collection-define-key 'normal 'jj-mode-map
@@ -153,7 +157,7 @@
   ;;
   ;;   "?" 'jj-mode-transient))
 
-
+(use-package! jjdescription)
 
 (use-package! disable-mouse)
 (use-package! github-review)
@@ -294,7 +298,8 @@
           lsp-ui-sideline-show-hover nil
           lsp-ui-sideline-diagnostic-max-lines 10
           lsp-auto-execute-action nil
-          lsp-python-ty-clients-server-command '("uvx" "ty" "server"))
+          lsp-python-ty-clients-server-command '("uvx" "ty" "server")
+          lsp-file-watch-threshold 4000)
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets"
@@ -302,7 +307,8 @@
                  "[/\\\\]result\\'"
                  "[/\\\\]_build\\'"
                  "[/\\\\]build\\'"
-                 "[/\\\\]node_modules\\'"))
+                 "[/\\\\]node_modules\\'"
+                 "[/\\\\]repldist\\'"))
     (add-to-list 'lsp-file-watch-ignored-directories dir))
 
 
@@ -334,6 +340,46 @@
             (cons "emacs-lsp-booster" orig-result))
         orig-result)))
   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+;;   (defgroup lsp-typst nil
+;;     "LSP support for Typst"
+;;     :group 'lsp-mode)
+;;   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst"))
+;;
+;;   (defun my/typst-ts-lsp-download-binary ()
+;;     "Download latest tinymist binary to `typst-ts-lsp-download-path'.
+;; Will override old versions."
+;;     (unless (file-exists-p typst-ts-lsp-download-path)
+;;       (make-directory (file-name-directory typst-ts-lsp-download-path) t))
+;;     (with-file-modes #o500
+;;       (url-copy-file
+;;        (concat
+;;         "https://github.com/Myriad-Dreamin/tinymist/releases/latest/download/tinymist-"
+;;         (pcase system-type
+;;           ('gnu/linux "linux")
+;;           ('darwin "darwin")
+;;           ('windows-nt "win32")
+;;           (_ "linux"))
+;;         ;; TODO too lazy to find out all the arch suffixes
+;;         "-x64")
+;;        typst-ts-lsp-download-path t)))
+;;
+;;   (lsp-register-client (make-lsp-client
+;;                         :new-connection (lsp-stdio-connection `(,(f-expand typst-ts-lsp-download-path) "lsp"))
+;;                         :activation-fn (lsp-activate-on "typst")
+;;                         :server-id 'tinymist
+;;                         :download-server-fn (lambda (_client callback error-callback _update?)
+;;                                               (make-thread
+;;                                                (lambda ()
+;;                                                  (condition-case err
+;;                                                      (progn
+;;                                                        (lsp--info "Starting download of tinymist")
+;;                                                        (my/typst-ts-lsp-download-binary)
+;;                                                        (lsp--info "Finished download of tinymist")
+;;                                                        (funcall callback))
+;;                                                    (error (funcall error-callback err))))))))
+;; (add-hook! typst-ts-mode
+;;            (lsp!))
+
 
 (defvar known-parser-results (make-hash-table :test 'equal))
 
@@ -352,8 +398,11 @@
 
 (advice-add 'treesit-language-available-p :around #'my-treesit-language-available-p)
 
+(setq! process-connection-type nil)
+
 (after! magit
-  (setq! git-commit-summary-max-length 72)
+  (setq! git-commit-summary-max-length 72
+         magit-process-connection-type nil)
 
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
   (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
@@ -419,7 +468,12 @@
           lsp-rust-analyzer-import-granularity "crate"
           lsp-rust-analyzer-call-info-full t
           lsp-rust-analyzer-cargo-run-build-scripts t
-          lsp-rust-analyzer-check-all-targets nil))
+          lsp-rust-analyzer-check-all-targets nil
+          lsp-rust-analyzer-discriminants-hints "fieldless"
+          lsp-rust-analyzer-closure-return-type-hints "with_block"
+          lsp-rust-analyzer-display-closure-return-type-hints t
+          lsp-rust-analyzer-import-enforce-granularity t
+          lsp-rust-analyzer-import-prefix "by_self"))
 
 
 (after! lsp-javascript
@@ -469,7 +523,14 @@
     (let ((text (replace-regexp-in-string "\n" "" (filter-buffer-substring beg end))))
       (if (string-match-p "^\\s-*$" text)
           (evil-delete beg end type ?_)
-        (evil-delete beg end type reg yank-handler)))))
+        (evil-delete beg end type reg yank-handler))))
+
+  ;; otherwise we start moving multiple lines?
+  (evil-define-motion evil-next-line (count)
+    "Move the cursor COUNT lines down."
+    :type line
+    (let ((line-move-visual t))
+      (evil-line-move (or count 1)))))
 
 (after! consult
   (consult-customize
@@ -479,7 +540,83 @@
    :preview-key (list :debounce 0.5 'any))
   (setq! consult-async-refresh-delay 0.1
           consult-async-input-throttle 0.1
-          consult-async-input-debounce 0.05))
+          consult-async-input-debounce 0.05)
+
+
+  (defvar consult-ugrep-args
+    '("ugrep" "--index" "--color=never" "--exclude-dir=.git/" "--ignore-files" "--hidden"
+      "--ignore-binary" "--smart-case" "--line-buffered" "--line-number" "--null" "--recursive"
+      "--bool"))
+
+  (defun consult-ugrep-make-builder (paths)
+    "Create ugrep command line builder given PATHS."
+    (let ((cmd (consult--build-args consult-ugrep-args)))
+      (lambda (input)
+        (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
+                     (`(,re . ,hl)
+                      (funcall consult--regexp-compiler arg 'extended t)))
+          (when re
+            (cons (append cmd
+                          (cdr (mapcan (lambda (x) (list "--and" "-e" x)) re))
+                          opts paths)
+                  hl)))))))
+
+;; (after! vertico
+;;   (cl-defun +vertico-file-search (&key query in all-files (recursive t) prompt args)
+;;    "Conduct a file search using ripgrep.
+
+;; :query STRING
+;;   Determines the initial input to search for.
+;; :in PATH
+;;   Sets what directory to base the search out of. Defaults to the current project's root.
+;; :recursive BOOL
+;;   Whether or not to search files recursively from the base directory.
+;; :args LIST
+;;   Arguments to be appended to `consult-ugrep-args'."
+;;    (declare (indent defun))
+;;    (unless (executable-find "rg" t)
+;;      (user-error "Couldn't find ripgrep in your PATH"))
+;;    (require 'consult)
+;;    (setq deactivate-mark t)
+;;    (let* ((project-root (or (doom-project-root) default-directory))
+;;           (directory (or in project-root))
+;;           (consult-ripgrep-args
+;;            (append '("ugrep" "--index" "--color=never" "--exclude-dir=.git/" "--ignore-files" "--hidden"
+;;                      "--ignore-binary" "--smart-case" "--line-buffered" "--line-number" "--null" "--recursive"
+;;                      "--bool")
+;;                    args))
+;;           (prompt (if (stringp prompt) (string-trim prompt) "Search"))
+;;           (query (or query
+;;                      (when (doom-region-active-p)
+;;                        (regexp-quote (doom-thing-at-point-or-region)))))
+;;           (consult-async-split-style consult-async-split-style)
+;;           (consult-async-split-styles-alist consult-async-split-styles-alist))
+;;      ;; Change the split style if the initial query contains the separator.
+;;      (when query
+;;        (cl-destructuring-bind (&key type separator initial _function)
+;;            (alist-get consult-async-split-style consult-async-split-styles-alist)
+;;          (pcase type
+;;            (`separator
+;;             (replace-regexp-in-string (regexp-quote (char-to-string separator))
+;;                                       (concat "\\" (char-to-string separator))
+;;                                       query t t))
+;;            (`perl
+;;             (when (string-match-p initial query)
+;;               (setf (alist-get 'perlalt consult-async-split-styles-alist)
+;;                     `(:initial ,(or (cl-loop for char in (list "%" "@" "!" "&" "/" ";")
+;;                                              unless (string-match-p char query)
+;;                                              return char)
+;;                                     "%")
+;;                       :type perl)
+;;                     consult-async-split-style 'perlalt))))))
+;;      (consult--grep prompt #'consult-ugrep-make-builder directory query)))
+
+;;   (defun +vertico/project-search (&optional arg initial-query directory)
+;;     "Performs a live project search from the project root using ripgrep.
+;; If ARG (universal argument), include all files, even hidden or compressed ones,
+;; in the search."
+;;     (interactive "P")
+;;     (+vertico-file-search :query initial-query :in directory :all-files arg)))
 
 (setq x-stretch-cursor t
       uniquify-buffer-name-style 'forward)
@@ -690,17 +827,67 @@
   (set-completion-desires))
 
 (after! vertico-repeat
-  ;; added as vertico/consult is adding the # from ripgrep back after resuming
-  (defun vertico--trim-hash-prefix (session)
-    (when (cadr session)
-      (setf (cadr session) (string-remove-prefix "#" (cadr session))))
-    session)
+ (defun vertico-repeat-select ()
+   "Select a Vertico session from the session history and repeat it.
+If called from an existing Vertico session, you can select among
+previous sessions for the current command."
+   (interactive)
+   (vertico-repeat--run
+    (let* ((current-cmd vertico-repeat--command)
+           (trimmed
+            (delete-dups
+             (or
+              (cl-loop
+               for session in vertico-repeat-history
+               if (or (not current-cmd) (eq (car session) current-cmd))
+               collect
+               (list
+                (symbol-name (car session))
+                (replace-regexp-in-string
+                 "\\s-+" " "
+                 (string-trim (cadr session)))
+                session))
+              (user-error "No repeatable session"))))
+           (max-cmd (cl-loop for (cmd . _) in trimmed
+                             maximize (string-width cmd)))
+           (formatted (cl-loop
+                       for (cmd input session) in (reverse trimmed) collect
+                       (cons
+                        (concat
+                         (and (not current-cmd)
+                              (propertize cmd 'face 'font-lock-function-name-face))
+                         (and (not current-cmd)
+                              (make-string (- max-cmd (string-width cmd) -4) ?\s))
+                         input)
+                        session)))
+           (enable-recursive-minibuffers t))
+      (cdr (assoc (completing-read
+                   (if current-cmd
+                       (format "History of %s: " current-cmd)
+                     "Completion history: ")
+                   ;; TODO: Use `completion-table-with-metadata'
+                   (lambda (str pred action)
+                     (if (eq action 'metadata)
+                         '(metadata (display-sort-function . identity)
+                                    (cycle-sort-function . identity))
+                       (complete-with-action action formatted str pred)))
+                   nil t nil t)
+                  formatted))))))
 
-  (add-to-list 'vertico-repeat-transformers #'vertico--trim-hash-prefix))
+;; (after! vertico-repeat
+;;   ;; added as vertico/consult is adding the # from ripgrep back after resuming
+;;   (defun vertico--trim-hash-prefix (session)
+;;     (when (cadr session)
+;;       (setf (cadr session) (string-remove-prefix "#" (cadr session))))
+;;     session)
+
+;;   (add-to-list 'vertico-repeat-transformers #'vertico--trim-hash-prefix))
 
 (after! corfu
   (require 'cape)
   (setq! global-corfu-minibuffer nil))
+
+(setq! tab-first-completion 'word)
 
 (use-package! corfu-echo
   :after corfu
@@ -781,7 +968,7 @@
 ;;   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
 ;;   :custom
 ;;   (typst-ts-mode-watch-options "--open"))
-;;
+
 (setq! mac-command-modifier 'meta
         mac-option-modifier nil)
 
@@ -858,6 +1045,24 @@
   (setq! auto-dark-allow-osascript t
          auto-dark-themes `((,doom-theme) (doom-one-light)))
   (auto-dark-mode 1))
+
+(use-package! physical-font-size)
+
+(defun my/physical-font-size-apply (&rest _)
+  "Set font size in FRAME."
+  (let* ((frame (selected-frame))
+         (dpi (or (physical-font-size--frame-dpi frame) 96))
+         (height (* physical-font-size-point-size (/ dpi 96.0))))
+    (doom-adjust-font-size height t)))
+
+(my/physical-font-size-apply)
+
+(use-package! dispwatch
+  :load-path "~/.doom.d/local/dispwatch"
+  :config
+  (and (add-hook 'dispwatch-display-change-hooks #'my/physical-font-size-apply)
+       (dispwatch-mode 1)))
+
 
 (after! markdown
   (setq! markdown-fontify-code-blocks-natively t))
@@ -1053,3 +1258,12 @@ the return value of that function instead."
 
 (after! (nerd-icons haskell-ts-mode)
   (add-to-list 'nerd-icons-mode-icon-alist '(haskell-ts-mode nerd-icons-devicon "nf-dev-haskell" :face nerd-icons-red)))
+
+(setq! +whitespace-guess-in-projects t)
+
+;; (use-package! reader
+;;   :mode (("\\.pdf\\'" . reader-mode))
+;;   :config
+;;     (require 'reader-bookmark)
+;;     (require 'reader-saveplace)
+;;     (require 'reader-outline))

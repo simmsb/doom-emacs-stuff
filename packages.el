@@ -4,7 +4,7 @@
 (disable-packages! anaconda-mode ocamlformat code-review writegood-mode flyspell)
 
 ;; (package! evil-textobj-treesitter)
-;; (package! typst-ts-mode :recipe (:type git :host sourcehut :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")))
+;; (package! typst-ts-mode :recipe (:type git :host codeberg :repo "meow_king/typst-ts-mode" :files (:defaults "*.el")))
 
 (package! outline-minor-faces)
 
@@ -39,6 +39,7 @@
 ;  :recipe (:host github :repo "magit/emacsql"))
 ;(package! magit :recipe (:host github :repo "simmsb/magit" :branch "aaa") :pin "282cc8bc2b100c14dfa8350ec0159ec3bbdc7916")
 (package! majutsu :recipe (:host github :repo "simmsb/majutsu"))
+(package! jjdescription)
 ;(package! jj-mode :recipe (:host github :repo "bolivier/jj-mode.el"))
 ;; (package! vc-jj)
 ;; (package! strie)
@@ -89,6 +90,7 @@
 (package! hotfuzz :type 'built-in :built-in t)
 (package! jinx :type 'built-in :built-in t)
 (package! vterm :type 'built-in :built-in t)
+;; (package! reader :type 'built-in :built-in t)
 
 (package! nucleo
   :recipe (:host github :repo "simmsb/emacs-nucleo"
@@ -127,6 +129,8 @@
 (package! f)
 
 (package! auto-dark)
+(package! physical-font-size
+  :recipe (:host github :repo "r-b-g-b/emacs-physical-font-size"))
 
 (package! affe)
 
