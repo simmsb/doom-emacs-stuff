@@ -38,7 +38,7 @@
 ;(package! emacsql
 ;  :recipe (:host github :repo "magit/emacsql"))
 ;(package! magit :recipe (:host github :repo "simmsb/magit" :branch "aaa") :pin "282cc8bc2b100c14dfa8350ec0159ec3bbdc7916")
-
+(package! majutsu :recipe (:host github :repo "simmsb/majutsu"))
 ;(package! jj-mode :recipe (:host github :repo "bolivier/jj-mode.el"))
 ;; (package! vc-jj)
 ;; (package! strie)

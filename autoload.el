@@ -191,8 +191,8 @@
   (interactive)
   (let ((exit-code
           (with-temp-buffer
-            (apply #'process-file jj-executable nil t nil '("root")))))
+            (apply #'process-file majutsu-executable nil t nil '("root")))))
     (if (= 0 exit-code)
         (let ((default-directory (magit-toplevel)))
-          (call-interactively #'jj-log))
+          (call-interactively #'majutsu))
       (call-interactively #'magit))))

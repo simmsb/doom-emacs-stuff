@@ -117,42 +117,42 @@
 ;;   :config
 ;;   (advice-add #'vc-jj-root :around #'vc-jj--cache-root))
 
-(use-package! jj-mode
-  :load-path "~/.doom.d/local/jj-mode.el"
+(use-package! majutsu
   :config
-  (setq! jj-log-display-function #'switch-to-buffer)
-  (defconst evil-collection-jj-mode-maps '(jj-mode-map))
-  (evil-set-initial-state 'jj-mode 'normal)
-  (evil-collection-define-key 'normal 'jj-mode-map
-    "n" 'magit-section-forward
-    "p" 'magit-section-backward
-    "." 'jj-goto-current
-    "TAB" 'magit-section-toggle
-    "q" 'quit-window
+  (setq! majutsu-log-display-function #'switch-to-buffer))
+  ;; (defconst evil-collection-jj-mode-maps '(jj-mode-map))
+  ;; (evil-set-initial-state 'jj-mode 'normal)
+  ;; (evil-collection-define-key 'normal 'jj-mode-map
+  ;;   "n" 'magit-section-forward
+  ;;   "p" 'magit-section-backward
+  ;;   "." 'jj-goto-current
+  ;;   "TAB" 'magit-section-toggle
+  ;;   "q" 'quit-window
+  ;;
+  ;;   ;; Basic operations
+  ;;   "g" 'jj-log-refresh
+  ;;   "c" 'jj-commit
+  ;;   "e" 'jj-edit-changeset
+  ;;   "u" 'jj-undo
+  ;;   "N" 'jj-new-transient
+  ;;   "s" 'jj-squash-transient
+  ;;   "c" 'jj-commit
+  ;;   "d" 'jj-describe
+  ;;   "a" 'jj-abandon
+  ;;
+  ;;   ;; Advanced Operations
+  ;;   "RET" 'jj-enter-dwim
+  ;;   "b" 'jj-bookmark-transient
+  ;;   "r" 'jj-rebase-transient
+  ;;   "G" 'jj-git-transient
+  ;;
+  ;;   ;; Experimental
+  ;;   "D" 'jj-diff
+  ;;   "E" 'jj-diffedit-emacs
+  ;;   "M" 'jj-diffedit-smerge
+  ;;
+  ;;   "?" 'jj-mode-transient))
 
-    ;; Basic operations
-    "g" 'jj-log-refresh
-    "c" 'jj-commit
-    "e" 'jj-edit-changeset
-    "u" 'jj-undo
-    "N" 'jj-new-transient
-    "s" 'jj-squash-transient
-    "c" 'jj-commit
-    "d" 'jj-describe
-    "a" 'jj-abandon
-
-    ;; Advanced Operations
-    "RET" 'jj-enter-dwim
-    "b" 'jj-bookmark-transient
-    "r" 'jj-rebase-transient
-    "G" 'jj-git-transient
-
-    ;; Experimental
-    "D" 'jj-diff
-    "E" 'jj-diffedit-emacs
-    "M" 'jj-diffedit-smerge
-
-    "?" 'jj-mode-transient))
 
 
 (use-package! disable-mouse)
@@ -788,7 +788,8 @@
 (after! cape
   (setq! cape-dabbrev-check-other-buffers nil))
 
-(setq! mac-mouse-wheel-smooth-scroll t)
+(setq! mac-mouse-wheel-smooth-scroll t
+       scroll-conservatively 101)
 
 (use-package! ultra-scroll
   :config (ultra-scroll-mode 1))
