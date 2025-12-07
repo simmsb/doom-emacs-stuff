@@ -22,9 +22,9 @@
         nerd-icons
         nerd-icons-completion)
 
-;; (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
-(package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
-                                   :branch "child-frame-preview"))
+(package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
+;; (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
+;;                                    :branch "child-frame-preview"))
 
 
 (package! parinfer-rust-mode
