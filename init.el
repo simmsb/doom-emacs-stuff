@@ -118,10 +118,10 @@
          (json +lsp)
          ;p4
          ;jade
-         sourcepawn
-         ebnf
+         ;; sourcepawn
+         ;; ebnf
          ;; (scheme +racket)
-         racket
+         ;; racket
          (cc +lsp +tree-sitter)
          data
          (elixir +lsp +tree-sitter)
@@ -180,6 +180,8 @@
 ;;       show-paren-delay 0)
 
 (setq default-directory "~/dev/")
+
+(add-to-list 'exec-path "~/.local/bin")
 
 (setq major-mode-remap-alist
       '((yaml-mode . yaml-ts-mode)

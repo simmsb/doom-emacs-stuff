@@ -266,23 +266,28 @@
   (setq! nix-nixfmt-bin "nixpkgs-fmt"))
 ;; (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
 
-;; (defun config-brossa-lsp-server (workspace)
-;;   (with-lsp-workspace workspace
-;;     (lsp--set-configuration
-;;      `(:brossa
-;;        (:languageServer
-;;         (:inlayHints
-;;          (:cutoff 999999)))))))
+(defun config-brossa-lsp-server (workspace)
+  (with-lsp-workspace workspace
+    (lsp--set-configuration
+     `(:brossa
+       (:languageServer
+        (:inlayHints
+         (:cutoff 999999)))))))
 
-;; (after! art-mode
-;;   (require 'lsp-mode)
-;;   (add-to-list 'lsp-language-id-configuration '(art-mode . "brossa"))
-;;   (lsp-register-client
-;;    (make-lsp-client
-;;     :new-connection (lsp-stdio-connection "brossa-lsp-server")
-;;     :activation-fn (lsp-activate-on "brossa")
-;;     :initialized-fn 'config-brossa-lsp-server
-;;     :server-id 'brossa-lsp)))
+(use-package! art-mode
+  :load-path "~/dev/brossa/tools/emacs"
+  :defer t
+  :mode "\\.art\\'")
+
+(after! art-mode
+  (require 'lsp-mode)
+  (add-to-list 'lsp-language-id-configuration '(art-mode . "brossa"))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection "brossa-lsp-server" (lambda () (executable-find "brossa-lsp-server")))
+    :activation-fn (lsp-activate-on "brossa")
+    :initialized-fn 'config-brossa-lsp-server
+    :server-id 'brossa-lsp)))
 
 (after! lsp-mode
   (setq! lsp-lens-enable nil
@@ -299,6 +304,7 @@
           lsp-ui-sideline-diagnostic-max-lines 10
           lsp-auto-execute-action nil
           lsp-python-ty-clients-server-command '("uvx" "ty" "server")
+          lsp-pyright-langserver-command nil
           lsp-file-watch-threshold 4000)
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
@@ -336,6 +342,8 @@
                (not (functionp 'json-rpc-connection))  ;; native json-rpc
                (executable-find "emacs-lsp-booster"))
           (progn
+            (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+              (setcar orig-result command-from-exec-path))
             (message "Using emacs-lsp-booster for %s!" orig-result)
             (cons "emacs-lsp-booster" orig-result))
         orig-result)))
@@ -770,24 +778,25 @@
 ;;                           fussy-default-regex-fn 'fussy-pattern-default
 ;;                           fussy-prefer-prefix t))))
 
-(use-package! hotfuzz
-  :config
-  (defun nospace-hotfuzz-all-completions (string table &optional pred point)
-    "Get hotfuzz-completions of STRING in TABLE.
-        See `completion-all-completions' for the semantics of PRED and POINT.
-        This function prematurely sorts the completions; mutating the result
-        before passing it to `display-sort-function' or `cycle-sort-function'
-        will lead to inaccuracies."
-    (unless (string-search " " string)
-      (hotfuzz-all-completions string table pred point)))
-  (add-to-list 'completion-styles-alist
-               '(hotfuzz-nospace completion-flex-try-completion nospace-hotfuzz-all-completions
-                         "Fuzzy completion."))
-  (put 'hotfuzz-nospace 'completion--adjust-metadata #'hotfuzz--adjust-metadata))
+;; (use-package! hotfuzz
+;;   :config
+;;   (defun nospace-hotfuzz-all-completions (string table &optional pred point)
+;;     "Get hotfuzz-completions of STRING in TABLE.
+;;         See `completion-all-completions' for the semantics of PRED and POINT.
+;;         This function prematurely sorts the completions; mutating the result
+;;         before passing it to `display-sort-function' or `cycle-sort-function'
+;;         will lead to inaccuracies."
+;;     (unless (string-search " " string)
+;;       (hotfuzz-all-completions string table pred point)))
+;;   (add-to-list 'completion-styles-alist
+;;                '(hotfuzz-nospace completion-flex-try-completion nospace-hotfuzz-all-completions
+;;                          "Fuzzy completion."))
+;;   (put 'hotfuzz-nospace 'completion--adjust-metadata #'hotfuzz--adjust-metadata))
 
 (use-package! nucleo)
 
-(setq! completion-ignore-case t)
+(setq! completion-ignore-case t
+       completion-lazy-hilit t)
 
 (after! vertico
   (cl-defun +vertico-file-search--sort-a (orig-fn &key query in all-files (recursive t) prompt args)
