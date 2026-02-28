@@ -120,10 +120,13 @@
 ;;   :config
 ;;   (advice-add #'vc-jj-root :around #'vc-jj--cache-root))
 
+(defun switch-to-buffer-returning-window (buffer)
+  (switch-to-buffer buffer)
+  (get-buffer-window buffer))
+
 (use-package! majutsu
   :config
-  (setq! majutsu-default-display-function #'switch-to-buffer
-         majutsu-display-functions '()))
+  (setq! majutsu-display-buffer-function #'switch-to-buffer-returning-window))
   ;; (defconst evil-collection-jj-mode-maps '(jj-mode-map))
   ;; (evil-set-initial-state 'jj-mode 'normal)
   ;; (evil-collection-define-key 'normal 'jj-mode-map
