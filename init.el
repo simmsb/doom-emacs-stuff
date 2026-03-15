@@ -76,7 +76,6 @@
 
          :term
          eshell
-         vterm
          shell
 
          :tools

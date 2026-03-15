@@ -87,9 +87,7 @@
 ;;            :host github
 ;;            :files (:defaults "bin")))
 
-(package! hotfuzz :type 'built-in :built-in t)
 (package! jinx :type 'built-in :built-in t)
-(package! vterm :type 'built-in :built-in t)
 ;; (package! reader :type 'built-in :built-in t)
 
 (package! nucleo

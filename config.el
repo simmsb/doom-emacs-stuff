@@ -2,6 +2,7 @@
 
 (require 'cl-lib)
 (require 'f)
+(require 'ediff)
 ;; (require 'strie)
 
 (setq! warning-minimum-level :error)
