@@ -22,7 +22,7 @@
 (pcase-let* ((`(,normal ,big ,serif)
               (pcase (system-name)
                 ("home" '(15 22 16))
-                (_ '(15 28 18)))))
+                (_ '(13 28 18)))))
  (setq! doom-font (doom-normalize-font
                    (first-font
                     (font-spec :family "PragmataPro Liga" :size normal)
@@ -469,6 +469,19 @@
 (after! rustic
   (setq! rustic-lsp-server 'rust-analyzer
           rustic-treesitter-derive t))
+
+;; (defun bb-sp-pair-newline-and-indent (&rest _)
+;;   "Create an empty line between two delimiters."
+;;   (save-excursion
+;;     (newline)
+;;     (indent-according-to-mode))
+;;   (indent-according-to-mode))
+
+;; (after! smartparens
+;;   (sp-local-pair
+;;    '(rustic-mode)
+;;    "{" nil
+;;    :post-handlers '(:add (bb-sp-pair-newline-and-indent "RET"))))
 
 (after! lsp-rust
   (setq! lsp-rust-analyzer-display-chaining-hints nil
@@ -1059,7 +1072,9 @@ previous sessions for the current command."
          auto-dark-themes `((,doom-theme) (doom-one-light)))
   (auto-dark-mode 1))
 
-(use-package! physical-font-size)
+(use-package! physical-font-size
+  :config
+  (setq physical-font-size-point-size 10))
 
 (defun my/physical-font-size-apply (&rest _)
   "Set font size in FRAME."
