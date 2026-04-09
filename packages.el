@@ -25,7 +25,7 @@
 (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 ;; (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
 ;;                                    :branch "child-frame-preview"))
-
+(package! doom-snippets :ignore t)
 
 (package! parinfer-rust-mode
   :recipe (:host github :repo "justinbarclay/parinfer-rust-mode"))
