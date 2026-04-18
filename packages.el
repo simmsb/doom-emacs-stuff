@@ -116,7 +116,7 @@
 ;;(package! elpy)
 (package! github-browse-file)
 (package! github-review)
-(package! disable-mouse)
+;;(package! disable-mouse)
 (package! transpose-frame)
 (package! evil-lion)
 (package! sqlup-mode)

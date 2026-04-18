@@ -163,7 +163,7 @@
 
 (use-package! jjdescription)
 
-(use-package! disable-mouse)
+;;(use-package! disable-mouse)
 (use-package! github-review)
 (use-package! github-browse-file)
 
