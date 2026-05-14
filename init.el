@@ -1,6 +1,7 @@
 ;; -*- no-byte-compile: t; lexical-binding: t; -*-
 ;;; init.el -*- lexical-binding: t; -*-
 
+(setq native-comp-async-on-battery-power t)
 (setq comp-speed 2)
 
 ;; Ensure Emacs loads the most recent byte-compiled files.
@@ -26,7 +27,7 @@
 
 
 (doom! `(:editor
-         (whitespace +guess +trim)
+         (whitespace +guess +whitespace-guess-in-project +trim)
          file-templates
          snippets
          (evil +everywhere)

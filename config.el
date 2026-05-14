@@ -226,6 +226,27 @@
   :documentation '(lsp-copilot-describe-thing-at-point :async t))
 
 (after! lsp-haskell
+  (defcustom-lsp lsp-haskell-link-doc-to
+    "LinkToHackage"
+    "link docs to"
+    :group 'lsp-haskell
+    :type '(choice (const "LinkToLocal") (const "LinkToHackage"))
+    :lsp-path "haskell.linkDocTo")
+
+  (defcustom-lsp lsp-haskell-link-src-to
+    "LinkToHackage"
+    "link docs to"
+    :group 'lsp-haskell
+    :type '(choice (const "LinkToLocal") (const "LinkToHackage"))
+    :lsp-path "haskell.linkSourceTo")
+
+  (defcustom-lsp lsp-haskell-document-link
+    nil
+    "Enable document link plugin"
+    :group 'lsp-haskell
+    :type 'boolean
+    :lsp-path "haskell.plugin.documentLink.globalOn")
+
   (setq! lsp-haskell-formatting-provider "ormolu"
          lsp-haskell--original-server-args lsp-haskell-server-args
          ;; lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-xn" "-RTS")
@@ -647,6 +668,9 @@
       uniquify-buffer-name-style 'forward)
 
 (setq! projectile-require-project-root t)
+(after! projectile
+  (add-to-list 'projectile-globally-ignored-directories "~/.cargo")
+  (add-to-list 'projectile-globally-ignored-directories "/nix"))
 
 (setq! posframe-mouse-banish nil)
 
@@ -841,7 +865,7 @@
   (add-to-list 'completion-category-overrides
                '(buffer (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
-               '(lsp-capf (styles nucleo orderless)))
+               '(lsp-capf (styles orderless)))
   (add-to-list 'completion-category-overrides
                '(nil (styles nucleo orderless))))
 
