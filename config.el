@@ -309,7 +309,7 @@
   (add-to-list 'lsp-language-id-configuration '(art-mode . "brossa"))
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection "brossa-lsp-server" (lambda () (executable-find "brossa-lsp-server")))
+    :new-connection (lsp-stdio-connection (lambda () (executable-find "brossa-lsp-server")))
     :activation-fn (lsp-activate-on "brossa")
     :initialized-fn 'config-brossa-lsp-server
     :server-id 'brossa-lsp)))
@@ -330,7 +330,8 @@
           lsp-auto-execute-action nil
           lsp-python-ty-clients-server-command '("uvx" "ty" "server")
           lsp-pyright-langserver-command nil
-          lsp-file-watch-threshold 4000)
+          lsp-file-watch-threshold 4000
+          lsp-completion-default-behaviour :insert)
   (dolist (dir '(
                  "[/\\\\]\\.venv\\'"
                  "[/\\\\]assets"

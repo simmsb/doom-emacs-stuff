@@ -27,7 +27,7 @@
 
 
 (doom! `(:editor
-         (whitespace +guess +whitespace-guess-in-project +trim)
+         (whitespace +guess +trim)
          file-templates
          snippets
          (evil +everywhere)
@@ -88,7 +88,6 @@
          (lookup +dictionary)
          lsp
          make
-         editorconfig
          (magit +forge)
          direnv
          ;; (pass +auth)
