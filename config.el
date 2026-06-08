@@ -5,8 +5,8 @@
 (require 'ediff)
 ;; (require 'strie)
 
-(setq! warning-minimum-level :error)
-(setq! compile-angel-predicate-function
+(setopt warning-minimum-level :error)
+(setopt compile-angel-predicate-function
         (lambda (file)
           (and (not (and (file-in-directory-p file doom-user-dir)
                          (not (file-in-directory-p file (expand-file-name "local" doom-user-dir)))))
@@ -23,11 +23,11 @@
               (pcase (system-name)
                 ("home" '(15 22 16))
                 (_ '(13 28 18)))))
- (setq! doom-font (doom-normalize-font
-                   (first-font
-                    (font-spec :family "PragmataPro Liga" :size normal)
-                    (font-spec :family "MonoLisa" :size normal)
-                    (font-spec :family "Fira Code" :size normal)))
+ (setopt doom-font (doom-normalize-font
+                    (first-font
+                     (font-spec :family "PragmataPro Liga" :size normal)
+                     (font-spec :family "MonoLisa" :size normal)
+                     (font-spec :family "Fira Code" :size normal)))
         doom-variable-pitch-font (first-font
                                   (font-spec :family "PragmataPro VF Liga"))
         doom-big-font (first-font
@@ -54,6 +54,8 @@
 
   :desc "Vertico repeat select" "\"" #'vertico-repeat-select)
 
+ "C-_" :desc "Vertico suspend" #'vertico-suspend
+
  (:map evilem-map
   :after evil-easymotion
   "<down>" #'evilem-motion-next-line
@@ -66,8 +68,8 @@
        "<down>"     #'evil-window-down)
 
  (:map evil-insert-state-map
-       "C-<tab>" #'doom/dumb-indent
-       "S-<tab>" #'doom/dumb-dedent
+       ;; "C-<tab>" #'doom/dumb-indent
+       ;; "S-<tab>" #'doom/dumb-dedent
        "C-(" #'sp-wrap-round
        "C-[" #'sp-wrap-square
        "C-{" #'sp-wrap-curly)
@@ -96,13 +98,13 @@
  "<triple-wheel-right>" #'do-nothing)
 
 (defun affe-orderless-regexp-compiler (input _type _ignorecase)
-  (setq! input (cdr (orderless-compile input)))
+  (setopt input (cdr (orderless-compile input)))
   (cons input (apply-partially #'orderless--highlight input t)))
 
 (use-package! affe
-  :after '(orderless)
-  :custom
-  ((affe-regexp-compiler . #'affe-orderless-regexp-compiler)))
+  :init (after! orderless (require 'affe))
+  :config
+  (setopt affe-regexp-compiler #'affe-orderless-regexp-compiler))
 
 (defun do-nothing (&rest _)
   (interactive)
@@ -127,7 +129,7 @@
 
 (use-package! majutsu
   :config
-  (setq! majutsu-display-buffer-function #'switch-to-buffer-returning-window))
+  (setopt majutsu-display-buffer-function #'switch-to-buffer-returning-window))
   ;; (defconst evil-collection-jj-mode-maps '(jj-mode-map))
   ;; (evil-set-initial-state 'jj-mode 'normal)
   ;; (evil-collection-define-key 'normal 'jj-mode-map
@@ -177,7 +179,7 @@
 (use-package! geros
   :defer t
   :config
-  (setq! geros-eval-result-duration nil))
+  (setopt geros-eval-result-duration nil))
 
 (use-package! evil-lion
   :config
@@ -190,7 +192,7 @@
          (sql-interactive-mode . sqlup-mode)))
 
 (use-package! backline
-  :after outline
+  :init (after! outline (require 'backline))
   :config (advice-add 'outline-flag-region :after 'backline-update))
 
 (use-package! esh-autosuggest
@@ -199,7 +201,7 @@
 
 ;; (use-package! lsp-copilot
 ;;   :config
-;;   (setq! lsp-copilot-user-languages-config (f-join doom-user-dir "languages.toml"))
+;;   (setopt lsp-copilot-user-languages-config (f-join doom-user-dir "languages.toml"))
 ;;   (add-hook! '(
 ;;                tsx-ts-mode-hook
 ;;                js-ts-mode-hook
@@ -247,7 +249,7 @@
     :type 'boolean
     :lsp-path "haskell.plugin.documentLink.globalOn")
 
-  (setq! lsp-haskell-formatting-provider "ormolu"
+  (setopt lsp-haskell-formatting-provider "ormolu"
          lsp-haskell--original-server-args lsp-haskell-server-args
          ;; lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-xn" "-RTS")
          lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N8" "-xn" "-RTS")
@@ -288,7 +290,7 @@
 ;;     (browse-url-generic url)))
 
 (after! nix-mode
-  (setq! nix-nixfmt-bin "nixpkgs-fmt"))
+  (setopt nix-nixfmt-bin "nixpkgs-fmt"))
 ;; (set-formatter! 'nixpkgs-fmt "nixpkgs-fmt" :modes 'nix-mode))
 
 (defun config-brossa-lsp-server (workspace)
@@ -315,10 +317,10 @@
     :server-id 'brossa-lsp)))
 
 (after! lsp-mode
-  (setq! lsp-lens-enable nil
+  (setopt lsp-lens-enable nil
           +lsp-defer-shutdown nil
           lsp-inlay-hint-enable t
-          lsp-modeline-diagnostics-scope :project
+          lsp-modeline-diagnostics-scope :file
           lsp-restart 'auto-restart
           lsp-enable-indentation t
           lsp-enable-relative-indentation t
@@ -432,10 +434,10 @@
 
 (advice-add 'treesit-language-available-p :around #'my-treesit-language-available-p)
 
-(setq! process-connection-type nil)
+(setopt process-connection-type nil)
 
 (after! magit
-  (setq! git-commit-summary-max-length 72
+  (setopt git-commit-summary-max-length 72
          magit-process-connection-type nil)
 
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
@@ -466,7 +468,7 @@
   (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
 
 (after! smerge-mode
-  (setq! smerge-begin-re "^<+ \\(.*\\)\n"
+  (setopt smerge-begin-re "^<+ \\(.*\\)\n"
          smerge-end-re "^>+ \\(.*\\)\n"
          smerge-base-re "^|+ \\(.*\\)\n"
          smerge-lower-re "^=+\n"
@@ -474,22 +476,21 @@
                                   smerge-base-re "\\|" smerge-lower-re "\\|")))
 
 (after! flycheck
-  (add-hook! haskell-mode
-    (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc)
-    (add-to-list 'flycheck-disabled-checkers 'haskell-ghc)
-    (add-to-list 'flycheck-disabled-checkers 'haskell-hlint))
-  (setq! flycheck-popup-tip-error-prefix "❌ "))
+  (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc)
+  (add-to-list 'flycheck-disabled-checkers 'haskell-ghc)
+  (add-to-list 'flycheck-disabled-checkers 'haskell-hlint)
+  (setopt flycheck-popup-tip-error-prefix "❌ "))
 
 (after! flycheck-posframe
   (set-face-attribute 'flycheck-posframe-info-face nil :inherit 'font-lock-variable-name-face)
   (set-face-attribute 'flycheck-posframe-warning-face nil :inherit 'warning)
   (set-face-attribute 'flycheck-posframe-error-face nil :inherit 'error)
-  (setq! flycheck-posframe-warning-prefix "⚠ "
+  (setopt flycheck-posframe-warning-prefix "⚠ "
           flycheck-posframe-error-prefix "❌ "
           flycheck-posframe-info-prefix "ⓘ "))
 
 (after! rustic
-  (setq! rustic-lsp-server 'rust-analyzer
+  (setopt rustic-lsp-server 'rust-analyzer
           rustic-treesitter-derive t))
 
 ;; (defun bb-sp-pair-newline-and-indent (&rest _)
@@ -506,7 +507,7 @@
 ;;    :post-handlers '(:add (bb-sp-pair-newline-and-indent "RET"))))
 
 (after! lsp-rust
-  (setq! lsp-rust-analyzer-display-chaining-hints nil
+  (setopt lsp-rust-analyzer-display-chaining-hints nil
           lsp-rust-analyzer-display-parameter-hints t
           lsp-rust-analyzer-max-inlay-hint-length 20
           lsp-rust-analyzer-proc-macro-enable t
@@ -529,7 +530,7 @@
                  :group 'lsp-typescript
                  :lsp-path "typescript.preferences.jsxAttributeCompletionStyle")
 
-  (setq! lsp-javascript-display-enum-member-value-hints t
+  (setopt lsp-javascript-display-enum-member-value-hints t
           lsp-javascript-display-parameter-name-hints 'literals
           lsp-javascript-display-variable-type-hints t))
 
@@ -540,21 +541,21 @@
   (rainbow-delimiters-mode -1))
 
 (after! engrave-faces
-  (setq! engrave-faces-attributes-of-interest
+  (setopt engrave-faces-attributes-of-interest
           '(:foreground :slant :weight :height :strike-through)))
 
-(setq! frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
+(setopt frame-title-format (list "%b - " (user-login-name) "@" (system-name)))
 
 (after! haskell-mode
-  (setq! haskell-auto-insert-module-format-string "module %s\n    (\n     ) where"))
+  (setopt haskell-auto-insert-module-format-string "module %s\n    (\n     ) where"))
 
 (after! evil
-  (setq! ;; evil-normal-state-cursor '(box "light blue")
+  (setopt ;; evil-normal-state-cursor '(box "light blue")
    ;; evil-insert-state-cursor '(bar "medium sea green")
    ;; evil-visual-state-cursor '(hollow "orange")
    evil-want-fine-undo t
    evil-kill-on-visual-paste nil)
-  (setq! evil-vsplit-window-right t
+  (setopt evil-vsplit-window-right t
           evil-split-window-below t)
   ;; stops the evil selection being added to the kill-ring
   (fset 'evil-visual-update-x-selection 'ignore)
@@ -577,7 +578,12 @@
     "Move the cursor COUNT lines down."
     :type line
     (let ((line-move-visual t))
-      (evil-line-move (or count 1)))))
+      (evil-line-move (or count 1))))
+
+ (advice-add 'evil-ex-substitute :around
+            (lambda (orig-fun &rest args)
+              (save-excursion
+                (apply orig-fun args)))))
 
 (after! consult
   (consult-customize
@@ -585,7 +591,7 @@
    +vertico-file-search
    +default/search-project
    :preview-key (list :debounce 0.5 'any))
-  (setq! consult-async-refresh-delay 0.1
+  (setopt consult-async-refresh-delay 0.1
           consult-async-input-throttle 0.1
           consult-async-input-debounce 0.05)
 
@@ -668,21 +674,27 @@
 (setq x-stretch-cursor t
       uniquify-buffer-name-style 'forward)
 
-(setq! projectile-require-project-root t)
+(defun my/projectile-extra-ignore (fn root)
+  (or (file-in-directory-p root "~/.cargo/"
+          (file-in-directory-p root "/nix")
+          (apply fn (list root)))))
+
+(setopt projectile-require-project-root t)
 (after! projectile
   (add-to-list 'projectile-globally-ignored-directories "~/.cargo")
-  (add-to-list 'projectile-globally-ignored-directories "/nix"))
+  (add-to-list 'projectile-globally-ignored-directories "/nix")
+  (advice-add #'doom-project-ignored-p :around #'my/projectile-extra-ignore))
 
-(setq! posframe-mouse-banish nil)
+(setopt posframe-mouse-banish nil)
 
-(setq! display-line-numbers-type nil)
+(setopt display-line-numbers-type nil)
 
-(setq! line-move-ignore-invisible nil)
+(setopt line-move-ignore-invisible nil)
 
 (tooltip-mode t)
 (global-subword-mode 1)
 
-(setq! blink-matching-paren t
+(setopt blink-matching-paren t
         blink-matching-paren-highlight-offscreen t)
 
 
@@ -702,7 +714,7 @@
 ;; (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 
 (after! web-mode
-  (setq! web-mode-enable-inlays t
+  (setopt web-mode-enable-inlays t
           web-mode-enable-current-element-highlight t
           web-mode-enable-html-entities-fontification t
           web-mode-enable-auto-closing t
@@ -717,13 +729,13 @@
 
 (after! treemacs
   (set-popup-rule! "^ \\*Treemacs-Scoped-Buffer-[^*]*\\*" :ignore t)
-  (setq! treemacs-silent-refresh t
+  (setopt treemacs-silent-refresh t
          treemacs-read-string-input 'from-minibuffer))
 (after! forge
   ;; (advice-remove 'forge-get-repository '+magit--forge-get-repository-lazily-a)
   ;; (advice-remove 'forge-dispatch '+magit--forge-build-binary-lazily-a)
   ;; (if (atom forge-topic-list-limit)
-  ;;     (setq! forge-topic-list-limit (cons forge-topic-list-limit -5))
+  ;;     (setopt forge-topic-list-limit (cons forge-topic-list-limit -5))
   ;;   (setcdr forge-topic-list-limit -5))
 
   (add-to-list 'transient-levels '(forge-dispatch (t . 7)))
@@ -781,7 +793,7 @@
                       (sit-for (/ end-delay 1000.0)))))
   (sit-for 60))
 
-(setq! zone-programs [zone-pgm-drip zone-pgm-rise-and-shine zone-pgm-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
+(setopt zone-programs [zone-pgm-drip zone-pgm-rise-and-shine zone-pgm-matrix-wake-up zone-pgm-putz-with-case zone-pgm-five-oclock-swan-dive])
 
 (defun zone-choose (pgm)
   "Choose a PGM to run for `zone'."
@@ -806,7 +818,7 @@
 ;;     (unless (string-search " " string)
 ;;       (fussy-all-completions string table pred point)))
 
-;;   (setq! fussy-use-cache t
+;;   (setopt fussy-use-cache t
 ;;         fussy-score-fn 'fussy-hotfuzz-score
 ;;         fussy-score-ALL-fn 'fussy-score
 ;;         fussy-filter-fn 'fussy-filter-default)
@@ -816,7 +828,7 @@
 ;;   (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
 ;;   (add-hook 'corfu-mode-hook
 ;;             (lambda ()
-;;               (setq!-local fussy-max-candidate-limit 5000
+;;               (setopt-local fussy-max-candidate-limit 5000
 ;;                           fussy-default-regex-fn 'fussy-pattern-default
 ;;                           fussy-prefer-prefix t))))
 
@@ -837,7 +849,7 @@
 
 (use-package! nucleo)
 
-(setq! completion-ignore-case t
+(setopt completion-ignore-case t
        completion-lazy-hilit t)
 
 (after! vertico
@@ -856,7 +868,7 @@
   '())
 
 (defun set-completion-desires ()
-  (setq! completion-category-overrides '())
+  (setopt completion-category-overrides '())
   (add-to-list 'completion-category-overrides
                '(file (styles orderless)))
   (add-to-list 'completion-category-overrides
@@ -866,7 +878,7 @@
   (add-to-list 'completion-category-overrides
                '(buffer (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
-               '(lsp-capf (styles orderless)))
+               '(lsp-capf (styles nucleo orderless)))
   (add-to-list 'completion-category-overrides
                '(nil (styles nucleo orderless))))
 
@@ -877,53 +889,53 @@
 (after! corfu
   (set-completion-desires))
 
-(after! vertico-repeat
- (defun vertico-repeat-select ()
-   "Select a Vertico session from the session history and repeat it.
-If called from an existing Vertico session, you can select among
-previous sessions for the current command."
-   (interactive)
-   (vertico-repeat--run
-    (let* ((current-cmd vertico-repeat--command)
-           (trimmed
-            (delete-dups
-             (or
-              (cl-loop
-               for session in vertico-repeat-history
-               if (or (not current-cmd) (eq (car session) current-cmd))
-               collect
-               (list
-                (symbol-name (car session))
-                (replace-regexp-in-string
-                 "\\s-+" " "
-                 (string-trim (cadr session)))
-                session))
-              (user-error "No repeatable session"))))
-           (max-cmd (cl-loop for (cmd . _) in trimmed
-                             maximize (string-width cmd)))
-           (formatted (cl-loop
-                       for (cmd input session) in (reverse trimmed) collect
-                       (cons
-                        (concat
-                         (and (not current-cmd)
-                              (propertize cmd 'face 'font-lock-function-name-face))
-                         (and (not current-cmd)
-                              (make-string (- max-cmd (string-width cmd) -4) ?\s))
-                         input)
-                        session)))
-           (enable-recursive-minibuffers t))
-      (cdr (assoc (completing-read
-                   (if current-cmd
-                       (format "History of %s: " current-cmd)
-                     "Completion history: ")
-                   ;; TODO: Use `completion-table-with-metadata'
-                   (lambda (str pred action)
-                     (if (eq action 'metadata)
-                         '(metadata (display-sort-function . identity)
-                                    (cycle-sort-function . identity))
-                       (complete-with-action action formatted str pred)))
-                   nil t nil t)
-                  formatted))))))
+;; (after! vertico-repeat
+;;  (defun vertico-repeat-select ()
+;;    "Select a Vertico session from the session history and repeat it.
+;; If called from an existing Vertico session, you can select among
+;; previous sessions for the current command."
+;;    (interactive)
+;;    (vertico-repeat--run
+;;     (let* ((current-cmd vertico-repeat--command)
+;;            (trimmed
+;;             (delete-dups
+;;              (or
+;;               (cl-loop
+;;                for session in vertico-repeat-history
+;;                if (or (not current-cmd) (eq (car session) current-cmd))
+;;                collect
+;;                (list
+;;                 (symbol-name (car session))
+;;                 (replace-regexp-in-string
+;;                  "\\s-+" " "
+;;                  (string-trim (cadr session)))
+;;                 session))
+;;               (user-error "No repeatable session"))))
+;;            (max-cmd (cl-loop for (cmd . _) in trimmed
+;;                              maximize (string-width cmd)))
+;;            (formatted (cl-loop
+;;                        for (cmd input session) in (reverse trimmed) collect
+;;                        (cons
+;;                         (concat
+;;                          (and (not current-cmd)
+;;                               (propertize cmd 'face 'font-lock-function-name-face))
+;;                          (and (not current-cmd)
+;;                               (make-string (- max-cmd (string-width cmd) -4) ?\s))
+;;                          input)
+;;                         session)))
+;;            (enable-recursive-minibuffers t))
+;;       (cdr (assoc (completing-read
+;;                    (if current-cmd
+;;                        (format "History of %s: " current-cmd)
+;;                      "Completion history: ")
+;;                    ;; TODO: Use `completion-table-with-metadata'
+;;                    (lambda (str pred action)
+;;                      (if (eq action 'metadata)
+;;                          '(metadata (display-sort-function . identity)
+;;                                     (cycle-sort-function . identity))
+;;                        (complete-with-action action formatted str pred)))
+;;                    nil t nil t)
+;;                   formatted))))))
 
 ;; (after! vertico-repeat
 ;;   ;; added as vertico/consult is adding the # from ripgrep back after resuming
@@ -936,21 +948,28 @@ previous sessions for the current command."
 
 (after! corfu
   (require 'cape)
-  (setq! global-corfu-minibuffer nil))
+  (setopt global-corfu-minibuffer nil))
 
-(setq! tab-first-completion 'word)
+(after! corfu-auto
+  (setopt corfu-auto-delay 0.2
+          +corfu-want-tab-prefer-navigating-org-tables t))
+
+(after! corfu-popupinfo
+  (setopt corfu-popupinfo-delay 0.3))
+
+(setopt tab-first-completion 'word)
 
 (use-package! corfu-echo
-  :after corfu
+  :init (after! corfu (require 'corfu-echo))
   :hook (corfu-mode . corfu-echo-mode))
 ;;
 ;; (use-package! orderless
 ;;   :after corfu
 ;;   :config
-;;   (setq! completion-styles '( orderless basic)))
+;;   (setopt completion-styles '( orderless basic)))
 
 (after! marginalia)
-;; (setq! marginalia-censor-variables nil)
+;; (setopt marginalia-censor-variables nil)
 
 ;; (defadvice! +marginalia--anotate-local-file-colorful (cand)
 ;;   "Just a more colourful version of `marginalia--anotate-local-file'."
@@ -986,7 +1005,7 @@ previous sessions for the current command."
 (use-package! indent-bars
   :hook (prog-mode . indent-bars-mode)
   :config
-  (setq!
+  (setopt
                                         ;indent-bars-prefer-character (eq (window-system) 'ns)
    indent-bars-pattern "."
    indent-bars-width-frac 0.20
@@ -998,7 +1017,7 @@ previous sessions for the current command."
 
 
 (after! doom-modeline
-  (setq! doom-modeline-height 23))
+  (setopt doom-modeline-height 23))
 
 (defun auth-source-1password--1password-construct-query-path-escaped (_backend _type host user _port)
   "Construct the full entry-path for the 1password entry for HOST and USER.
@@ -1020,13 +1039,13 @@ previous sessions for the current command."
 ;;   :custom
 ;;   (typst-ts-mode-watch-options "--open"))
 
-(setq! mac-command-modifier 'meta
+(setopt mac-command-modifier 'meta
         mac-option-modifier nil)
 
 (after! cape
-  (setq! cape-dabbrev-check-other-buffers nil))
+  (setopt cape-dabbrev-check-other-buffers nil))
 
-(setq! mac-mouse-wheel-smooth-scroll t
+(setopt mac-mouse-wheel-smooth-scroll t
        scroll-conservatively 101)
 
 (use-package! ultra-scroll
@@ -1034,7 +1053,7 @@ previous sessions for the current command."
 
 (when (fboundp 'pixel-scroll-precision-mode)
 
-  (setq! pixel-scroll-precision-interpolate-page t))
+  (setopt pixel-scroll-precision-interpolate-page t))
 
 (custom-set-faces!
   '(org-level-1 :inherit (fixed-pitch-serif outline-1))
@@ -1053,14 +1072,14 @@ previous sessions for the current command."
   (add-hook! org-mode #'+word-wrap-mode)
   (defun org-do-latex-and-related (&rest _)))
 
-(setq! org-modern-star nil
+(setopt org-modern-star nil
        org-modern-table nil
        org-modern-timestamp nil
        org-modern-tag nil
        org-modern-hide-stars nil)
 
 (use-package! ox-typst
-  :after org)
+  :init (after! org (require 'ox-typst)))
 
 ;; (use-package! org-flyimage
 ;;   :defer t
@@ -1077,23 +1096,23 @@ previous sessions for the current command."
 ;;   :defer t
 ;;   :hook (org-mode . org-hide-tags-mode))
 
-(setq! window-combination-resize t
+(setopt window-combination-resize t
         mouse-drag-and-drop-region-cross-program t
         scroll-margin 0)
 
-(setq! parinfer-rust-disable-troublesome-modes t)
+(setopt parinfer-rust-disable-troublesome-modes t)
 
-(setq! pdf-tools-installer-os "nixos")
+(setopt pdf-tools-installer-os "nixos")
 
-(setq! doom-theme 'doom-lantern)
-;; (setq! doom-theme 'doom-opera-light
+(setopt doom-theme 'doom-lantern)
+;; (setopt doom-theme 'doom-opera-light
 ;;        frame-background-mode 'light)
-;; (setq! doom-theme 'doom-opera-light)
+;; (setopt doom-theme 'doom-opera-light)
 
 (use-package! auto-dark)
 
 (after! doom-ui
-  (setq! auto-dark-allow-osascript t
+  (setopt auto-dark-allow-osascript t
          auto-dark-themes `((,doom-theme) (doom-one-light)))
   (auto-dark-mode 1))
 
@@ -1118,7 +1137,7 @@ previous sessions for the current command."
 
 
 (after! markdown
-  (setq! markdown-fontify-code-blocks-natively t))
+  (setopt markdown-fontify-code-blocks-natively t))
 
 (use-package! scad-mode
   :defer t
@@ -1133,8 +1152,8 @@ previous sessions for the current command."
 
 ;; (dtrt-indent-global-mode +1)
 
-(setq! flyspell-delay-use-timer t)
-(setq! rust-ts-mode-fontify-number-suffix-as-type t)
+(setopt flyspell-delay-use-timer t)
+(setopt rust-ts-mode-fontify-number-suffix-as-type t)
 
 ;; (use-package! jujutsu)
 
@@ -1143,7 +1162,7 @@ previous sessions for the current command."
 ;;   :config (difftastic-bindings-mode))
 
 (after! treesit
-  (setq! treesit-font-lock-level 4)
+  (setopt treesit-font-lock-level 4)
                                         ;indent-bars-treesit-support t)
   (add-hook! haskell-ts-mode
     (advice-add #'comment-forward :around #'+haskell-ts--inhibit-forward-comment)))
@@ -1159,7 +1178,7 @@ previous sessions for the current command."
                                         ;    ;; Clear the result buffer (we might regenerate a diff, e.g., for
                                         ;    ;; the current changes in our working directory).
                                         ;    (with-current-buffer buffer
-                                        ;      (setq! buffer-read-only nil)
+                                        ;      (setopt buffer-read-only nil)
                                         ;      (erase-buffer))
                                         ;    ;; Now spawn a process calling the git COMMAND.
                                         ;    (make-process
@@ -1174,7 +1193,7 @@ previous sessions for the current command."
                                         ;                   (with-current-buffer (process-buffer proc)
                                         ;                     (goto-char (point-min))
                                         ;                     (ansi-color-apply-on-region (point-min) (point-max))
-                                        ;                     (setq! buffer-read-only t)
+                                        ;                     (setopt buffer-read-only t)
                                         ;                     (view-mode)
                                         ;                     (end-of-line)
                                         ;                     ;; difftastic diffs are usually 2-column side-by-side,
@@ -1182,9 +1201,9 @@ previous sessions for the current command."
                                         ;                     (let ((width (current-column)))
                                         ;                       (while (zerop (forward-line 1))
                                         ;                         (end-of-line)
-                                        ;                         (setq! width (max (current-column) width)))
+                                        ;                         (setopt width (max (current-column) width)))
                                         ;                       ;; Add column size of fringes
-                                        ;                       (setq! width (+ width
+                                        ;                       (setopt width (+ width
                                         ;                                      (fringe-columns 'left)
                                         ;                                      (fringe-columns 'right)))
                                         ;                       (goto-char (point-min))
@@ -1278,10 +1297,10 @@ the return value of that function instead."
 ;;          (define-word identifier nil arg))
 ;;         ((user-error "No dictionary backend is available"))))
 
-(setq! pdf-view-selection-style 'glyph)
+(setopt pdf-view-selection-style 'glyph)
 
-(setq! odict-dictionaries (list
-                           (f-canonical (f-join "~" "Dropbox" "dictionaries" "deutsch.odict")))
+(setopt odict-dictionaries (list
+                            (f-canonical (f-join "~" "Dropbox" "dictionaries" "deutsch.odict")))
         odict-default-dictionary "deutsch")
 
 (add-hook! org-mode-hook
@@ -1294,7 +1313,7 @@ the return value of that function instead."
     contents))
 ;; (org-typst--raw contents verse-block info nil t))
 
-(setq! jinx-languages "en_GB")
+(setopt jinx-languages "en_GB")
 
 (add-hook! yaml-mode (lsp!))
 
@@ -1312,7 +1331,7 @@ the return value of that function instead."
 (after! (nerd-icons haskell-ts-mode)
   (add-to-list 'nerd-icons-mode-icon-alist '(haskell-ts-mode nerd-icons-devicon "nf-dev-haskell" :face nerd-icons-red)))
 
-(setq! +whitespace-guess-in-projects t)
+(setopt +whitespace-guess-in-projects t)
 
 (setq read-process-output-max (* 4 1024 1024))
 (setq save-interprogram-paste-before-kill t)
