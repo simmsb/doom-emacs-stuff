@@ -58,7 +58,7 @@
           +defaults)
          ;ligatures
          doom
-         doom-dashboard
+         dashboard
          modeline
          hl-todo
          nav-flash

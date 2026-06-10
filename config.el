@@ -11,7 +11,8 @@
           (and (not (and (file-in-directory-p file doom-user-dir)
                          (not (file-in-directory-p file (expand-file-name "local" doom-user-dir)))))
                (not (file-in-directory-p file (expand-file-name "lisp" doom-emacs-dir)))
-               (not (file-in-directory-p file (expand-file-name doom-modules-dir))))))
+               (not (file-in-directory-p file (expand-file-name "modules" doom-emacs-dir)))
+               (not (file-in-directory-p file (expand-file-name "sources" doom-emacs-dir))))))
 
 (compile-angel-on-load-mode)
 (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
@@ -675,14 +676,16 @@
       uniquify-buffer-name-style 'forward)
 
 (defun my/projectile-extra-ignore (fn root)
-  (or (file-in-directory-p root "~/.cargo/"
-          (file-in-directory-p root "/nix")
-          (apply fn (list root)))))
+  (or (file-in-directory-p root "~/.cargo/")
+      (file-in-directory-p root "/nix")
+      (file-in-directory-p root "~/Library")
+      (apply fn (list root))))
 
 (setopt projectile-require-project-root t)
 (after! projectile
   (add-to-list 'projectile-globally-ignored-directories "~/.cargo")
   (add-to-list 'projectile-globally-ignored-directories "/nix")
+  (add-to-list 'projectile-globally-ignored-directories "~/Library")
   (advice-add #'doom-project-ignored-p :around #'my/projectile-extra-ignore))
 
 (setopt posframe-mouse-banish nil)
@@ -1111,9 +1114,9 @@
 
 (use-package! auto-dark)
 
-(after! doom-ui
+(after! doom
   (setopt auto-dark-allow-osascript t
-         auto-dark-themes `((,doom-theme) (doom-one-light)))
+          auto-dark-themes `((,doom-theme) (doom-one-light)))
   (auto-dark-mode 1))
 
 (use-package! physical-font-size
@@ -1343,3 +1346,8 @@ the return value of that function instead."
 ;;     (require 'reader-bookmark)
 ;;     (require 'reader-saveplace)
 ;;     (require 'reader-outline))
+
+(add-hook! c-ts-mode
+  (setq comment-start "// "
+        comment-end "")
+  (yas-minor-mode-on))
