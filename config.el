@@ -679,6 +679,7 @@
   (or (file-in-directory-p root "~/.cargo/")
       (file-in-directory-p root "/nix")
       (file-in-directory-p root "~/Library")
+      (file-in-directory-p root "~/.rustup/")
       (apply fn (list root))))
 
 (setopt projectile-require-project-root t)
@@ -686,6 +687,7 @@
   (add-to-list 'projectile-globally-ignored-directories "~/.cargo")
   (add-to-list 'projectile-globally-ignored-directories "/nix")
   (add-to-list 'projectile-globally-ignored-directories "~/Library")
+  (add-to-list 'projectile-globally-ignored-directories "~/.rustup")
   (advice-add #'doom-project-ignored-p :around #'my/projectile-extra-ignore))
 
 (setopt posframe-mouse-banish nil)
@@ -1115,8 +1117,10 @@
 (use-package! auto-dark)
 
 (after! doom
-  (setopt auto-dark-allow-osascript t
-          auto-dark-themes `((,doom-theme) (doom-one-light)))
+  (setopt auto-dark-allow-osascript nil
+          auto-dark-themes `((doom-lantern) (doom-one-light)))
+  (add-to-list 'auto-dark-dark-mode-hook #'redraw-frame)
+  (add-to-list 'auto-dark-light-mode-hook #'redraw-frame)
   (auto-dark-mode 1))
 
 (use-package! physical-font-size
@@ -1127,7 +1131,7 @@
   "Set font size in FRAME."
   (let* ((frame (selected-frame))
          (dpi (or (physical-font-size--frame-dpi frame) 96))
-         (height (* physical-font-size-point-size (/ dpi 96.0))))
+         (height (* physical-font-size-point-size (/ dpi 120.0))))
     (doom-adjust-font-size height t)))
 
 (my/physical-font-size-apply)
@@ -1351,3 +1355,5 @@ the return value of that function instead."
   (setq comment-start "// "
         comment-end "")
   (yas-minor-mode-on))
+
+(setq gpu-buffer-transitions nil)
