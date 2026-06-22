@@ -1131,7 +1131,7 @@
   "Set font size in FRAME."
   (let* ((frame (selected-frame))
          (dpi (or (physical-font-size--frame-dpi frame) 96))
-         (height (* physical-font-size-point-size (/ dpi 120.0))))
+         (height (* physical-font-size-point-size (/ dpi 108.0))))
     (doom-adjust-font-size height t)))
 
 (my/physical-font-size-apply)
