@@ -130,7 +130,11 @@
 
 (use-package! majutsu
   :config
-  (setopt majutsu-display-buffer-function #'switch-to-buffer-returning-window))
+  (setopt majutsu-display-buffer-function #'switch-to-buffer-returning-window
+          magit-section-initial-visibility-alist
+          '((stashes . hide)
+            (majutsu-commit-section . hide))))
+
   ;; (defconst evil-collection-jj-mode-maps '(jj-mode-map))
   ;; (evil-set-initial-state 'jj-mode 'normal)
   ;; (evil-collection-define-key 'normal 'jj-mode-map
@@ -244,7 +248,7 @@
     :lsp-path "haskell.linkSourceTo")
 
   (defcustom-lsp lsp-haskell-document-link
-    nil
+    t
     "Enable document link plugin"
     :group 'lsp-haskell
     :type 'boolean
@@ -376,7 +380,12 @@
             (message "Using emacs-lsp-booster for %s!" orig-result)
             (cons "emacs-lsp-booster" orig-result))
         orig-result)))
-  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+
+  (defun my/lsp--document-links-block (old-fn &rest args)
+    nil)
+  (advice-add 'lsp--document-links :around #'my/lsp--document-links-block))
+
 ;;   (defgroup lsp-typst nil
 ;;     "LSP support for Typst"
 ;;     :group 'lsp-mode)
@@ -510,6 +519,8 @@
 (after! lsp-rust
   (setopt lsp-rust-analyzer-display-chaining-hints nil
           lsp-rust-analyzer-display-parameter-hints t
+          lsp-rust-analyzer-display-lifetime-elision-hints-enable t
+          lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names t
           lsp-rust-analyzer-max-inlay-hint-length 20
           lsp-rust-analyzer-proc-macro-enable t
           lsp-rust-analyzer-diagnostics-enable-experimental t
@@ -1050,8 +1061,7 @@
 (after! cape
   (setopt cape-dabbrev-check-other-buffers nil))
 
-(setopt mac-mouse-wheel-smooth-scroll t
-       scroll-conservatively 101)
+(setopt mac-mouse-wheel-smooth-scroll t)
 
 (use-package! ultra-scroll
   :config (ultra-scroll-mode 1))

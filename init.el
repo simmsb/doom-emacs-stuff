@@ -76,8 +76,7 @@
          electric
 
          :term
-         eshell
-         shell
+         ghostel
 
          :tools
          odict
@@ -102,6 +101,7 @@
          grammar
 
          :lang
+         slint
          art
          haskell-ts-mode
          numbat
