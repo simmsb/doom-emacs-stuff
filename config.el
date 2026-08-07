@@ -386,46 +386,18 @@
     nil)
   (advice-add 'lsp--document-links :around #'my/lsp--document-links-block))
 
-;;   (defgroup lsp-typst nil
-;;     "LSP support for Typst"
-;;     :group 'lsp-mode)
-;;   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst"))
-;;
-;;   (defun my/typst-ts-lsp-download-binary ()
-;;     "Download latest tinymist binary to `typst-ts-lsp-download-path'.
-;; Will override old versions."
-;;     (unless (file-exists-p typst-ts-lsp-download-path)
-;;       (make-directory (file-name-directory typst-ts-lsp-download-path) t))
-;;     (with-file-modes #o500
-;;       (url-copy-file
-;;        (concat
-;;         "https://github.com/Myriad-Dreamin/tinymist/releases/latest/download/tinymist-"
-;;         (pcase system-type
-;;           ('gnu/linux "linux")
-;;           ('darwin "darwin")
-;;           ('windows-nt "win32")
-;;           (_ "linux"))
-;;         ;; TODO too lazy to find out all the arch suffixes
-;;         "-x64")
-;;        typst-ts-lsp-download-path t)))
-;;
-;;   (lsp-register-client (make-lsp-client
-;;                         :new-connection (lsp-stdio-connection `(,(f-expand typst-ts-lsp-download-path) "lsp"))
-;;                         :activation-fn (lsp-activate-on "typst")
-;;                         :server-id 'tinymist
-;;                         :download-server-fn (lambda (_client callback error-callback _update?)
-;;                                               (make-thread
-;;                                                (lambda ()
-;;                                                  (condition-case err
-;;                                                      (progn
-;;                                                        (lsp--info "Starting download of tinymist")
-;;                                                        (my/typst-ts-lsp-download-binary)
-;;                                                        (lsp--info "Finished download of tinymist")
-;;                                                        (funcall callback))
-;;                                                    (error (funcall error-callback err))))))))
-;; (add-hook! typst-ts-mode
-;;            (lsp!))
+(defgroup lsp-typst nil
+  "LSP support for Typst"
+  :group 'lsp-mode)
 
+(use-package! typst-ts-mode
+  :defer t
+  :mode "\\.typ\\'"
+  :config
+  (add-hook 'typst-ts-mode-local-vars-hook #'lsp! 'append)
+  :custom
+  (typst-ts-mode-watch-options "--open")
+  (typst-ts-indent-offset 2))
 
 (defvar known-parser-results (make-hash-table :test 'equal))
 
@@ -1047,13 +1019,6 @@
   (auth-source-1password-construct-secret-reference #'auth-source-1password--1password-construct-query-path-escaped)
   :config
   (auth-source-1password-enable))
-
-;; (use-package! typst-ts-mode
-;;   :defer t
-;;   :config
-;;   (add-to-list 'auto-mode-alist '("\\.typ" . typst-ts-mode))
-;;   :custom
-;;   (typst-ts-mode-watch-options "--open"))
 
 (setopt mac-command-modifier 'meta
         mac-option-modifier nil)
