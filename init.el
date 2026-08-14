@@ -31,7 +31,7 @@
          file-templates
          snippets
          (evil +everywhere)
-         (format +lsp)
+         format
          multiple-cursors
          (parinfer +rust)
          rotate-text

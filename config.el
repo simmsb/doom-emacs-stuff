@@ -1332,3 +1332,83 @@ the return value of that function instead."
   (yas-minor-mode-on))
 
 (setq gpu-buffer-transitions nil)
+
+(require 'color)
+
+(defun hex-to-oklch (hex)
+  "Convert a HEX color string to a CSS oklch string (e.g. \"oklch(62.8% 0.225 15.2)\")."
+  (let* ((rgb (color-name-to-rgb hex))
+         (r (nth 0 rgb))
+         (g (nth 1 rgb))
+         (b (nth 2 rgb))
+         ;; 1. Convert sRGB to Linear RGB
+         (lin-c (lambda (c)
+                  (if (> c 0.04045)
+                      (expt (/ (+ c 0.055) 1.055) 2.4)
+                    (/ c 12.92))))
+         (lr (funcall lin-c r))
+         (lg (funcall lin-c g))
+         (lb (funcall lin-c b))
+         ;; 2. Convert Linear RGB to LMS
+         (l-lms (+ (* 0.4122214708 lr) (* 0.5363325363 lg) (* 0.0514459929 lb)))
+         (m-lms (+ (* 0.2119034982 lr) (* 0.6806995451 lg) (* 0.1073969566 lb)))
+         (s-lms (+ (* 0.0883024619 lr) (* 0.2817188376 lg) (* 0.6299787005 lb)))
+         ;; 3. Non-linear transform
+         (l-prime (expt l-lms (/ 1.0 3.0)))
+         (m-prime (expt m-lms (/ 1.0 3.0)))
+         (s-prime (expt s-lms (/ 1.0 3.0)))
+         ;; 4. Compute Oklab L, a, b
+         (ok-l (+ (* 0.2104542553 l-prime) (* 0.7936177850 m-prime) (* -0.0040720468 s-prime)))
+         (ok-a (+ (* 1.9779984951 l-prime) (* -2.4285922050 m-prime) (* 0.4505937099 s-prime)))
+         (ok-b (+ (* 0.0259040371 l-prime) (* 0.7827717662 m-prime) (* -0.8086757971 s-prime)))
+         ;; 5. Compute Chroma and Hue
+         (chroma (sqrt (+ (* ok-a ok-a) (* ok-b ok-b))))
+         (hue-rad (atan ok-b ok-a))
+         (hue-deg (mod (* hue-rad (/ 180.0 float-pi)) 360.0)))
+    (format "oklch(%.2f%% %.3f %.1f)"
+            (* ok-l 100.0)
+            chroma
+            hue-deg)))
+
+(defun convert-hex-at-point-or-region-to-oklch (&optional start end)
+  "Convert hex color(s) to CSS oklch format.
+If a region (START, END) is active, convert all hex colors inside it.
+Otherwise, convert the hex color at or around point."
+  (interactive "r")
+  (let ((hex-regex "#?\\b[0-9a-fA-F]\\{3\\}\\b\\|#?\\b[0-9a-fA-F]\\{6\\}\\b"))
+    (if (use-region-p)
+        ;; Case 1: Active Region -> Convert all hex colors in selection
+        (save-excursion
+          (let ((count 0))
+            (goto-char start)
+            (while (re-search-forward hex-regex end t)
+              (let* ((beg (match-beginning 0))
+                     (m-end (match-end 0))
+                     (hex (buffer-substring-no-properties beg m-end))
+                     (oklch-str (hex-to-oklch hex)))
+                (replace-match oklch-str)
+                ;; Adjust 'end' bound to account for string length changes
+                (setq end (+ end (- (length oklch-str) (- m-end beg))))
+                (setq count (1+ count))))
+            (message "Converted %d hex color(s) to oklch." count)))
+      ;; Case 2: No Region -> Convert hex color under/around point
+      (let ((bounds (bounds-of-thing-at-point 'symbol)))
+        (save-excursion
+          ;; Expand check slightly backward to catch leading '#' if not part of symbol syntax
+          (when (and (not bounds)
+                     (char-before)
+                     (memq (char-before) '(?# ?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?a ?b ?c ?d ?e ?f ?A ?B ?C ?D ?E ?F)))
+            (backward-char)
+            (setq bounds (bounds-of-thing-at-point 'symbol)))
+          ;; Walk back past '#' if point is right after it
+          (when (and bounds (eq (char-before (car bounds)) ?#))
+            (setq bounds (cons (1- (car bounds)) (cdr bounds)))))
+        (if bounds
+            (let ((candidate (buffer-substring-no-properties (car bounds) (cdr bounds))))
+              (if (string-match-p (concat "^" hex-regex "$") candidate)
+                  (let ((oklch-str (hex-to-oklch candidate)))
+                    (delete-region (car bounds) (cdr bounds))
+                    (insert oklch-str)
+                    (message "Converted %s -> %s" candidate oklch-str))
+                (user-error "Symbol at point (%s) is not a valid hex color" candidate)))
+          (user-error "No hex color found at point"))))))
