@@ -20,7 +20,8 @@
         ultra-scroll
         diff-hl
         nerd-icons
-        nerd-icons-completion)
+        nerd-icons-completion
+        ghostel)
 
 (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 ;; (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
@@ -93,6 +94,10 @@
 (package! nucleo
   :recipe (:host github :repo "simmsb/emacs-nucleo"
            :files (:defaults "nucleo-module.dylib")))
+
+(package! fff-search
+  :recipe (:host github :repo "simmsb/emacs-fff"
+           :files (:defaults "fff-module.dylib")))
 
 
 ;; (package! fussy

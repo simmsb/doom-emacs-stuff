@@ -76,7 +76,7 @@
          electric
 
          :term
-         ghostel
+         (ghostel +everywhere)
 
          :tools
          odict
@@ -104,6 +104,7 @@
          slint
          art
          haskell-ts-mode
+         ;;curry-mode
          numbat
          (zig +tree-sitter +lsp)
          (nix +tree-sitter +lsp)

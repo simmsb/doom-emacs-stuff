@@ -46,6 +46,7 @@
    :desc "Open kill ring" "k" #'+default/yank-pop
    :desc "Open notes.org" "n" #'org-notes-open)
   (:prefix "s"
+   :desc "Search project" "p" #'fff-consult-grep
    :desc "Search project (affe)" "P" #'affe-grep
    :desc "Lookup word in dict" "t" #'odict-lookup
    :desc "Fuzzy search word in dict" "T" #'odict-search)
@@ -254,17 +255,25 @@
     :type 'boolean
     :lsp-path "haskell.plugin.documentLink.globalOn")
 
+  (defcustom-lsp lsp-haskell-components-loading
+    t
+    "Components loading method"
+    :group 'lsp-haskell
+    :type 'string
+    :lsp-path "haskell.componentsLoading")
+
+  (setq lsp-haskell--original-server-args lsp-haskell-server-args)
   (setopt lsp-haskell-formatting-provider "ormolu"
-         lsp-haskell--original-server-args lsp-haskell-server-args
          ;; lsp-haskell-server-args `(,@lsp-haskell-server-args "+RTS" "-N8" "-xn" "-RTS")
-         lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N8" "-xn" "-RTS")
-         ;; lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N8" "-c" "-H" "-RTS")
+         ;; lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N8" "-xn" "-RTS")
+         lsp-haskell-server-args `(,@lsp-haskell--original-server-args "+RTS" "-N4" "-c" "-A4m" "-F1.2" "-I0.3" "-H" "-RTS")
          lsp-haskell-plugin-ghcide-type-lenses-config-mode "always"
          lsp-haskell-tactics-on nil
          lsp-haskell-plugin-rename-config-cross-module t
          lsp-haskell-max-completions 100
          lsp--show-message nil
-         lsp-haskell-session-loading "multipleComponents")
+         lsp-haskell-components-loading "multi: whole-project")
+         ;; lsp-haskell-session-loading "multipleComponents")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed)
 
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
@@ -836,6 +845,7 @@
 ;;   (put 'hotfuzz-nospace 'completion--adjust-metadata #'hotfuzz--adjust-metadata))
 
 (use-package! nucleo)
+(use-package! fff-search)
 
 (setopt completion-ignore-case t
        completion-lazy-hilit t)
@@ -1077,8 +1087,9 @@
 ;;   :hook (org-mode . org-hide-tags-mode))
 
 (setopt window-combination-resize t
-        mouse-drag-and-drop-region-cross-program t
-        scroll-margin 0)
+        mouse-drag-and-drop-region-cross-program t)
+        ;; scroll-margin 3
+        ;; scroll-error-top-bottom t)
 
 (setopt parinfer-rust-disable-troublesome-modes t)
 
@@ -1412,3 +1423,99 @@ Otherwise, convert the hex color at or around point."
                     (message "Converted %s -> %s" candidate oklch-str))
                 (user-error "Symbol at point (%s) is not a valid hex color" candidate)))
           (user-error "No hex color found at point"))))))
+
+(defvar-local typst-image-dir nil
+  "Directory to save images pasted into Typst buffers.
+Must be set as a file-local or buffer-local variable. If nil, paste is aborted.")
+
+(put 'typst-image-dir 'safe-local-variable #'stringp)
+
+(defun my/typst-yank-image-handler (mimetype data)
+  "Handle clipboard image insertion for Typst buffers."
+  (unless (and (boundp 'typst-image-dir)
+               typst-image-dir
+               (not (string-empty-p typst-image-dir)))
+    (user-error "Aborted: `typst-image-dir` local variable is not set"))
+
+  (let* ((ext (pcase mimetype
+                ("image/png" "png")
+                ("image/jpeg" "jpg")
+                ("image/webp" "webp")
+                ("image/svg+xml" "svg")
+                (_ "png")))
+         (base-dir (if buffer-file-name
+                       (file-name-directory buffer-file-name)
+                     default-directory))
+         (target-dir (expand-file-name typst-image-dir base-dir))
+         (filename (format-time-string (concat "image_%Y%m%d_%H%M%S." ext)))
+         (filepath (expand-file-name filename target-dir))
+         (rel-path (file-relative-name filepath base-dir)))
+
+    ;; Create the directory if it doesn't exist
+    (unless (file-exists-p target-dir)
+      (make-directory target-dir t))
+
+    ;; Save binary image payload
+    (with-temp-file filepath
+      (set-buffer-multibyte nil)
+      (insert data))
+
+    ;; Insert Typst markup at point
+    (insert (format "#image(\"%s\")" rel-path))))
+
+(defun my/typst-setup-yank-media ()
+  "Register the image yank handler in Typst buffers."
+  (yank-media-handler "image/png" #'my/typst-yank-image-handler)
+  (yank-media-handler "image/jpg" #'my/typst-yank-image-handler))
+
+;; Bind to your preferred Typst mode hooks (e.g., typst-mode or typst-ts-mode)
+(add-hook 'typst-mode-hook #'my/typst-setup-yank-media)
+(add-hook 'typst-ts-mode-hook #'my/typst-setup-yank-media)
+
+(with-eval-after-load 'typst-ts-editing
+   (defun typst-ts-editing-auto-fill-function ()
+     "Auto Fill Function for `auto-fill-mode'."
+     (when (>= (current-column) (current-fill-column))
+       (let* ((fill-prefix (typst-ts-editing-calculate-fill-prefix))
+              (adaptive-fill-mode (null fill-prefix)))
+         (do-auto-fill)))))
+
+(after! typst-ts-mode
+ (defun typst-ts-editing-yank-png (_mime data)
+   "Function for `yank-media-handler' handling png images.
+DATA is the data."
+   (if-let* (
+             (root typst-image-dir)
+             (default-name (concat (format-time-string "%Y%m%d-%H%M%S") ".png"))
+             (default-path (file-name-concat
+                            root
+                            default-name))
+             (save-to (expand-file-name
+                       (read-file-name
+                        "Save to file: "
+                        nil nil nil default-name))))
+       (progn
+         (when (and (file-exists-p save-to)
+                    (not (yes-or-no-p (format "Overwrite: %s?" save-to))))
+           (user-error "Aborted"))
+         (make-directory (file-name-directory save-to) t)
+         ;; save the image data into save-to
+         (let ((coding-system-for-write 'no-conversion))
+           (write-region data nil save-to))
+         ;; insert the image
+         (insert (concat
+                  ;; do not insert # if inside code mode
+                  (unless (treesit-parent-until (treesit-node-at (point))
+                                                (lambda (x)
+                                                  (string=
+                                                   (treesit-node-type x)
+                                                   "code")))
+                    "#")
+                  (format "image(\"%s\")" (file-relative-name save-to root))))
+         (indent-according-to-mode))
+     (user-error "Save the file first!"))))
+
+(after! ghostel
+  (setq ghostel-module-auto-install 'download
+        ghostel-shell '("/usr/bin/env" "nu"))
+  (setopt ghostel-glyph-scale-floor 1.0))
