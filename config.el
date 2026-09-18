@@ -256,7 +256,7 @@
     :lsp-path "haskell.plugin.documentLink.globalOn")
 
   (defcustom-lsp lsp-haskell-components-loading
-    t
+    "multi: whole-project"
     "Components loading method"
     :group 'lsp-haskell
     :type 'string
@@ -272,8 +272,8 @@
          lsp-haskell-plugin-rename-config-cross-module t
          lsp-haskell-max-completions 100
          lsp--show-message nil
-         lsp-haskell-components-loading "multi: whole-project")
-         ;; lsp-haskell-session-loading "multipleComponents")
+         lsp-haskell-components-loading "multi: whole-project"
+         lsp-haskell-session-loading "multipleComponents")
   (setq-hook! 'haskell-mode-hook yas-indent-line 'fixed)
 
   (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql lsp-haskell)))
