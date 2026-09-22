@@ -54,7 +54,8 @@
   (:prefix "g"
    :desc "JJ or Magit log" "g" #'jj-or-magit-log)
 
-  :desc "Vertico repeat select" "\"" #'vertico-repeat-select)
+  :desc "Vertico repeat select" "\"" #'vertico-repeat-select
+  :desc "Switch ghostel buffers" "z" #'consult-ghostel-project)
 
  "C-_" :desc "Vertico suspend" #'vertico-suspend
 
@@ -80,6 +81,10 @@
        "q" nil
        "^" #'doom/backward-to-bol-or-indent
        "$" #'doom/forward-to-last-non-comment-or-eol)
+
+ (:map vertico-map
+       "<prior>" #'vertico-scroll-down
+       "<next>" #'vertico-scroll-up)
 
  ;; (:map evil-normal-state-map
  ;;       "d" #'evil-delete-without-register-if-whitespace)
@@ -121,9 +126,9 @@
 ;;       (strie-add vc-jj--cache-root root root)
 ;;       root)))
 
-;; (use-package! vc-jj
-;;   :config
-;;   (advice-add #'vc-jj-root :around #'vc-jj--cache-root))
+;; (use-package! vc-jj)
+  ;; :config
+  ;; (advice-add #'vc-jj-root :around #'vc-jj--cache-root)
 
 (defun switch-to-buffer-returning-window (buffer)
   (switch-to-buffer buffer)
@@ -135,6 +140,19 @@
           magit-section-initial-visibility-alist
           '((stashes . hide)
             (majutsu-commit-section . hide))))
+
+(defun majutsu-next-conflict-or-conflicted ()
+  "Visit the next conflicted file in the current JJ repo."
+  (interactive)
+  (save-buffer)
+  (condition-case nil
+      (majutsu-conflict-goto-nearest)
+    (error
+      (when-let* ((file (car (majutsu-jj-conflicted-files))))
+        (majutsu-with-toplevel
+          (find-file (plist-get file :path))
+          (smerge-mode +1)
+          (majutsu-conflict-goto-nearest))))))
 
   ;; (defconst evil-collection-jj-mode-maps '(jj-mode-map))
   ;; (evil-set-initial-state 'jj-mode 'normal)
@@ -294,7 +312,52 @@
             (-drop-last 1)                ; ```
             (-map #'s-trim)
             (s-join " "))
-       "haskell"))))
+       "haskell")))
+
+  (defun my/get-hls-executable ()
+    "Resolve the executable path for HLS in the current buffer's environment."
+    (let ((configured-path (bound-and-true-p lsp-haskell-server-path)))
+      (or (and configured-path (executable-find configured-path))
+          (executable-find "haskell-language-server-wrapper")
+          (executable-find "haskell-language-server"))))
+
+  (defun my/lsp-guard-hls-version (orig-fun &rest args)
+    "Intercept `lsp` in Haskell buffers, check version asynchronously, and start if > 2.13.0.0."
+    (if (derived-mode-p 'haskell-mode 'haskell-ts-mode 'haskell-literate-mode)
+        (let ((target-buf (current-buffer))
+              (exe (my/get-hls-executable)))
+          (if (not exe)
+              (message "[lsp-mode] Suppressed HLS startup in %s: executable not found."
+                       (buffer-name))
+            (let ((proc-buf (generate-new-buffer " *hls-version-check*")))
+              (make-process
+               :name "hls-version-check"
+               :buffer proc-buf
+               :command (list exe "--version")
+               :sentinel
+               (lambda (proc event)
+                 (when (memq (process-status proc) '(exit signal))
+                   (let ((version nil))
+                     (when (buffer-live-p proc-buf)
+                       (with-current-buffer proc-buf
+                         (goto-char (point-min))
+                         (when (re-search-forward "version:\\s-*\\([0-9]+\\(?:\\.[0-9]+\\)+\\)" nil t)
+                           (setq version (match-string 1))))
+                       (kill-buffer proc-buf))
+                     (if (and version (version< "2.13.0.0" version))
+                         (when (buffer-live-p target-buf)
+                           (with-current-buffer target-buf
+                             (message "[lsp-mode] HLS version %s validated (> 2.13.0.0). Starting LSP..." version)
+                             ;; Invokes original `lsp` directly without re-triggering advice
+                             (apply orig-fun args)))
+                       (message "[lsp-mode] Suppressed HLS startup in %s: version %s is <= 2.13.0.0."
+                                (buffer-name target-buf) (or version "Not Found"))))))))))
+      ;; Non-Haskell modes bypass version check entirely
+      (apply orig-fun args)))
+
+  ;; Intercept all `lsp` calls
+  (advice-add 'lsp :around #'my/lsp-guard-hls-version))
+
 
 
 
@@ -345,7 +408,7 @@
           lsp-ui-sideline-diagnostic-max-lines 10
           lsp-auto-execute-action nil
           lsp-python-ty-clients-server-command '("uvx" "ty" "server")
-          lsp-pyright-langserver-command nil
+          ;; lsp-pyright-langserver-command nil
           lsp-file-watch-threshold 4000
           lsp-completion-default-behaviour :insert)
   (dolist (dir '(
@@ -500,7 +563,7 @@
 (after! lsp-rust
   (setopt lsp-rust-analyzer-display-chaining-hints nil
           lsp-rust-analyzer-display-parameter-hints t
-          lsp-rust-analyzer-display-lifetime-elision-hints-enable t
+          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
           lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names t
           lsp-rust-analyzer-max-inlay-hint-length 20
           lsp-rust-analyzer-proc-macro-enable t
@@ -524,8 +587,8 @@
                  :lsp-path "typescript.preferences.jsxAttributeCompletionStyle")
 
   (setopt lsp-javascript-display-enum-member-value-hints t
-          lsp-javascript-display-parameter-name-hints 'literals
-          lsp-javascript-display-variable-type-hints t))
+          lsp-javascript-display-parameter-name-hints "literals"
+          lsp-javascript-display-variable-type-hints nil))
 
 (add-hook! prog-mode
   (rainbow-delimiters-mode))
@@ -573,10 +636,11 @@
     (let ((line-move-visual t))
       (evil-line-move (or count 1))))
 
- (advice-add 'evil-ex-substitute :around
-            (lambda (orig-fun &rest args)
-              (save-excursion
-                (apply orig-fun args)))))
+  (advice-add 'evil-ex-substitute :around
+             (lambda (orig-fun &rest args)
+               (save-excursion
+                 (apply orig-fun args))))
+  (setopt evil-ex-hl-update-delay 0.01))
 
 (after! consult
   (consult-customize
@@ -706,6 +770,14 @@
   :side 'bottom
   :size 0.4
   :ttl 60)
+
+(set-popup-rule! "^\\*doom:ghostel-popup"
+  :vslot -5
+  :size 0.3
+  :select t
+  :modeline nil
+  :quit nil
+  :ttl nil)
 
 ;; (add-to-list 'auto-mode-alist '("\\.eex$" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
@@ -1035,6 +1107,10 @@
 
 (after! cape
   (setopt cape-dabbrev-check-other-buffers nil))
+
+(after! prog-mode
+  (setq-local dabbrev-case-fold-search nil
+              dabbrev-case-replace nil))
 
 (setopt mac-mouse-wheel-smooth-scroll t)
 
@@ -1519,3 +1595,7 @@ DATA is the data."
   (setq ghostel-module-auto-install 'download
         ghostel-shell '("/usr/bin/env" "nu"))
   (setopt ghostel-glyph-scale-floor 1.0))
+
+(use-package! consult-ghostel
+  :after (ghostel consult)
+  :config (consult-ghostel-mode))

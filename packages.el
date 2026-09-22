@@ -21,7 +21,9 @@
         diff-hl
         nerd-icons
         nerd-icons-completion
-        ghostel)
+        ghostel
+        evil-ghostel
+        consult-ghostel)
 
 (package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
 ;; (package! pdf-tools :recipe (:host github :repo "aikrahguzar/pdf-tools"
@@ -160,3 +162,7 @@
 
 (package! rainbow-delimiters)
 (package! ast-grep :recipe (:host github :repo "SunskyXH/ast-grep.el"))
+
+(package! consult-ghostel
+  :recipe (:host github :repo "dakra/ghostel"
+           :files ("extensions/consult-ghostel/*.el")))
