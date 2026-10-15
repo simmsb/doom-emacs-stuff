@@ -312,8 +312,9 @@
             (-drop-last 1)                ; ```
             (-map #'s-trim)
             (s-join " "))
-       "haskell")))
+       "haskell"))))
 
+(after! lsp-mode
   (defun my/get-hls-executable ()
     "Resolve the executable path for HLS in the current buffer's environment."
     (let ((configured-path (bound-and-true-p lsp-haskell-server-path)))
@@ -1089,18 +1090,18 @@
 (after! doom-modeline
   (setopt doom-modeline-height 23))
 
-(defun auth-source-1password--1password-construct-query-path-escaped (_backend _type host user _port)
-  "Construct the full entry-path for the 1password entry for HOST and USER.
-   Usually starting with the `auth-source-1password-vault', followed
-   by host and user."
-  (mapconcat #'identity (list auth-source-1password-vault host (string-replace "^" "_" user)) "/"))
+;; (defun auth-source-1password--1password-construct-query-path-escaped (_backend _type host user _port)
+;;   "Construct the full entry-path for the 1password entry for HOST and USER.
+;;    Usually starting with the `auth-source-1password-vault', followed
+;;    by host and user."
+;;   (mapconcat #'identity (list auth-source-1password-vault host (string-replace "^" "_" user)) "/"))
 
-(use-package! auth-source-1password
-  :custom
-  (auth-source-1password-vault "Auto")
-  (auth-source-1password-construct-secret-reference #'auth-source-1password--1password-construct-query-path-escaped)
-  :config
-  (auth-source-1password-enable))
+;; (use-package! auth-source-1password
+;;   :custom
+;;   (auth-source-1password-vault "Auto")
+;;   (auth-source-1password-construct-secret-reference #'auth-source-1password--1password-construct-query-path-escaped)
+;;   :config
+;;   (auth-source-1password-enable))
 
 (setopt mac-command-modifier 'meta
         mac-option-modifier nil)
@@ -1599,3 +1600,18 @@ DATA is the data."
 (use-package! consult-ghostel
   :after (ghostel consult)
   :config (consult-ghostel-mode))
+
+(use-package! msgpack)
+(use-package! tramp-rpc)
+
+(connection-local-set-profile-variables
+ 'remote-direct-async-process
+ '((tramp-direct-async-process . t)))
+
+(connection-local-set-profiles
+ '(:application tramp :protocol "scp")
+ 'remote-direct-async-process)
+
+(setq magit-tramp-pipe-stty-settings 'pty)
+
+(setopt tramp-use-ssh-controlmaster-options nil)

@@ -33,8 +33,8 @@
 (package! parinfer-rust-mode
   :recipe (:host github :repo "justinbarclay/parinfer-rust-mode"))
 
-(package! auth-source-1password
-  :recipe (:host github :repo "dlobraico/auth-source-1password"))
+;; (package! auth-source-1password
+;;   :recipe (:host github :repo "dlobraico/auth-source-1password"))
 
 ;(package! emacsql-sqlite-builtin
 ;  :recipe (:host github :repo "magit/emacsql"))
@@ -90,6 +90,8 @@
 ;;            :host github
 ;;            :files (:defaults "bin")))
 
+(package! msgpack)
+(package! tramp-rpc :type 'built-in :built-in t)
 (package! jinx :type 'built-in :built-in t)
 ;; (package! reader :type 'built-in :built-in t)
 
